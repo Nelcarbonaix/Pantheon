@@ -10,9 +10,9 @@
 <meta name="apple-mobile-web-app-title" content="Panthéon">
 <meta name="description" content="Panthéon — suivi des piliers, succès et quêtes.">
 <title>Panthéon</title>
-<link rel="icon" id="Panthéon-favicon" href="">
-<link rel="apple-touch-icon" id="Panthéon-apple-icon" href="">
-<link rel="manifest" id="Panthéon-manifest" href="">
+<link rel="icon" id="pantheon-favicon" href="">
+<link rel="apple-touch-icon" id="pantheon-apple-icon" href="">
+<link rel="manifest" id="pantheon-manifest" href="">
 <script>
   // Génère un manifeste PWA (et une icône) directement en mémoire,
   // pour que le fichier reste autonome (installable en un seul fichier .html
@@ -33,8 +33,8 @@
         </g>
       </svg>`;
       const iconUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(iconSvg)));
-      document.getElementById('Panthéon-favicon').href = iconUrl;
-      document.getElementById('Panthéon-apple-icon').href = iconUrl;
+      document.getElementById('pantheon-favicon').href = iconUrl;
+      document.getElementById('pantheon-apple-icon').href = iconUrl;
 
       const manifest = {
         name: 'Panthéon',
@@ -51,7 +51,7 @@
         ]
       };
       const manifestBlob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-      document.getElementById('Panthéon-manifest').href = URL.createObjectURL(manifestBlob);
+      document.getElementById('pantheon-manifest').href = URL.createObjectURL(manifestBlob);
     }catch(e){ /* environnement restreint (ex: aperçu Claude) : on ignore */ }
   })();
 </script>
@@ -62,16 +62,16 @@
      active "Realtime Database" (gratuit, pas de facturation requise),
      puis Paramètres du projet > Vos applications > Web (</>) pour
      obtenir ces valeurs (databaseURL compris). Colle-les ci-dessous.
-     Tant que ce n'est pas rempli, Panthéon fonctionne en local
+     Tant que ce n'est pas rempli, l'appli fonctionne en local
      uniquement (pas de synchro entre appareils).
      ============================================================ -->
 <script>
   window.FIREBASE_CONFIG = {
     apiKey: "AIzaSyArGmCIFzAPqUtkqK36h4HYADOx5YTrgP4",
-    authDomain: "Panthéon-app-c6508.firebaseapp.com",
-    databaseURL: "https://Panthéon-app-c6508-default-rtdb.europe-west1.firebasedatabase.app", // ex: https://ton-projet-default-rtdb.europe-west1.firebasedatabase.app
-    projectId: "Panthéon-app-c6508",
-    storageBucket: "Panthéon-app-c6508.firebasestorage.app",
+    authDomain: "pantheon-app-c6508.firebaseapp.com",
+    databaseURL: "https://pantheon-app-c6508-default-rtdb.europe-west1.firebasedatabase.app", // ex: https://ton-projet-default-rtdb.europe-west1.firebasedatabase.app
+    projectId: "pantheon-app-c6508",
+    storageBucket: "pantheon-app-c6508.firebasestorage.app",
     messagingSenderId: "22676039083",
     appId: "1:22676039083:web:6ce7383bb65a6dbb8a1eee"
   };
@@ -201,13 +201,13 @@
   }
   .subtitle{color:var(--stone);letter-spacing:3px;font-size:12px;text-transform:uppercase;margin-top:6px;}
 
-  .Panthéon-message{
+  .pantheon-message{
     margin-top:14px;font-size:13.5px;font-style:italic;color:var(--gold);
     letter-spacing:0.5px;text-shadow:0 0 8px rgba(166,130,31,0.4);
     opacity:1;transition:opacity .5s ease;
     min-height:18px;
   }
-  .Panthéon-message.fade{opacity:0;}
+  .pantheon-message.fade{opacity:0;}
 
   .stats{
     display:flex;justify-content:center;gap:22px;margin:18px 0 30px;flex-wrap:wrap;
@@ -330,7 +330,7 @@
     50%{box-shadow:0 0 18px var(--gold), 0 0 32px rgba(230,196,95,0.55) inset;}
   }
 
-  /* Séquence Valkyrie : le Panthéon s'assombrit, les piliers se rayent puis tombent */
+  /* Séquence Valkyrie : le pantheon s'assombrit, les piliers se rayent puis tombent */
   .wrap.valkyrie-dark{
     filter:grayscale(0.9) brightness(0.42);
     transition:filter 1.1s ease;
@@ -1124,7 +1124,7 @@
     <header>
       <h1>PANTHÉON</h1>
       <div class="subtitle">24 piliers · gravez vos épreuves</div>
-      <div class="Panthéon-message" id="Panthéon-message"></div>
+      <div class="pantheon-message" id="pantheon-message"></div>
     </header>
 
     <div class="stats">
@@ -1146,7 +1146,7 @@
       <h2>Nouvelle case</h2>
       <div class="field">
         <label>Nom de la case</label>
-        <input type="text" id="new-name" placeholder="Ex : Colonel Eclatax - sodomie édition">
+        <input type="text" id="new-name" placeholder="Ex : Épreuve du feu">
       </div>
       <div class="field">
         <label>Lien (optionnel)</label>
@@ -1276,7 +1276,7 @@
     </div>
     <header style="margin-bottom:20px;">
       <h1 style="font-size:clamp(22px,4vw,32px);">420</h1>
-      <div class="subtitle">What funnier than clicking for money ?</div>
+      <div class="subtitle">1000 clics = 250 fragments · pause de 2h ensuite</div>
     </header>
     <div class="clicker-stats" id="clicker-stats">0 clics · 0 / 1000</div>
     <div class="clicker-wrap" id="clicker-wrap">
@@ -1298,7 +1298,7 @@
   <div class="menu-item" id="questsBtn" onclick="selectMenuView('quests')" title="Voir les quêtes cachées">🔒 Quêtes</div>
   <div class="menu-item" onclick="selectMenuView('shop')" title="Voir le Shop">🛒 Shop</div>
   <div class="menu-item" onclick="selectMenuView('inventory')" title="Voir le profil">👤 Profil</div>
-  <div class="menu-item" onclick="openMapPopup()" title="Voir la Carte du Panthéon">🗺️ Carte</div>
+  <div class="menu-item" onclick="openMapPopup()" title="Voir la carte de l'app">🗺️ Carte</div>
 </div>
 
 <div class="menu-btn chill-btn" id="chillBtn" onclick="toggleChillDropdown(event)" title="Chill">Chill</div>
@@ -1409,7 +1409,7 @@
 <div class="overlay" id="overlay-chat">
   <div class="modal chat-modal">
     <h3>💬 Tchat</h3>
-    <p class="chat-sub">Partagé entre tous ceux qui utilisent Panthéon.</p>
+    <p class="chat-sub">Partagé entre tous ceux qui utilisent l'appli.</p>
     <div class="chat-messages" id="chat-messages"></div>
     <p class="chat-sub" id="chat-guest-note" style="display:none;color:var(--stone);">Connecte-toi à un compte pour pouvoir écrire dans le tchat.</p>
     <div class="chat-input-row" id="chat-input-row">
@@ -1435,19 +1435,19 @@
   </div>
 </div>
 
-<!-- Carte du Panthéon : legende de ce qui est relié à quoi, pour se repérer.
+<!-- carte de l'app : legende de ce qui est relié à quoi, pour se repérer.
      Contenu statique volontairement écrit à la main (pas de génération JS) :
      les éléments secrets sont étiquetés [secret] sans détailler leur
      déclencheur, et rien de ce qui concerne l'admin n'y figure. -->
 <div class="overlay" id="overlay-map">
   <div class="modal" style="width:min(480px,92vw);">
-    <h3>🗺️ Carte du Panthéon</h3>
+    <h3>🗺️ Carte de l'app</h3>
     <p style="color:var(--stone);font-size:12.5px;margin-top:-6px;">Ce qui est relié à quoi, pour mieux se repérer.</p>
     <div class="map-list">
 
       <div class="map-item">
-        <div class="map-item-title">⛓️ Piliers</div>
-        <div class="map-item-desc">24 colonels a valider pour pouvoir entrer dans la legende</div>
+        <div class="map-item-title">🗿 Piliers</div>
+        <div class="map-item-desc">La grille principale : chaque case peut être validée ou invalidée. C'est le cœur de l'app.</div>
         <div class="map-item-links">→ relié à : Défi du jour, Badges, Hall of Fame, Points de saison, Comparaison</div>
       </div>
 
@@ -1476,7 +1476,7 @@
 
       <div class="map-item">
         <div class="map-item-title">✨ Points de saison</div>
-        <div class="map-item-desc">Gagnés en Jouant au mini jeu, en réussissant le défi du jour, et via certains éléments <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-desc">Gagnés en validant des piliers, en réussissant le défi du jour, et via certains éléments <span class="map-secret">[secret]</span>.</div>
         <div class="map-item-links">→ relié à : Shop</div>
       </div>
 
@@ -1488,7 +1488,7 @@
 
       <div class="map-item">
         <div class="map-item-title">🏷️ Stickers</div>
-        <div class="map-item-desc">Obtenus via les paquets du Shop, classés par rareté et consultables dans un carnet dédier dés leur obtentions.</div>
+        <div class="map-item-desc">Obtenus via les paquets du Shop, classés par rareté et consultables dans un carnet dédié.</div>
         <div class="map-item-links">→ relié à : Shop, Profil</div>
       </div>
 
@@ -1516,8 +1516,7 @@
 
       <div class="map-item">
         <div class="map-item-title">🔥 Chill / 420</div>
-        <div class="map-item-desc">Un clicker, qui n'aime pas les clickers ? 
-Contient un élément <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-desc">Mini-jeu de clics indépendant, qui rapporte aussi des points de saison à intervalle régulier. Contient un élément <span class="map-secret">[secret]</span>.</div>
         <div class="map-item-links">→ relié à : Points de saison</div>
       </div>
 
@@ -1726,15 +1725,15 @@ Contient un élément <span class="map-secret">[secret]</span>.</div>
 // Utilise Firestore (voir config en haut du fichier) pour garder
 // les mêmes données sur tous les PC qui ouvrent ce site. Si
 // Firebase n'est pas configuré, on retombe simplement sur le
-// localStorage de l'appareil (pas de synchro, mais Panthéon marche
+// localStorage de l'appareil (pas de synchro, mais l'appli marche
 // quand même).
-// Collection Firestore utilisée : "Panthéon_data", un document par clé.
+// Collection Firestore utilisée : "pantheon_data", un document par clé.
 // ============================================================
 const syncStorage = (function(){
   const cache = Object.create(null);
   let hasCloud = false;
   let knownKeys = new Set();
-  const ROOT = 'Panthéon_data';
+  const ROOT = 'pantheon_data';
 
   function localGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
   function localSet(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
@@ -1770,10 +1769,10 @@ const syncStorage = (function(){
       persistToCloud(key, null);
     },
     // Charge toutes les clés déjà connues du cloud avant le démarrage de
-    // Panthéon (pour que les lectures synchrones suivantes renvoient bien
+    // l'appli (pour que les lectures synchrones suivantes renvoient bien
     // les données les plus récentes), PUIS reste abonnée en temps réel :
     // dès qu'un autre appareil écrit quoi que ce soit, `onChange` est
-    // rappelé pour que Panthéon puisse se rafraîchir toute seule, sans
+    // rappelé pour que l'appli puisse se rafraîchir toute seule, sans
     // avoir besoin de recharger la page.
     async preloadAndSync(onChange){
       try{ await window.__fbReady; }catch(e){}
@@ -1810,35 +1809,35 @@ const syncStorage = (function(){
 })();
 
 
-const STORAGE_KEY = 'Panthéon-cases-v1';
-const HALL_KEY = 'Panthéon-hall-v1';
-const HALL_PROMPTED_KEY = 'Panthéon-hall-prompted-v1';
-const CROWNS_KEY = 'Panthéon-crowns-v1'; // {accountId: nombre de couronnes gagnées en fin de saison}
-const ACCOUNTS_KEY = 'Panthéon-accounts-v1';
-const ACTIVE_ACCOUNT_KEY = 'Panthéon-active-account-v1';
-const STATES_KEY = 'Panthéon-states-v1';
+const STORAGE_KEY = 'pantheon-cases-v1';
+const HALL_KEY = 'pantheon-hall-v1';
+const HALL_PROMPTED_KEY = 'pantheon-hall-prompted-v1';
+const CROWNS_KEY = 'pantheon-crowns-v1'; // {accountId: nombre de couronnes gagnées en fin de saison}
+const ACCOUNTS_KEY = 'pantheon-accounts-v1';
+const ACTIVE_ACCOUNT_KEY = 'pantheon-active-account-v1';
+const STATES_KEY = 'pantheon-states-v1';
 const TEMP_ACCOUNT_ID = 'temp-admin';
 const SECRET_VOID_ID = 'secret-void';
-const SECRETS_KEY = 'Panthéon-secrets-v1';
-const CLICKER_KEY = 'Panthéon-clicker-v1'; // {compte: nombre total de clics} — propre à chaque profil
+const SECRETS_KEY = 'pantheon-secrets-v1';
+const CLICKER_KEY = 'pantheon-clicker-v1'; // {compte: nombre total de clics} — propre à chaque profil
 const CLICKER_FRAGMENTS_PER_1000 = 250; // fragments donnés tous les 1000 clics (remplace les points)
 const CLICKER_COOLDOWN_MS = 2 * 60 * 60 * 1000; // 2h de pause après avoir atteint le palier de 1000 clics
-const CLICKER_COOLDOWN_KEY = 'Panthéon-clicker-cooldown-v1'; // {compte: timestamp de fin de cooldown}
+const CLICKER_COOLDOWN_KEY = 'pantheon-clicker-cooldown-v1'; // {compte: timestamp de fin de cooldown}
 const CLICKER_EASTER_EGG_CHANCE = 0.001; // 0.1%
 const CLICKER_EASTER_EGG_BONUS = 521;
-const FRAGMENTS_KEY = 'Panthéon-fragments-v1'; // {compte: nombre de fragments}
+const FRAGMENTS_KEY = 'pantheon-fragments-v1'; // {compte: nombre de fragments}
 const FRAGMENTS_EXCHANGE_COST = 500; // fragments nécessaires
 const FRAGMENTS_EXCHANGE_GAIN = 120; // points obtenus en échange
 const STICKER_DUP_FRAGMENTS = 10; // fragments gagnés à chaque doublon de carte
 
 // ---------- Saisons / points / shop ----------
-const SEASON_KEY = 'Panthéon-season-v1';               // {start:{y,m,d}|null, end:{y,m,d}|null}
-const SEASON_HISTORY_KEY = 'Panthéon-season-history-v1'; // [{start,end,closedAt,top:[{name,points}]}]
-const POINTS_KEY = 'Panthéon-points-v1';               // {accountId: points}
-const POINTS_AWARDED_KEY = 'Panthéon-points-awarded-v1'; // {accountId:{cases:{},quests:{},valkyrie:bool,challenges:{}}}
-const SHOP_ITEMS_KEY = 'Panthéon-shop-items-v1';       // [{id,name,icon,cost,desc}]
-const SHOP_PURCHASES_KEY = 'Panthéon-shop-purchases-v1'; // {accountId:[itemId,...]}
-const STICKER_INVENTORY_KEY = 'Panthéon-card-inventory-v1'; // {accountId:[{packId,packName,stickerId,name,image,rarity,ts},...]}
+const SEASON_KEY = 'pantheon-season-v1';               // {start:{y,m,d}|null, end:{y,m,d}|null}
+const SEASON_HISTORY_KEY = 'pantheon-season-history-v1'; // [{start,end,closedAt,top:[{name,points}]}]
+const POINTS_KEY = 'pantheon-points-v1';               // {accountId: points}
+const POINTS_AWARDED_KEY = 'pantheon-points-awarded-v1'; // {accountId:{cases:{},quests:{},valkyrie:bool,challenges:{}}}
+const SHOP_ITEMS_KEY = 'pantheon-shop-items-v1';       // [{id,name,icon,cost,desc}]
+const SHOP_PURCHASES_KEY = 'pantheon-shop-purchases-v1'; // {accountId:[itemId,...]}
+const STICKER_INVENTORY_KEY = 'pantheon-card-inventory-v1'; // {accountId:[{packId,packName,stickerId,name,image,rarity,ts},...]}
 const POINT_VALUES = { case:10, challenge:15, quest:40, valkyrie:100 };
 
 let seasonConfig = {start:null, end:null};
@@ -1858,13 +1857,13 @@ const STICKER_IMG_W = 240, STICKER_IMG_H = 320;
 // Quêtes cachées : contrairement aux piliers/secrets (propres à chaque profil),
 // leur état est UNIQUE et PARTAGÉ par tous les comptes de cet appareil :
 // si un joueur valide une quête ou change le verrou, ça change pour tout le monde.
-const QUESTS_KEY = 'Panthéon-quests-v1';
+const QUESTS_KEY = 'pantheon-quests-v1';
 
-// Tchat partagé entre TOUS les utilisateurs de Panthéon (pas seulement
+// Tchat partagé entre TOUS les utilisateurs de l'appli (pas seulement
 // ce compte / cet appareil) : stocké en "shared" côté cloud.
-const CHAT_KEY = 'Panthéon-chat-v1';
-const CHAT_PSEUDO_KEY = 'Panthéon-chat-pseudo-v1'; // propre à cet appareil/navigateur
-const CHAT_SEEN_KEY = 'Panthéon-chat-seen-v1';     // propre à cet appareil/navigateur
+const CHAT_KEY = 'pantheon-chat-v1';
+const CHAT_PSEUDO_KEY = 'pantheon-chat-pseudo-v1'; // propre à cet appareil/navigateur
+const CHAT_SEEN_KEY = 'pantheon-chat-seen-v1';     // propre à cet appareil/navigateur
 const CHAT_MAX_MESSAGES = 200;
 let chatMessages = [];
 // TODO : donner un nom (et éventuellement une icône) à chaque quête une fois définie.
@@ -1939,7 +1938,7 @@ function hashStr(s){
 
 // Même pilier mis en avant pour tout le monde, change chaque jour.
 function getDailyChallengeNum(){
-  return (hashStr('Panthéon-daily-'+todayStr()) % 24) + 1;
+  return (hashStr('pantheon-daily-'+todayStr()) % 24) + 1;
 }
 
 async function loadValidationDates(){
@@ -2480,7 +2479,7 @@ function renderHallOfShame(){
         <div>
           <div class="hos-name">${escapeHtml(h.name)}</div>
           ${h.message ? `<div class="hos-message">« ${escapeHtml(h.message)} »</div>` : ''}
-          ${claimable ? '<div class="hos-message" style="color:var(--purple-neon);">Cliquer pour être déchue</div>' : ''}
+          ${claimable ? '<div class="hos-message" style="color:var(--purple-neon);">Cliquer pour être absous</div>' : ''}
         </div>
       </div>
     </div>
@@ -2494,7 +2493,7 @@ function renderHallOfShame(){
       <div class="name-overlay">
         <div>
           <div class="hos-name">Vous</div>
-          <div class="hos-message">« déchue dans le Void le ${absolved.date} »</div>
+          <div class="hos-message">« Absous de Void le ${absolved.date} »</div>
         </div>
       </div>
     </div>
@@ -3570,7 +3569,7 @@ async function setValkyrieState(state){
 let valkyrieSequencePlaying = false;
 function wait(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
 
-// Tant que verrouillée : rien au clic. Une fois débloquée : le Panthéon classique
+// Tant que verrouillée : rien au clic. Une fois débloquée : le pantheon classique
 // s'assombrit, les piliers se rayent puis tombent un par un, Valkyrie apparaît au
 // centre, puis redirection vers le lien et retour à la normale.
 function onValkyrieClick(){
@@ -3810,7 +3809,7 @@ function selectMenuView(name){
   showView(name);
 }
 
-// Carte du Panthéon : popup de repérage, contenu statique (voir HTML de
+// Carte de l'app : popup de repérage, contenu statique (voir HTML de
 // overlay-map). Volontairement pas rattachée à showView : c'est une
 // référence consultable depuis n'importe quelle vue, pas une vue en soi.
 function openMapPopup(){
@@ -3924,11 +3923,11 @@ function render(){
   document.getElementById('count-neutral').textContent = neu;
 
   const validPillars = cases.filter(c=>c.num!=null && getState(c.id)==='valid').length;
-  updatePanthéonMessage(validPillars);
+  updatePantheonMessage(validPillars);
   checkHallCompletion(validPillars);
 }
 
-const Panthéon_STAGES = [
+const PANTHEON_STAGES = [
   {min:0,  text:"..."},
   {min:1,  text:"Rien."},
   {min:3,  text:"Vous entendez des voix lointaines, presque inaudibles."},
@@ -3940,18 +3939,18 @@ const Panthéon_STAGES = [
   {min:24, text:"Vous avez franchi le Panthéon."}
 ];
 
-let lastPanthéonStageText = null;
-function updatePanthéonMessage(validCount){
-  let stage = Panthéon_STAGES[0];
-  for(const s of Panthéon_STAGES){
+let lastPantheonStageText = null;
+function updatePantheonMessage(validCount){
+  let stage = PANTHEON_STAGES[0];
+  for(const s of PANTHEON_STAGES){
     if(validCount >= s.min) stage = s;
   }
-  const el = document.getElementById('Panthéon-message');
-  if(stage.text === lastPanthéonStageText){
+  const el = document.getElementById('pantheon-message');
+  if(stage.text === lastPantheonStageText){
     el.textContent = stage.text;
     return;
   }
-  lastPanthéonStageText = stage.text;
+  lastPantheonStageText = stage.text;
   el.classList.add('fade');
   setTimeout(()=>{
     el.textContent = stage.text;
@@ -4222,7 +4221,7 @@ async function loadAccounts(){
     accounts = raw ? JSON.parse(raw) : [];
   }catch(e){ accounts = []; }
   // Volontairement : on ne restaure JAMAIS le dernier compte connecté au
-  // lancement. Chaque personne qui ouvre Panthéon (sur n'importe quel appareil)
+  // lancement. Chaque personne qui ouvre l'appli (sur n'importe quel appareil)
   // démarre sur "Invité" et doit se reconnecter elle-même à son compte.
   activeAccountId = null;
 }
@@ -4546,7 +4545,7 @@ async function loadChatFromCloud(){
   if(window.__fb){
     try{
       const fb = window.__fb;
-      const snap = await fb.get(fb.ref(fb.db, 'Panthéon_data/' + CHAT_KEY));
+      const snap = await fb.get(fb.ref(fb.db, 'pantheon_data/' + CHAT_KEY));
       if(snap.exists()){
         const v = snap.val();
         if(typeof v === 'string'){
@@ -4571,7 +4570,7 @@ async function startChatRealtimeListener(){
   try{ await window.__fbReady; }catch(e){}
   if(!window.__fb) return; // mode local uniquement : pas de temps réel possible
   const fb = window.__fb;
-  chatListenerRef = fb.ref(fb.db, 'Panthéon_data/' + CHAT_KEY);
+  chatListenerRef = fb.ref(fb.db, 'pantheon_data/' + CHAT_KEY);
   chatListenerCb = (snap)=>{ applyIncomingChat(snap.val()); };
   fb.onValue(chatListenerRef, chatListenerCb);
 }
@@ -4590,7 +4589,7 @@ async function saveChatToCloud(){
   if(window.__fb){
     try{
       const fb = window.__fb;
-      await fb.set(fb.ref(fb.db, 'Panthéon_data/' + CHAT_KEY), json);
+      await fb.set(fb.ref(fb.db, 'pantheon_data/' + CHAT_KEY), json);
     }catch(e){}
   }
 }
@@ -4711,7 +4710,7 @@ function startChatBackgroundWatch(){
   startChatRealtimeListener();
 }
 
-// Rejoue tout ce que Panthéon affiche à partir des données rechargées, sans
+// Rejoue tout ce que l'appli affiche à partir des données rechargées, sans
 // toucher aux formulaires en cours de saisie (admin, création de case,
 // configuration de saison...) pour ne rien écraser sous les doigts de
 // quelqu'un en train de taper — ces écrans-là restent à rouvrir pour voir
@@ -4719,13 +4718,13 @@ function startChatBackgroundWatch(){
 let cloudRefreshTimer = null;
 function refreshFromCloud(){
   // Regroupe les changements rapprochés (plusieurs clics d'affilée ailleurs)
-  // en un seul rafraîchissement, pour éviter de re-rendre Panthéon en rafale.
+  // en un seul rafraîchissement, pour éviter de re-rendre l'appli en rafale.
   if(cloudRefreshTimer) clearTimeout(cloudRefreshTimer);
   cloudRefreshTimer = setTimeout(applyCloudRefresh, 150);
 }
 
 // loadAccounts() remet toujours activeAccountId à null (comportement voulu
-// au lancement de Panthéon, voir sa définition). En plein rafraîchissement
+// au lancement de l'appli, voir sa définition). En plein rafraîchissement
 // temps réel, il ne faut surtout PAS déconnecter la personne en cours de
 // session à chaque changement distant : on recharge la liste des comptes
 // mais on restaure ensuite le compte actif s'il existe toujours.
@@ -4792,7 +4791,7 @@ async function applyCloudRefresh(){
 // que le cloud n'est pas configuré (hasCloud resterait bloqué à false pour
 // toute la session). On attend donc l'événement DOMContentLoaded, qui ne se
 // déclenche qu'une fois tous les scripts différés/modules exécutés.
-function startPanthéonApp(){
+function startPantheonApp(){
   (async function init(){
     await syncStorage.preloadAndSync(refreshFromCloud);
     await loadAccounts();
@@ -4816,11 +4815,11 @@ function startPanthéonApp(){
 }
 
 if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', startPanthéonApp);
+  document.addEventListener('DOMContentLoaded', startPantheonApp);
 } else {
   // Cas rare où le script s'exécute alors que le DOM est déjà chargé :
   // on démarre directement.
-  startPanthéonApp();
+  startPantheonApp();
 }
 </script>
 </body>
