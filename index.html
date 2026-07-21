@@ -78,7 +78,7 @@
 </script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getDatabase, ref, get, set, remove }
+  import { getDatabase, ref, get, set, remove, onValue, off }
     from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
   window.__fbReady = (async ()=>{
@@ -90,7 +90,7 @@
     try{
       const app = initializeApp(cfg);
       const db = getDatabase(app);
-      window.__fb = { db, ref, get, set, remove };
+      window.__fb = { db, ref, get, set, remove, onValue, off };
     }catch(e){
       console.warn('Firebase indisponible, mode local uniquement.', e);
       window.__fb = null;
@@ -222,11 +222,11 @@
 
   .grid{
     display:grid;
-    grid-template-columns:repeat(9,1fr);
+    grid-template-columns:repeat(6,1fr);
     gap:12px;
   }
-  @media(max-width:820px){.grid{grid-template-columns:repeat(6,1fr);}}
-  @media(max-width:480px){.grid{grid-template-columns:repeat(4,1fr);}}
+  @media(max-width:820px){.grid{grid-template-columns:repeat(4,1fr);}}
+  @media(max-width:480px){.grid{grid-template-columns:repeat(3,1fr);}}
 
   @media(max-width:600px){
     body{border-width:6px;}
@@ -947,7 +947,29 @@
     background:var(--purple-neon);box-shadow:0 0 6px var(--purple-neon);
     display:none;border:2px solid var(--bg-void);
   }
-  .chat-btn.has-unread .chat-dot{display:block;}
+  .chat-btn.has-unread .chat-dot{display:block;animation:notif-dot-breathe 2.2s ease-in-out infinite;}
+
+  /* Pulsation discrète du bouton tant qu'il y a une notification non lue. */
+  @keyframes notif-dot-breathe{
+    0%,100%{transform:scale(1);box-shadow:0 0 6px var(--purple-neon);}
+    50%{transform:scale(1.3);box-shadow:0 0 11px var(--purple-neon),0 0 3px rgba(192,96,255,0.8);}
+  }
+  .chat-btn.has-unread{animation:notif-btn-glow 2.2s ease-in-out infinite;}
+  @keyframes notif-btn-glow{
+    0%,100%{box-shadow:0 0 10px rgba(166,130,31,0.25);}
+    50%{box-shadow:0 0 10px rgba(166,130,31,0.25), 0 0 14px rgba(192,96,255,0.35);}
+  }
+  /* Petit rebond joué une fois pile au moment où une notification arrive
+     (classe ajoutée/retirée en JS via triggerNotifBump). Générique : peut
+     être réutilisée sur n'importe quel élément de notification, pas
+     seulement le tchat. */
+  @keyframes notif-bump{
+    0%{transform:scale(1);}
+    35%{transform:scale(1.22);}
+    60%{transform:scale(0.92);}
+    100%{transform:scale(1);}
+  }
+  .notif-bump{animation:notif-bump .45s cubic-bezier(.34,1.56,.64,1);}
   @media(max-width:600px){
     .chat-btn{bottom:52px;left:10px;width:36px;height:36px;font-size:15px;}
   }
@@ -997,6 +1019,14 @@
   .account-item-tag{font-size:9.5px;color:var(--green-neon);letter-spacing:0.5px;text-transform:uppercase;}
 
   .comparison-list{max-height:320px;overflow-y:auto;margin-top:8px;}
+
+  .map-list{max-height:56vh;overflow-y:auto;margin-top:10px;padding-right:4px;}
+  .map-item{padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .map-item:last-child{border-bottom:none;}
+  .map-item-title{color:var(--gold);font-size:13.5px;letter-spacing:0.5px;margin-bottom:4px;}
+  .map-item-desc{color:var(--white-neon);font-size:12.5px;line-height:1.5;}
+  .map-item-links{color:var(--stone);font-size:11.5px;margin-top:4px;}
+  .map-secret{color:var(--purple-neon);}
   .comparison-row{
     display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;
     margin-bottom:7px;background:var(--bg-deep);border:1px solid #2a2013;
@@ -1015,7 +1045,7 @@
   <div class="view active" id="view-grid">
     <header>
       <h1>PANTHÉON</h1>
-      <div class="subtitle">55 piliers · gravez vos épreuves</div>
+      <div class="subtitle">24 piliers · gravez vos épreuves</div>
       <div class="pantheon-message" id="pantheon-message"></div>
     </header>
 
@@ -1185,6 +1215,7 @@
   <div class="menu-item" id="questsBtn" onclick="selectMenuView('quests')" title="Voir les quêtes cachées">🔒 Quêtes</div>
   <div class="menu-item" onclick="selectMenuView('shop')" title="Voir le Shop">🛒 Shop</div>
   <div class="menu-item" onclick="selectMenuView('inventory')" title="Voir le profil">👤 Profil</div>
+  <div class="menu-item" onclick="openMapPopup()" title="Voir la carte de l'app">🗺️ Carte</div>
 </div>
 
 <div class="menu-btn chill-btn" id="chillBtn" onclick="toggleChillDropdown(event)" title="Chill">Chill</div>
@@ -1321,8 +1352,112 @@
   </div>
 </div>
 
+<!-- carte de l'app : legende de ce qui est relié à quoi, pour se repérer.
+     Contenu statique volontairement écrit à la main (pas de génération JS) :
+     les éléments secrets sont étiquetés [secret] sans détailler leur
+     déclencheur, et rien de ce qui concerne l'admin n'y figure. -->
+<div class="overlay" id="overlay-map">
+  <div class="modal" style="width:min(480px,92vw);">
+    <h3>🗺️ Carte de l'app</h3>
+    <p style="color:var(--stone);font-size:12.5px;margin-top:-6px;">Ce qui est relié à quoi, pour mieux se repérer.</p>
+    <div class="map-list">
+
+      <div class="map-item">
+        <div class="map-item-title">🗿 Piliers</div>
+        <div class="map-item-desc">La grille principale : chaque case peut être validée ou invalidée. C'est le cœur de l'app.</div>
+        <div class="map-item-links">→ relié à : Défi du jour, Badges, Hall of Fame, Points de saison, Comparaison</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🎯 Défi du jour</div>
+        <div class="map-item-desc">Un pilier différent est mis en avant chaque jour, avec un bonus si vous le validez.</div>
+        <div class="map-item-links">→ relié à : Piliers</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🏛 Hall of Fame</div>
+        <div class="map-item-desc">Atteint en validant tous les piliers de la saison. Une seule entrée possible par saison et par profil.</div>
+        <div class="map-item-links">→ relié à : Piliers, Couronnes (Profil)</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🕳 Hall of Shame</div>
+        <div class="map-item-desc">Un antre caché lié à un mécanisme <span class="map-secret">[secret]</span>.</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🏅 Badges</div>
+        <div class="map-item-desc">Regroupe deux onglets : les piliers validés, et les secrets débloqués <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-links">→ relié à : Piliers, Secrets</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">✨ Points de saison</div>
+        <div class="map-item-desc">Gagnés en validant des piliers, en réussissant le défi du jour, et via certains éléments <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-links">→ relié à : Shop</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🛒 Shop</div>
+        <div class="map-item-desc">Dépensez vos points en objets ou en paquets de cartes à collectionner.</div>
+        <div class="map-item-links">→ relié à : Points de saison, Cartes, Profil</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🎴 Cartes</div>
+        <div class="map-item-desc">Obtenues via les paquets du Shop, classées par rareté et consultables dans un album dédié.</div>
+        <div class="map-item-links">→ relié à : Shop, Profil</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">👤 Profil</div>
+        <div class="map-item-desc">Regroupe vos points, vos couronnes, vos cartes et vos objets achetés.</div>
+        <div class="map-item-links">→ relié à : Hall of Fame, Shop, Cartes, Points de saison</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">📊 Comparaison</div>
+        <div class="map-item-desc">Classement des profils par nombre de piliers validés.</div>
+        <div class="map-item-links">→ relié à : Piliers, Comptes</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">👥 Comptes</div>
+        <div class="map-item-desc">Plusieurs profils utilisables sur l'app, avec des données synchronisées entre tous les appareils.</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">💬 Tchat</div>
+        <div class="map-item-desc">Discussion partagée entre tous les profils, avec notification en temps réel.</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🔥 Chill / 420</div>
+        <div class="map-item-desc">Mini-jeu de clics indépendant, qui rapporte aussi des points de saison à intervalle régulier. Contient un élément <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-links">→ relié à : Points de saison</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🔒 Quêtes cachées</div>
+        <div class="map-item-desc">Une série d'épreuves cachées, partagées entre tous les profils <span class="map-secret">[secret]</span>.</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🌀 Secrets</div>
+        <div class="map-item-desc">Des éléments à découvrir un peu partout dans l'app <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-links">→ relié à : Badges</div>
+      </div>
+
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeOverlay('overlay-map')">Fermer</button>
+    </div>
+  </div>
+</div>
+
 <!-- modal confirmation d'achat shop -->
 <div class="overlay" id="overlay-shop-buy">
+
   <div class="modal">
     <h3 id="shop-buy-title">Acheter cet objet ?</h3>
     <p id="shop-buy-desc" style="color:var(--stone);font-size:13px;margin-top:-6px;"></p>
@@ -1427,10 +1562,15 @@
       <option value="cards">Cartes obtenues</option>
       <option value="shop">Achats du shop</option>
       <option value="crowns">Couronnes du Panthéon</option>
+      <option value="clicker">Clics du jeu 420</option>
       <option value="all">⚠️ Tout réinitialiser</option>
     </select>
     <div class="modal-actions" style="justify-content:flex-start;">
       <button class="btn ghost" style="background:#ff6b6b;border-color:#ff6b6b;color:#1a0505;" onclick="confirmAdminPanelReset()">🗑 Réinitialiser</button>
+    </div>
+
+    <div class="modal-actions" style="justify-content:center;margin-top:10px;border-top:1px solid #2a2013;padding-top:12px;">
+      <button class="btn ghost" style="background:#ff6b6b;border-color:#ff6b6b;color:#1a0505;" onclick="confirmResetChat()">🗑 Réinitialiser le tchat</button>
     </div>
 
     <div class="modal-actions" style="justify-content:center;margin-top:10px;border-top:1px solid #2a2013;padding-top:12px;">
@@ -1501,6 +1641,7 @@
 const syncStorage = (function(){
   const cache = Object.create(null);
   let hasCloud = false;
+  let knownKeys = new Set();
   const ROOT = 'pantheon_data';
 
   function localGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
@@ -1536,28 +1677,46 @@ const syncStorage = (function(){
       localRemove(key);
       persistToCloud(key, null);
     },
-    // Charge toutes les clés déjà connues du cloud avant le démarrage
-    // de l'appli, pour que les lectures synchrones suivantes renvoient
-    // bien les données les plus récentes (celles du dernier appareil
-    // ayant écrit).
-    async preload(){
+    // Charge toutes les clés déjà connues du cloud avant le démarrage de
+    // l'appli (pour que les lectures synchrones suivantes renvoient bien
+    // les données les plus récentes), PUIS reste abonnée en temps réel :
+    // dès qu'un autre appareil écrit quoi que ce soit, `onChange` est
+    // rappelé pour que l'appli puisse se rafraîchir toute seule, sans
+    // avoir besoin de recharger la page.
+    async preloadAndSync(onChange){
       try{ await window.__fbReady; }catch(e){}
       hasCloud = !!window.__fb;
       if(!hasCloud) return;
-      try{
-        const fb = window.__fb;
-        const snap = await fb.get(fb.ref(fb.db, ROOT));
-        if(snap.exists()){
+      const fb = window.__fb;
+      const rootRef = fb.ref(fb.db, ROOT);
+      await new Promise((resolve)=>{
+        let first = true;
+        fb.onValue(rootRef, (snap)=>{
           const obj = snap.val() || {};
-          Object.keys(obj).forEach(k=>{
+          const newKeys = new Set(Object.keys(obj));
+          newKeys.forEach(k=>{
             const v = obj[k];
             if(typeof v === 'string'){ cache[k] = v; localSet(k, v); }
           });
-        }
-      }catch(e){ /* pas grave, on utilisera le cache local */ }
+          // Une clé qui a disparu côté cloud (ex: reset admin) doit aussi
+          // disparaître du cache local, sinon on continuerait à lire une
+          // vieille valeur périmée.
+          knownKeys.forEach(k=>{
+            if(!newKeys.has(k)){ cache[k] = null; localRemove(k); }
+          });
+          knownKeys = newKeys;
+          if(first){
+            first = false;
+            resolve();
+          } else if(onChange){
+            onChange();
+          }
+        }, ()=>{ resolve(); /* erreur réseau : on démarre quand même en mode local */ });
+      });
     }
   };
 })();
+
 
 const STORAGE_KEY = 'pantheon-cases-v1';
 const HALL_KEY = 'pantheon-hall-v1';
@@ -1607,10 +1766,7 @@ const CHAT_KEY = 'pantheon-chat-v1';
 const CHAT_PSEUDO_KEY = 'pantheon-chat-pseudo-v1'; // propre à cet appareil/navigateur
 const CHAT_SEEN_KEY = 'pantheon-chat-seen-v1';     // propre à cet appareil/navigateur
 const CHAT_MAX_MESSAGES = 200;
-const CHAT_POLL_MS = 5000;
 let chatMessages = [];
-let chatPollTimer = null;
-let chatBackgroundPollTimer = null;
 // TODO : donner un nom (et éventuellement une icône) à chaque quête une fois définie.
 const QUESTS = [
   {id:'quest-1', name:null},
@@ -1683,7 +1839,7 @@ function hashStr(s){
 
 // Même pilier mis en avant pour tout le monde, change chaque jour.
 function getDailyChallengeNum(){
-  return (hashStr('pantheon-daily-'+todayStr()) % 55) + 1;
+  return (hashStr('pantheon-daily-'+todayStr()) % 24) + 1;
 }
 
 async function loadValidationDates(){
@@ -1802,7 +1958,7 @@ function triggerKonamiChaos(){
 
 function defaultCases(){
   const arr = [];
-  for(let i=1;i<=55;i++){
+  for(let i=1;i<=24;i++){
     arr.push({id:'base-'+i, num:i, label:'Case '+i, link:'', file:null, removable:false});
   }
   return arr;
@@ -1826,7 +1982,10 @@ async function loadData(){
 function migrateCases(){
   const existingNums = new Set(cases.filter(c=>!c.removable).map(c=>c.num));
   let changed = false;
-  for(let i=1;i<=55;i++){
+  const before = cases.length;
+  cases = cases.filter(c=>c.removable || c.num==null || c.num<=24);
+  if(cases.length !== before) changed = true;
+  for(let i=1;i<=24;i++){
     if(!existingNums.has(i)){
       cases.push({id:'base-'+i, num:i, label:'Case '+i, link:'', file:null, removable:false});
       changed = true;
@@ -2884,6 +3043,7 @@ const ADMIN_RESET_LABELS = {
   cards: 'les cartes obtenues',
   shop: 'les achats du shop',
   crowns: 'les couronnes du Panthéon',
+  clicker: 'les clics du jeu 420',
   all: 'TOUTES les données'
 };
 
@@ -2904,6 +3064,30 @@ function confirmAdminPanelReset(){
     closeOverlay('overlay-confirm');
   };
   openOverlay('overlay-confirm');
+}
+
+// Le tchat est partagé par TOUS les profils (pas propre à un compte) : le
+// réinitialiser l'efface donc pour tout le monde, d'où la confirmation dédiée.
+function confirmResetChat(){
+  resetConfirmBtnStyle();
+  document.getElementById('confirm-title').textContent = "Effacer tout le tchat (pour tout le monde) ?";
+  const btn = document.getElementById('confirm-btn');
+  btn.textContent = 'Réinitialiser';
+  btn.style.background = '#ff6b6b';
+  btn.style.borderColor = '#ff6b6b';
+  btn.style.color = '#1a0505';
+  btn.onclick = async ()=>{
+    await performResetChat();
+    closeOverlay('overlay-confirm');
+  };
+  openOverlay('overlay-confirm');
+}
+
+async function performResetChat(){
+  chatMessages = [];
+  await saveChatToCloud();
+  // Le listener temps réel (déclenché par notre propre écriture) mettra
+  // à jour l'affichage et le badge chez tout le monde, y compris ici.
 }
 
 async function performAdminReset(accId, type){
@@ -2932,6 +3116,9 @@ async function performAdminReset(accId, type){
     delete accountCrowns[accId];
     saveCrownsData();
   }
+  if(type==='clicker' || type==='all'){
+    try{ syncStorage.removeItem(clickerKeyFor(accId)); }catch(e){}
+  }
 
   if(activeAccountId === accId){
     await loadStates();
@@ -2943,6 +3130,7 @@ async function performAdminReset(accId, type){
     if(document.getElementById('view-badges').classList.contains('active')) renderBadges();
     if(document.getElementById('view-shop').classList.contains('active')) renderShop();
     if(document.getElementById('view-inventory').classList.contains('active')) renderInventory();
+    if(document.getElementById('view-clicker').classList.contains('active')) renderClickerView();
   }
 }
 
@@ -2965,7 +3153,7 @@ function renderBadges(){
   renderSecretBadges();
 }
 
-// Section "Piliers" : un badge par pilier (1-55), identifié uniquement par son numéro.
+// Section "Piliers" : un badge par pilier (1-24), identifié uniquement par son numéro.
 function renderPillarBadges(){
   const holder = document.getElementById('badges-pillars-grid');
   const pillars = cases.filter(c=>c.num!=null).sort((a,b)=>a.num-b.num);
@@ -3246,9 +3434,9 @@ function showHallToast(name){
 
 // Une seule entrée au Panthéon par saison : une fois le drapeau "prompted" posé,
 // il ne se réinitialise plus tant que la saison n'est pas clôturée (voir
-// confirmEraseSeasonPoints), même si le profil redescend puis remonte à 55 piliers.
+// confirmEraseSeasonPoints), même si le profil redescend puis remonte à 24 piliers.
 async function checkHallCompletion(validCount){
-  if(validCount < 55) return;
+  if(validCount < 24) return;
   const isTemp = activeAccountId === TEMP_ACCOUNT_ID;
   let prompted = false;
   if(isTemp){
@@ -3299,6 +3487,15 @@ function selectMenuView(name){
   document.getElementById('menuDropdown').classList.remove('open');
   document.getElementById('chillDropdown').classList.remove('open');
   showView(name);
+}
+
+// Carte de l'app : popup de repérage, contenu statique (voir HTML de
+// overlay-map). Volontairement pas rattachée à showView : c'est une
+// référence consultable depuis n'importe quelle vue, pas une vue en soi.
+function openMapPopup(){
+  document.getElementById('menuDropdown').classList.remove('open');
+  document.getElementById('chillDropdown').classList.remove('open');
+  openOverlay('overlay-map');
 }
 
 document.addEventListener('click', (e)=>{
@@ -3413,13 +3610,13 @@ function render(){
 const PANTHEON_STAGES = [
   {min:0,  text:"..."},
   {min:1,  text:"Rien."},
-  {min:5,  text:"Vous entendez des voix lointaines, presque inaudibles."},
-  {min:10, text:"Les voix se rapprochent, murmurant votre nom."},
-  {min:20, text:"Elles vous appellent, de plus en plus distinctement."},
-  {min:30, text:"Un chœur de voix résonne autour de vous, et vous guide."},
-  {min:40, text:"Les voix ne sont plus des murmures : elles vous somment d'avancer."},
-  {min:50, text:"C'est comme si vous poussiez les portes du Panthéon du bout des doigts."},
-  {min:55, text:"Vous avez franchi le Panthéon."}
+  {min:3,  text:"Vous entendez des voix lointaines, presque inaudibles."},
+  {min:5,  text:"Les voix se rapprochent, murmurant votre nom."},
+  {min:9,  text:"Elles vous appellent, de plus en plus distinctement."},
+  {min:13, text:"Un chœur de voix résonne autour de vous, et vous guide."},
+  {min:17, text:"Les voix ne sont plus des murmures : elles vous somment d'avancer."},
+  {min:21, text:"C'est comme si vous poussiez les portes du Panthéon du bout des doigts."},
+  {min:24, text:"Vous avez franchi le Panthéon."}
 ];
 
 let lastPantheonStageText = null;
@@ -3993,15 +4190,36 @@ function openComparisonPopup(){
       <span class="rank">#${idx+1}</span>
       ${a.image ? `<div class="account-item-avatar small"><img src="${a.image}" alt=""></div>` : `<div class="account-item-avatar small">👤</div>`}
       <span class="comparison-name">${escapeHtml(a.name)}</span>
-      <span class="comparison-score">${a.valid} / 55</span>
+      <span class="comparison-score">${a.valid} / 24</span>
     </div>
   `).join('');
   openOverlay('overlay-comparison');
 }
 
 // ============================================================
-// TCHAT PARTAGÉ
+// TCHAT PARTAGÉ (temps réel via onValue : chaque écriture d'un
+// utilisateur pousse instantanément la mise à jour à tous les autres,
+// sans avoir besoin de rouvrir la popup ni d'attendre un sondage).
 // ============================================================
+let chatListenerRef = null;
+let chatListenerCb = null;
+
+function applyIncomingChat(v){
+  if(typeof v === 'string'){
+    try{ chatMessages = JSON.parse(v); }catch(e){ return; }
+    try{ localStorage.setItem(CHAT_KEY, v); }catch(e){}
+  } else if(v == null){
+    chatMessages = [];
+  } else {
+    return;
+  }
+  renderChat();
+  updateChatUnreadBadge();
+  if(document.getElementById('overlay-chat').style.display === 'flex'){
+    markChatSeen();
+  }
+}
+
 async function loadChatFromCloud(){
   try{ await window.__fbReady; }catch(e){}
   if(window.__fb){
@@ -4022,6 +4240,27 @@ async function loadChatFromCloud(){
     const raw = localStorage.getItem(CHAT_KEY);
     chatMessages = raw ? JSON.parse(raw) : [];
   }catch(e){ chatMessages = []; }
+}
+
+// Ouvre un flux permanent vers Firebase : dès qu'un message est ajouté
+// par n'importe quel profil, ce callback se déclenche sur tous les
+// appareils connectés, popup ouverte ou non.
+async function startChatRealtimeListener(){
+  if(chatListenerRef) return; // déjà abonné
+  try{ await window.__fbReady; }catch(e){}
+  if(!window.__fb) return; // mode local uniquement : pas de temps réel possible
+  const fb = window.__fb;
+  chatListenerRef = fb.ref(fb.db, 'pantheon_data/' + CHAT_KEY);
+  chatListenerCb = (snap)=>{ applyIncomingChat(snap.val()); };
+  fb.onValue(chatListenerRef, chatListenerCb);
+}
+
+function stopChatRealtimeListener(){
+  if(chatListenerRef && window.__fb){
+    try{ window.__fb.off(chatListenerRef, 'value', chatListenerCb); }catch(e){}
+  }
+  chatListenerRef = null;
+  chatListenerCb = null;
 }
 
 async function saveChatToCloud(){
@@ -4049,17 +4288,11 @@ async function openChatPopup(){
   renderChat();
   markChatSeen();
   if(!isGuest) document.getElementById('chat-input').focus();
-  if(chatPollTimer) clearInterval(chatPollTimer);
-  chatPollTimer = setInterval(async ()=>{
-    await loadChatFromCloud();
-    renderChat();
-    markChatSeen();
-  }, CHAT_POLL_MS);
+  await startChatRealtimeListener(); // reste actif même après fermeture, pour le badge "non lu"
 }
 
 function closeChatPopup(){
   closeOverlay('overlay-chat');
-  if(chatPollTimer){ clearInterval(chatPollTimer); chatPollTimer = null; }
 }
 
 function renderChat(){
@@ -4103,8 +4336,8 @@ async function sendChatMessage(){
   }
   await saveChatToCloud();
   input.value = '';
-  renderChat();
-  markChatSeen();
+  // Pas besoin de renderChat() ici : le listener temps réel (déclenché par
+  // notre propre écriture) s'en charge, y compris sur les autres appareils.
 }
 
 function markChatSeen(){
@@ -4112,33 +4345,127 @@ function markChatSeen(){
   document.getElementById('chatBtn').classList.remove('has-unread');
 }
 
-// Vérifie périodiquement (même popup fermée) s'il y a de nouveaux messages,
-// pour afficher un petit point sur le bouton tchat.
+// Joue une petite animation de "rebond" une seule fois (générique, réutilisable
+// pour n'importe quel élément de notification à l'avenir). Rejoue même si
+// l'animation précédente n'est pas terminée, en forçant un reflow.
+function triggerNotifBump(el){
+  if(!el) return;
+  el.classList.remove('notif-bump');
+  void el.offsetWidth; // force le reflow pour pouvoir relancer l'animation
+  el.classList.add('notif-bump');
+  el.addEventListener('animationend', ()=>el.classList.remove('notif-bump'), {once:true});
+}
+
+// Nombre de messages déjà "annoncés" par un rebond, pour ne jouer l'animation
+// que lorsqu'une notification est réellement nouvelle (pas à chaque re-render).
+let chatLastBumpedCount = null;
+
+// Met à jour instantanément le petit point "non lu" sur le bouton tchat,
+// appelé par le listener temps réel dès qu'un nouveau message arrive
+// (popup ouverte ou non, sans sondage périodique).
+function updateChatUnreadBadge(){
+  let seen = 0;
+  try{ seen = parseInt(localStorage.getItem(CHAT_SEEN_KEY) || '0', 10) || 0; }catch(e){}
+  if(chatLastBumpedCount === null) chatLastBumpedCount = seen;
+
+  const btn = document.getElementById('chatBtn');
+  if(!btn) return;
+
+  const chatOpen = document.getElementById('overlay-chat').style.display === 'flex';
+  const hasUnread = !chatOpen && chatMessages.length > seen;
+  btn.classList.toggle('has-unread', hasUnread);
+
+  // Rebond discret uniquement quand un message réellement nouveau arrive
+  // (et que la popup n'est pas déjà ouverte dessus).
+  if(!chatOpen && chatMessages.length > chatLastBumpedCount){
+    triggerNotifBump(btn);
+  }
+  chatLastBumpedCount = Math.max(chatLastBumpedCount, chatMessages.length);
+}
+
+// Démarre l'écoute temps réel dès le chargement de l'app (pas seulement à
+// l'ouverture de la popup), pour que le badge "non lu" réagisse tout de suite.
 function startChatBackgroundWatch(){
-  if(chatBackgroundPollTimer) clearInterval(chatBackgroundPollTimer);
-  const check = async ()=>{
-    if(document.getElementById('overlay-chat').style.display === 'flex') return;
-    await loadChatFromCloud();
-    let seen = 0;
-    try{ seen = parseInt(localStorage.getItem(CHAT_SEEN_KEY) || '0', 10) || 0; }catch(e){}
-    const btn = document.getElementById('chatBtn');
-    if(chatMessages.length > seen) btn.classList.add('has-unread');
-    else btn.classList.remove('has-unread');
-  };
-  check();
-  chatBackgroundPollTimer = setInterval(check, CHAT_POLL_MS * 3);
+  loadChatFromCloud().then(()=>{ updateChatUnreadBadge(); });
+  startChatRealtimeListener();
+}
+
+// Rejoue tout ce que l'appli affiche à partir des données rechargées, sans
+// toucher aux formulaires en cours de saisie (admin, création de case,
+// configuration de saison...) pour ne rien écraser sous les doigts de
+// quelqu'un en train de taper — ces écrans-là restent à rouvrir pour voir
+// les changements, tout le reste se met à jour tout seul.
+let cloudRefreshTimer = null;
+function refreshFromCloud(){
+  // Regroupe les changements rapprochés (plusieurs clics d'affilée ailleurs)
+  // en un seul rafraîchissement, pour éviter de re-rendre l'appli en rafale.
+  if(cloudRefreshTimer) clearTimeout(cloudRefreshTimer);
+  cloudRefreshTimer = setTimeout(applyCloudRefresh, 150);
+}
+
+// loadAccounts() remet toujours activeAccountId à null (comportement voulu
+// au lancement de l'appli, voir sa définition). En plein rafraîchissement
+// temps réel, il ne faut surtout PAS déconnecter la personne en cours de
+// session à chaque changement distant : on recharge la liste des comptes
+// mais on restaure ensuite le compte actif s'il existe toujours.
+async function refreshAccountsListPreservingActive(){
+  const currentId = activeAccountId;
+  if(currentId === TEMP_ACCOUNT_ID || currentId === SECRET_VOID_ID){
+    // Session admin de test / secrète : jamais persistée côté cloud, on ne
+    // touche pas à la liste des comptes tant qu'elle est active.
+    return;
+  }
+  await loadAccounts();
+  activeAccountId = (currentId && accounts.some(a=>a.id===currentId)) ? currentId : null;
+}
+
+async function applyCloudRefresh(){
+  await refreshAccountsListPreservingActive();
+  await loadData();
+  await loadStates();
+  await loadClickerCount();
+  await loadValidationDates();
+  await loadSecrets();
+  await loadHallData();
+  loadCrownsData();
+  await loadHallShameData();
+  loadQuests();
+  loadSeasonData();
+  ensureDefaultCardPack();
+  checkValkyrieAutoUnlock();
+
+  render();
+  updateAccountButton();
+  updateQuestsBtn();
+  updateHosBtnVisibility();
+
+  const activeView = document.querySelector('.view.active');
+  const viewName = activeView ? activeView.id.replace('view-', '') : null;
+  if(viewName==='halloffame') renderHallOfFame();
+  if(viewName==='hallofshame') renderHallOfShame();
+  if(viewName==='badges') renderBadges();
+  if(viewName==='quests') renderQuests();
+  if(viewName==='shop') renderShop();
+  if(viewName==='inventory') renderInventory();
+  if(viewName==='clicker') renderClickerView();
+
+  // Le classement est affiché dans une popup à part : s'il est ouvert
+  // pendant qu'une donnée change ailleurs, on le recalcule sur place.
+  if(document.getElementById('overlay-comparison').style.display === 'flex'){
+    openComparisonPopup();
+  }
 }
 
 // IMPORTANT : le script Firebase (plus haut, en type="module") s'exécute en
 // DIFFÉRÉ par le navigateur — c'est-à-dire APRÈS que ce script classique-ci ait
-// déjà tourné. Si on lançait init() tout de suite ici, syncStorage.preload()
+// déjà tourné. Si on lançait init() tout de suite ici, syncStorage.preloadAndSync()
 // vérifierait window.__fb avant même qu'il ait été créé, et croirait à tort
 // que le cloud n'est pas configuré (hasCloud resterait bloqué à false pour
 // toute la session). On attend donc l'événement DOMContentLoaded, qui ne se
 // déclenche qu'une fois tous les scripts différés/modules exécutés.
 function startPantheonApp(){
   (async function init(){
-    await syncStorage.preload();
+    await syncStorage.preloadAndSync(refreshFromCloud);
     await loadAccounts();
     await loadData();
     await loadStates();
