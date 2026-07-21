@@ -83,7 +83,7 @@
 
   window.__fbReady = (async ()=>{
     const cfg = window.FIREBASE_CONFIG;
-    if(!cfg || cfg.apiKey === "AIzaSyArGmCIFzAPqUtkqK36h4HYADOx5YTrgP4" || !cfg.databaseURL || cfg.databaseURL === "https://pantheon-app-c6508-default-rtdb.europe-west1.firebasedatabase.app"){
+    if(!cfg || !cfg.apiKey || !cfg.databaseURL){
       window.__fb = null; // pas configuré : mode local uniquement
       return;
     }
