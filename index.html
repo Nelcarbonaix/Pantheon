@@ -10,9 +10,9 @@
 <meta name="apple-mobile-web-app-title" content="Panthéon">
 <meta name="description" content="Panthéon — suivi des piliers, succès et quêtes.">
 <title>Panthéon</title>
-<link rel="icon" id="pantheon-favicon" href="">
-<link rel="apple-touch-icon" id="pantheon-apple-icon" href="">
-<link rel="manifest" id="pantheon-manifest" href="">
+<link rel="icon" id="Panthéon-favicon" href="">
+<link rel="apple-touch-icon" id="Panthéon-apple-icon" href="">
+<link rel="manifest" id="Panthéon-manifest" href="">
 <script>
   // Génère un manifeste PWA (et une icône) directement en mémoire,
   // pour que le fichier reste autonome (installable en un seul fichier .html
@@ -33,8 +33,8 @@
         </g>
       </svg>`;
       const iconUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(iconSvg)));
-      document.getElementById('pantheon-favicon').href = iconUrl;
-      document.getElementById('pantheon-apple-icon').href = iconUrl;
+      document.getElementById('Panthéon-favicon').href = iconUrl;
+      document.getElementById('Panthéon-apple-icon').href = iconUrl;
 
       const manifest = {
         name: 'Panthéon',
@@ -51,7 +51,7 @@
         ]
       };
       const manifestBlob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-      document.getElementById('pantheon-manifest').href = URL.createObjectURL(manifestBlob);
+      document.getElementById('Panthéon-manifest').href = URL.createObjectURL(manifestBlob);
     }catch(e){ /* environnement restreint (ex: aperçu Claude) : on ignore */ }
   })();
 </script>
@@ -62,16 +62,16 @@
      active "Realtime Database" (gratuit, pas de facturation requise),
      puis Paramètres du projet > Vos applications > Web (</>) pour
      obtenir ces valeurs (databaseURL compris). Colle-les ci-dessous.
-     Tant que ce n'est pas rempli, l'appli fonctionne en local
+     Tant que ce n'est pas rempli, Panthéon fonctionne en local
      uniquement (pas de synchro entre appareils).
      ============================================================ -->
 <script>
   window.FIREBASE_CONFIG = {
     apiKey: "AIzaSyArGmCIFzAPqUtkqK36h4HYADOx5YTrgP4",
-    authDomain: "pantheon-app-c6508.firebaseapp.com",
-    databaseURL: "https://pantheon-app-c6508-default-rtdb.europe-west1.firebasedatabase.app", // ex: https://ton-projet-default-rtdb.europe-west1.firebasedatabase.app
-    projectId: "pantheon-app-c6508",
-    storageBucket: "pantheon-app-c6508.firebasestorage.app",
+    authDomain: "Panthéon-app-c6508.firebaseapp.com",
+    databaseURL: "https://Panthéon-app-c6508-default-rtdb.europe-west1.firebasedatabase.app", // ex: https://ton-projet-default-rtdb.europe-west1.firebasedatabase.app
+    projectId: "Panthéon-app-c6508",
+    storageBucket: "Panthéon-app-c6508.firebasestorage.app",
     messagingSenderId: "22676039083",
     appId: "1:22676039083:web:6ce7383bb65a6dbb8a1eee"
   };
@@ -201,13 +201,13 @@
   }
   .subtitle{color:var(--stone);letter-spacing:3px;font-size:12px;text-transform:uppercase;margin-top:6px;}
 
-  .pantheon-message{
+  .Panthéon-message{
     margin-top:14px;font-size:13.5px;font-style:italic;color:var(--gold);
     letter-spacing:0.5px;text-shadow:0 0 8px rgba(166,130,31,0.4);
     opacity:1;transition:opacity .5s ease;
     min-height:18px;
   }
-  .pantheon-message.fade{opacity:0;}
+  .Panthéon-message.fade{opacity:0;}
 
   .stats{
     display:flex;justify-content:center;gap:22px;margin:18px 0 30px;flex-wrap:wrap;
@@ -330,7 +330,7 @@
     50%{box-shadow:0 0 18px var(--gold), 0 0 32px rgba(230,196,95,0.55) inset;}
   }
 
-  /* Séquence Valkyrie : le pantheon s'assombrit, les piliers se rayent puis tombent */
+  /* Séquence Valkyrie : le Panthéon s'assombrit, les piliers se rayent puis tombent */
   .wrap.valkyrie-dark{
     filter:grayscale(0.9) brightness(0.42);
     transition:filter 1.1s ease;
@@ -568,6 +568,11 @@
     -webkit-tap-highlight-color:transparent;
   }
   .clicker-btn:active{transform:scale(0.94);}
+  .clicker-btn:disabled{
+    opacity:0.4;cursor:not-allowed;box-shadow:none;
+  }
+  .clicker-btn:disabled:active{transform:none;}
+  #clicker-exchange-btn:disabled{opacity:0.4;cursor:not-allowed;}
   .clicker-btn.golden{
     background:#000;border-color:#fff;color:#fff;
     box-shadow:0 0 30px rgba(255,255,255,0.5), inset 0 0 20px rgba(255,255,255,0.2);
@@ -801,20 +806,13 @@
     position:relative;min-height:90px;border-radius:10px;
     background:linear-gradient(160deg,var(--bg-panel),var(--bg-deep));
     border:2px solid var(--gold-deep);
-    display:flex;align-items:center;justify-content:center;text-align:center;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;
     padding:10px 8px;cursor:pointer;
     box-shadow:0 0 8px rgba(166,130,31,0.2) inset;
     transition:transform .15s ease;
   }
   .shop-item:hover{transform:translateY(-3px);}
   .shop-item .shop-item-name{color:var(--white-neon);font-size:12.5px;letter-spacing:0.4px;line-height:1.25;}
-  .shop-item .shop-item-hover{
-    position:absolute;inset:0;border-radius:9px;background:rgba(2,2,1,0.9);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-    padding:8px;opacity:0;transition:opacity .2s ease;pointer-events:none;
-  }
-  .shop-item:hover .shop-item-hover{opacity:1;}
-  .shop-item .shop-item-desc{font-size:10.5px;color:var(--stone);line-height:1.3;}
   .shop-item .shop-item-cost{font-size:12.5px;color:var(--gold);font-weight:700;}
   .shop-item.owned{border-color:var(--green-neon);box-shadow:0 0 12px rgba(57,255,143,0.25) inset;cursor:default;}
   .shop-item.owned .shop-item-name{color:var(--green-neon);}
@@ -865,33 +863,113 @@
   .shop-item.no-buy{cursor:default;}
   .shop-item.pack-item{border-color:rgba(255,215,107,0.4);}
 
-  /* Cartes à collectionner */
+  /* Stickers à collectionner */
   .pack-open-stage{display:flex;align-items:center;justify-content:center;min-height:200px;margin:10px 0;}
   .pack-box{font-size:64px;}
   .pack-box.shaking{animation:pack-shake .15s infinite;}
   @keyframes pack-shake{0%{transform:rotate(-6deg) scale(1);}50%{transform:rotate(6deg) scale(1.05);}100%{transform:rotate(-6deg) scale(1);}}
-  .pack-card-reveal{width:150px;height:200px;border-radius:10px;overflow:hidden;border:2px solid var(--gold);box-shadow:0 0 18px rgba(255,215,107,0.35);animation:pack-reveal .45s ease;background:#1a1610;display:flex;align-items:center;justify-content:center;}
-  .pack-card-reveal.rare{border-color:#ff6bd6;box-shadow:0 0 26px rgba(255,107,214,0.55);}
-  .pack-card-reveal img{width:100%;height:100%;object-fit:cover;}
+  .pack-sticker-reveal{width:150px;min-height:150px;border-radius:10px;overflow:hidden;border:2px solid var(--gold);box-shadow:0 0 18px rgba(255,215,107,0.35);animation:pack-reveal .45s ease;background:#1a1610;display:flex;align-items:center;justify-content:center;}
+  .pack-sticker-reveal.rare{border-color:#ff6bd6;box-shadow:0 0 26px rgba(255,107,214,0.55);}
+  /* Le sticker garde sa taille/son cadrage d'origine (aucun forçage 3/4 + cover) :
+     la carte épouse la forme réelle de l'image, donc jamais de fond noir visible autour. */
+  .pack-sticker-reveal img{width:100%;height:auto;display:block;}
   @keyframes pack-reveal{0%{transform:scale(0.3) rotateY(90deg);opacity:0;}100%{transform:scale(1) rotateY(0deg);opacity:1;}}
-  .pack-card-noimg{font-size:40px;color:var(--stone);}
-  .pack-card-noimg.small{font-size:20px;}
+  .pack-sticker-noimg{font-size:40px;color:var(--stone);}
+  .pack-sticker-noimg.small{font-size:20px;}
   .pack-open-result{margin-top:10px;line-height:1.5;}
 
-  .card-album-pack{margin-bottom:16px;}
-  .card-album-total{color:var(--gold);font-size:13px;font-weight:700;text-align:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #2a2013;}
-  .card-album-pack-name{color:var(--gold);font-size:12.5px;letter-spacing:0.6px;margin-bottom:8px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:baseline;}
-  .card-album-pack-count{color:var(--stone);font-size:11px;text-transform:none;letter-spacing:0;}
-  .card-album-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;}
-  .card-album-item{position:relative;border:1px solid #2a2013;border-radius:8px;overflow:hidden;background:#161208;text-align:center;}
-  .card-album-item.rare{border-color:#ff6bd6;box-shadow:0 0 8px rgba(255,107,214,0.35) inset;}
-  .card-album-item img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;}
-  .card-album-item-name{font-size:10px;color:var(--white-neon);padding:4px 2px;line-height:1.2;}
-  .card-album-item-count{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.75);color:var(--gold);font-size:10px;padding:1px 5px;border-radius:8px;}
+  /* ---- Carnet de stickers : aspect livre ---- */
+  .sticker-carnet-modal{max-height:88vh;display:flex;flex-direction:column;}
+  .sticker-carnet-total{
+    color:var(--gold);font-size:13px;font-weight:700;text-align:center;
+    margin:-4px 0 12px;letter-spacing:0.5px;
+  }
+  /* Onglets : une section par paquet, régénérés à chaque ouverture donc toujours
+     à jour dès qu'un paquet est créé ou supprimé côté admin. */
+  .sticker-carnet-tabs{
+    display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:2px;
+    scrollbar-width:thin;
+  }
+  .sticker-carnet-tab{
+    flex-shrink:0;background:var(--bg-deep);border:1px solid #2a2013;color:var(--stone);
+    font-size:11.5px;padding:7px 14px;border-radius:9px 9px 0 0;cursor:pointer;
+    white-space:nowrap;transition:background .15s ease, color .15s ease;
+  }
+  .sticker-carnet-tab:hover{color:var(--white-neon);}
+  .sticker-carnet-tab.active{
+    background:var(--bg-panel);color:var(--gold);border-color:var(--gold-deep);
+    box-shadow:0 -2px 6px rgba(230,196,95,0.15);
+  }
+  .sticker-carnet-tab .tab-count{color:var(--stone);font-size:10px;margin-left:4px;}
+  .sticker-carnet-book{
+    flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(230,196,95,0.05) 0%, transparent 55%),
+      repeating-linear-gradient(180deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 34px),
+      var(--bg-panel);
+    border:1px solid #3a2c14;
+    border-radius:4px 14px 14px 4px;
+    box-shadow:
+      inset 4px 0 10px rgba(0,0,0,0.4),
+      inset 0 0 40px rgba(0,0,0,0.35),
+      0 6px 16px rgba(0,0,0,0.4);
+    padding:18px 16px 16px 22px;
+    position:relative;
+  }
+  /* reliure du carnet, sur le bord gauche */
+  .sticker-carnet-book::before{
+    content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;
+    background:repeating-linear-gradient(180deg, rgba(230,196,95,0.4) 0 7px, transparent 7px 14px);
+    pointer-events:none;
+  }
+  .sticker-carnet-page{
+    background:rgba(0,0,0,0.16);border:1px solid #2a2013;border-radius:8px;
+    padding:14px 14px 16px;position:relative;
+    box-shadow:0 2px 6px rgba(0,0,0,0.25);
+  }
+  .sticker-carnet-page-name{color:var(--gold);font-size:12.5px;letter-spacing:0.6px;margin-bottom:12px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:baseline;}
+  .sticker-carnet-page-count{color:var(--stone);font-size:11px;text-transform:none;letter-spacing:0;}
+  /* La grille "essaie au max" de remplir la page : auto-fill place chaque sticker dans
+     sa propre cellule, donc jamais de chevauchement ni de dépassement, quelle que soit
+     la quantité de stickers. Le gap est volontairement large pour absorber la légère
+     rotation/échelle décorative de chaque sticker sans qu'il ne touche son voisin. */
+  .sticker-carnet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:22px 18px;padding:8px 6px 4px;align-items:start;}
+  .sticker-carnet-item{
+    position:relative;border:1px solid #2a2013;overflow:hidden;background:#161208;text-align:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.45);
+    transition:transform .18s ease;
+  }
+  .sticker-carnet-item.rare{border-color:#ff6bd6;box-shadow:0 0 8px rgba(255,107,214,0.35) inset, 0 4px 10px rgba(0,0,0,0.45);}
+  /* Aucun forçage d'aspect-ratio + cover : chaque sticker garde sa taille/son
+     cadrage d'origine, donc jamais de fond visible autour de l'image. */
+  .sticker-carnet-item img{width:100%;height:auto;display:block;background:#161208;}
+  .sticker-carnet-item-name{font-size:10px;color:var(--white-neon);padding:4px 2px;line-height:1.2;}
+  .sticker-carnet-item-count{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.75);color:var(--gold);font-size:10px;padding:1px 5px;border-radius:8px;z-index:3;}
+  /* petit bout de ruban washi façon scrapbook, purement décoratif : rotation minime
+     et intégralement contenue dans le gap de la grille (ne déborde jamais sur un voisin). */
+  .sticker-carnet-item::before{
+    content:"";position:absolute;top:-6px;left:50%;width:30px;height:12px;z-index:2;
+    transform:translateX(-50%) rotate(-4deg);
+    background:rgba(230,196,95,0.22);border:1px solid rgba(230,196,95,0.35);
+  }
+  /* Coins/rayons de bordure légèrement irréguliers + rotation/échelle/décalage variables
+     selon la position : ça casse l'alignement trop parfait d'une grille et donne un effet
+     "collées à la main" plutôt qu'un tableau bien rangé, sans jamais laisser de vide
+     puisque l'image remplit toujours toute la vignette (cover). */
+  .sticker-carnet-item:nth-child(7n+1){transform:rotate(-3deg) scale(1.05) translateY(-3px);border-radius:9px 3px 8px 4px;}
+  .sticker-carnet-item:nth-child(7n+2){transform:rotate(2deg) scale(0.95) translateY(4px);border-radius:4px 9px 3px 8px;}
+  .sticker-carnet-item:nth-child(7n+3){transform:rotate(-1.5deg) scale(1.08) translateY(-2px);border-radius:8px 4px 9px 3px;}
+  .sticker-carnet-item:nth-child(7n+4){transform:rotate(3deg) scale(0.92) translateY(3px);border-radius:3px 8px 4px 9px;}
+  .sticker-carnet-item:nth-child(7n+5){transform:rotate(-2.5deg) scale(1.02) translateY(-4px);border-radius:9px 4px 8px 3px;}
+  .sticker-carnet-item:nth-child(7n+6){transform:rotate(1deg) scale(0.97) translateY(2px);border-radius:4px 8px 3px 9px;}
+  .sticker-carnet-item:nth-child(7n+7){transform:rotate(-1deg) scale(1.1) translateY(-1px);border-radius:8px 3px 9px 4px;}
+  .sticker-carnet-item:hover{transform:scale(1.12) rotate(0deg) translateY(0);z-index:4;}
+  .sticker-carnet-item:nth-child(5n+1)::before{transform:translateX(-50%) rotate(2deg);}
+  .sticker-carnet-item:nth-child(5n+3)::before{transform:translateX(-50%) rotate(-6deg);}
 
   .pack-content-list{max-height:340px;overflow-y:auto;}
   .pack-content-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2013;position:relative;}
-  .pack-content-row img{width:44px;height:58px;object-fit:cover;border-radius:5px;flex-shrink:0;}
+  .pack-content-row img{width:44px;height:58px;object-fit:contain;background:#161208;border-radius:5px;flex-shrink:0;}
   .pack-content-info{flex:1;min-width:0;}
   .pack-content-name{font-size:12.5px;color:var(--white-neon);margin-bottom:4px;}
   .pack-content-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--stone);}
@@ -900,9 +978,9 @@
   .pack-content-controls label{display:flex;align-items:center;gap:4px;margin:0;}
   .pack-content-row .shop-item-del{position:static;margin-left:auto;}
 
-  .card-add-preview-wrap{display:flex;justify-content:center;margin:8px 0;}
-  #card-add-canvas{border-radius:8px;border:1px solid #2a2013;max-width:150px;height:auto;}
-  #overlay-card-add label, #overlay-pack-content label{margin:8px 0 4px;display:block;}
+  .sticker-add-preview-wrap{display:flex;justify-content:center;margin:8px 0;}
+  #sticker-add-canvas{border-radius:8px;border:1px solid #2a2013;max-width:150px;height:auto;}
+  #overlay-sticker-add label, #overlay-pack-content label{margin:8px 0 4px;display:block;}
 
   .modal textarea{
     width:100%;padding:10px 12px;border-radius:8px;border:1px solid #33291a;
@@ -1046,7 +1124,7 @@
     <header>
       <h1>PANTHÉON</h1>
       <div class="subtitle">24 piliers · gravez vos épreuves</div>
-      <div class="pantheon-message" id="pantheon-message"></div>
+      <div class="Panthéon-message" id="Panthéon-message"></div>
     </header>
 
     <div class="stats">
@@ -1068,7 +1146,7 @@
       <h2>Nouvelle case</h2>
       <div class="field">
         <label>Nom de la case</label>
-        <input type="text" id="new-name" placeholder="Ex : Épreuve du feu">
+        <input type="text" id="new-name" placeholder="Ex : Colonel Eclatax - sodomie édition">
       </div>
       <div class="field">
         <label>Lien (optionnel)</label>
@@ -1169,7 +1247,8 @@
       </div>
       <div class="shop-admin-form">
         <input type="text" id="shop-new-desc" placeholder="Description (optionnelle)">
-        <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--stone);white-space:nowrap;"><input type="checkbox" id="shop-new-ispack" style="width:auto;"> 🃏 Paquet de cartes</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--stone);white-space:nowrap;"><input type="checkbox" id="shop-new-ispack" style="width:auto;" onchange="document.getElementById('shop-new-collector-wrap').style.display=this.checked?'flex':'none';"> 🏷️ Paquet de stickers</label>
+        <label id="shop-new-collector-wrap" style="display:none;align-items:center;gap:6px;font-size:11px;color:var(--stone);white-space:nowrap;"><input type="checkbox" id="shop-new-collector" style="width:auto;"> 🏆 Collector (garde les cartes et la section du carnet même si le paquet est supprimé)</label>
         <button class="btn primary" onclick="addShopItem()">+ Ajouter</button>
       </div>
     </div>
@@ -1197,11 +1276,15 @@
     </div>
     <header style="margin-bottom:20px;">
       <h1 style="font-size:clamp(22px,4vw,32px);">420</h1>
-      <div class="subtitle">1000 clics = 100 points</div>
+      <div class="subtitle">What funnier than clicking for money ?</div>
     </header>
     <div class="clicker-stats" id="clicker-stats">0 clics · 0 / 1000</div>
     <div class="clicker-wrap" id="clicker-wrap">
       <button class="clicker-btn" id="clicker-btn" onclick="handleClickerClick()">420</button>
+    </div>
+    <div id="clicker-cooldown" style="display:none;text-align:center;color:var(--stone);font-size:12.5px;margin-top:10px;"></div>
+    <div style="text-align:center;margin-top:18px;">
+      <button class="btn ghost" id="clicker-exchange-btn" onclick="exchangeFragmentsForPoints()">💠 500 fragments → 120 points</button>
     </div>
   </div>
 
@@ -1215,7 +1298,7 @@
   <div class="menu-item" id="questsBtn" onclick="selectMenuView('quests')" title="Voir les quêtes cachées">🔒 Quêtes</div>
   <div class="menu-item" onclick="selectMenuView('shop')" title="Voir le Shop">🛒 Shop</div>
   <div class="menu-item" onclick="selectMenuView('inventory')" title="Voir le profil">👤 Profil</div>
-  <div class="menu-item" onclick="openMapPopup()" title="Voir la carte de l'app">🗺️ Carte</div>
+  <div class="menu-item" onclick="openMapPopup()" title="Voir la Carte du Panthéon">🗺️ Carte</div>
 </div>
 
 <div class="menu-btn chill-btn" id="chillBtn" onclick="toggleChillDropdown(event)" title="Chill">Chill</div>
@@ -1326,7 +1409,7 @@
 <div class="overlay" id="overlay-chat">
   <div class="modal chat-modal">
     <h3>💬 Tchat</h3>
-    <p class="chat-sub">Partagé entre tous ceux qui utilisent l'appli.</p>
+    <p class="chat-sub">Partagé entre tous ceux qui utilisent Panthéon.</p>
     <div class="chat-messages" id="chat-messages"></div>
     <p class="chat-sub" id="chat-guest-note" style="display:none;color:var(--stone);">Connecte-toi à un compte pour pouvoir écrire dans le tchat.</p>
     <div class="chat-input-row" id="chat-input-row">
@@ -1352,19 +1435,19 @@
   </div>
 </div>
 
-<!-- carte de l'app : legende de ce qui est relié à quoi, pour se repérer.
+<!-- Carte du Panthéon : legende de ce qui est relié à quoi, pour se repérer.
      Contenu statique volontairement écrit à la main (pas de génération JS) :
      les éléments secrets sont étiquetés [secret] sans détailler leur
      déclencheur, et rien de ce qui concerne l'admin n'y figure. -->
 <div class="overlay" id="overlay-map">
   <div class="modal" style="width:min(480px,92vw);">
-    <h3>🗺️ Carte de l'app</h3>
+    <h3>🗺️ Carte du Panthéon</h3>
     <p style="color:var(--stone);font-size:12.5px;margin-top:-6px;">Ce qui est relié à quoi, pour mieux se repérer.</p>
     <div class="map-list">
 
       <div class="map-item">
-        <div class="map-item-title">🗿 Piliers</div>
-        <div class="map-item-desc">La grille principale : chaque case peut être validée ou invalidée. C'est le cœur de l'app.</div>
+        <div class="map-item-title">⛓️ Piliers</div>
+        <div class="map-item-desc">24 colonels a valider pour pouvoir entrer dans la legende</div>
         <div class="map-item-links">→ relié à : Défi du jour, Badges, Hall of Fame, Points de saison, Comparaison</div>
       </div>
 
@@ -1393,26 +1476,26 @@
 
       <div class="map-item">
         <div class="map-item-title">✨ Points de saison</div>
-        <div class="map-item-desc">Gagnés en validant des piliers, en réussissant le défi du jour, et via certains éléments <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-desc">Gagnés en Jouant au mini jeu, en réussissant le défi du jour, et via certains éléments <span class="map-secret">[secret]</span>.</div>
         <div class="map-item-links">→ relié à : Shop</div>
       </div>
 
       <div class="map-item">
         <div class="map-item-title">🛒 Shop</div>
-        <div class="map-item-desc">Dépensez vos points en objets ou en paquets de cartes à collectionner.</div>
-        <div class="map-item-links">→ relié à : Points de saison, Cartes, Profil</div>
+        <div class="map-item-desc">Dépensez vos points en objets ou en paquets de stickers à collectionner.</div>
+        <div class="map-item-links">→ relié à : Points de saison, Stickers, Profil</div>
       </div>
 
       <div class="map-item">
-        <div class="map-item-title">🎴 Cartes</div>
-        <div class="map-item-desc">Obtenues via les paquets du Shop, classées par rareté et consultables dans un album dédié.</div>
+        <div class="map-item-title">🏷️ Stickers</div>
+        <div class="map-item-desc">Obtenus via les paquets du Shop, classés par rareté et consultables dans un carnet dédier dés leur obtentions.</div>
         <div class="map-item-links">→ relié à : Shop, Profil</div>
       </div>
 
       <div class="map-item">
         <div class="map-item-title">👤 Profil</div>
-        <div class="map-item-desc">Regroupe vos points, vos couronnes, vos cartes et vos objets achetés.</div>
-        <div class="map-item-links">→ relié à : Hall of Fame, Shop, Cartes, Points de saison</div>
+        <div class="map-item-desc">Regroupe vos points, vos couronnes, vos stickers et vos objets achetés.</div>
+        <div class="map-item-links">→ relié à : Hall of Fame, Shop, Stickers, Points de saison</div>
       </div>
 
       <div class="map-item">
@@ -1433,7 +1516,8 @@
 
       <div class="map-item">
         <div class="map-item-title">🔥 Chill / 420</div>
-        <div class="map-item-desc">Mini-jeu de clics indépendant, qui rapporte aussi des points de saison à intervalle régulier. Contient un élément <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-desc">Un clicker, qui n'aime pas les clickers ? 
+Contient un élément <span class="map-secret">[secret]</span>.</div>
         <div class="map-item-links">→ relié à : Points de saison</div>
       </div>
 
@@ -1468,7 +1552,7 @@
   </div>
 </div>
 
-<!-- modal ouverture de paquet de cartes -->
+<!-- modal ouverture de paquet de stickers -->
 <div class="overlay" id="overlay-pack-open">
   <div class="modal" style="width:min(340px,92vw);text-align:center;">
     <h3 id="pack-open-title">Ouverture du paquet...</h3>
@@ -1480,13 +1564,17 @@
   </div>
 </div>
 
-<!-- modal album de cartes (vue joueur) -->
-<div class="overlay" id="overlay-card-album">
-  <div class="modal" style="width:min(480px,92vw);">
-    <h3>📖 Album de cartes</h3>
-    <div class="card-album-list" id="card-album-list"></div>
+<!-- modal carnet de stickers, aspect livre (vue joueur) -->
+<div class="overlay" id="overlay-sticker-carnet">
+  <div class="modal sticker-carnet-modal" style="width:min(560px,94vw);">
+    <h3>📖 Carnet de stickers</h3>
+    <div class="sticker-carnet-total" id="sticker-carnet-total"></div>
+    <div class="sticker-carnet-tabs" id="sticker-carnet-tabs"></div>
+    <div class="sticker-carnet-book">
+      <div class="sticker-carnet-page" id="sticker-carnet-page"></div>
+    </div>
     <div class="modal-actions">
-      <button class="btn ghost" onclick="closeOverlay('overlay-card-album')">Fermer</button>
+      <button class="btn ghost" onclick="closeOverlay('overlay-sticker-carnet')">Fermer</button>
     </div>
   </div>
 </div>
@@ -1495,29 +1583,32 @@
 <div class="overlay" id="overlay-pack-content">
   <div class="modal" style="width:min(480px,92vw);">
     <h3 id="pack-content-title">Contenu du paquet</h3>
+    <div id="pack-content-total" style="font-size:11.5px;color:var(--stone);margin:-6px 0 10px;"></div>
     <div class="pack-content-list" id="pack-content-list"></div>
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeOverlay('overlay-pack-content')">Fermer</button>
-      <button class="btn primary" id="pack-content-addcard-btn">➕ Ajouter une carte</button>
+      <button class="btn ghost" id="pack-content-normalize-btn" onclick="normalizePackChances()">⚖️ Normaliser à 100%</button>
+      <button class="btn primary" id="pack-content-addsticker-btn">➕ Ajouter un sticker</button>
     </div>
   </div>
 </div>
 
-<!-- modal ajout d'une carte (admin) -->
-<div class="overlay" id="overlay-card-add">
+<!-- modal ajout d'un sticker (admin) -->
+<div class="overlay" id="overlay-sticker-add">
   <div class="modal" style="width:min(360px,92vw);">
-    <h3>Ajouter une carte</h3>
-    <label>Nom de la carte</label>
-    <input type="text" id="card-add-name">
+    <h3>Ajouter un sticker</h3>
+    <label>Nom du sticker</label>
+    <input type="text" id="sticker-add-name">
     <label>Image</label>
-    <input type="file" id="card-add-file" accept="image/*">
-    <div class="card-add-preview-wrap"><canvas id="card-add-canvas" width="180" height="240"></canvas></div>
+    <input type="file" id="sticker-add-file" accept="image/*">
+    <div class="sticker-add-preview-wrap"><canvas id="sticker-add-canvas" width="180" height="240"></canvas></div>
+    <p style="color:var(--stone);font-size:11px;margin:-4px 0 8px;">La photo entière est conservée, sans découpe.</p>
     <label>Chance d'obtention (%)</label>
-    <input type="number" id="card-add-chance" min="0" max="100" value="10">
-    <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="card-add-rare" style="width:auto;"> ✨ Carte rare</label>
+    <input type="number" id="sticker-add-chance" min="0" max="100" value="10">
+    <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="sticker-add-rare" style="width:auto;"> ✨ Sticker rare</label>
     <div class="modal-actions">
-      <button class="btn ghost" onclick="closeOverlay('overlay-card-add')">Annuler</button>
-      <button class="btn primary" onclick="submitCardAdd()">Ajouter</button>
+      <button class="btn ghost" onclick="closeOverlay('overlay-sticker-add')">Annuler</button>
+      <button class="btn primary" onclick="submitStickerAdd()">Ajouter</button>
     </div>
   </div>
 </div>
@@ -1555,18 +1646,19 @@
     <select id="admin-panel-account"></select>
 
     <label>Réinitialiser</label>
-    <select id="admin-panel-reset-type">
+    <select id="admin-panel-reset-type" onchange="updateAdminPanelActionBtn()">
       <option value="progress">Piliers (progression)</option>
       <option value="badges">Succès / badges</option>
       <option value="points">Points de saison</option>
-      <option value="cards">Cartes obtenues</option>
+      <option value="stickers">Stickers obtenus</option>
       <option value="shop">Achats du shop</option>
       <option value="crowns">Couronnes du Panthéon</option>
       <option value="clicker">Clics du jeu 420</option>
       <option value="all">⚠️ Tout réinitialiser</option>
+      <option value="give-infinite">🎁 Donner un montant infini (points + fragments)</option>
     </select>
     <div class="modal-actions" style="justify-content:flex-start;">
-      <button class="btn ghost" style="background:#ff6b6b;border-color:#ff6b6b;color:#1a0505;" onclick="confirmAdminPanelReset()">🗑 Réinitialiser</button>
+      <button class="btn ghost" id="admin-panel-action-btn" style="background:#ff6b6b;border-color:#ff6b6b;color:#1a0505;" onclick="confirmAdminPanelReset()">🗑 Réinitialiser</button>
     </div>
 
     <div class="modal-actions" style="justify-content:center;margin-top:10px;border-top:1px solid #2a2013;padding-top:12px;">
@@ -1634,15 +1726,15 @@
 // Utilise Firestore (voir config en haut du fichier) pour garder
 // les mêmes données sur tous les PC qui ouvrent ce site. Si
 // Firebase n'est pas configuré, on retombe simplement sur le
-// localStorage de l'appareil (pas de synchro, mais l'appli marche
+// localStorage de l'appareil (pas de synchro, mais Panthéon marche
 // quand même).
-// Collection Firestore utilisée : "pantheon_data", un document par clé.
+// Collection Firestore utilisée : "Panthéon_data", un document par clé.
 // ============================================================
 const syncStorage = (function(){
   const cache = Object.create(null);
   let hasCloud = false;
   let knownKeys = new Set();
-  const ROOT = 'pantheon_data';
+  const ROOT = 'Panthéon_data';
 
   function localGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
   function localSet(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
@@ -1678,10 +1770,10 @@ const syncStorage = (function(){
       persistToCloud(key, null);
     },
     // Charge toutes les clés déjà connues du cloud avant le démarrage de
-    // l'appli (pour que les lectures synchrones suivantes renvoient bien
+    // Panthéon (pour que les lectures synchrones suivantes renvoient bien
     // les données les plus récentes), PUIS reste abonnée en temps réel :
     // dès qu'un autre appareil écrit quoi que ce soit, `onChange` est
-    // rappelé pour que l'appli puisse se rafraîchir toute seule, sans
+    // rappelé pour que Panthéon puisse se rafraîchir toute seule, sans
     // avoir besoin de recharger la page.
     async preloadAndSync(onChange){
       try{ await window.__fbReady; }catch(e){}
@@ -1718,29 +1810,35 @@ const syncStorage = (function(){
 })();
 
 
-const STORAGE_KEY = 'pantheon-cases-v1';
-const HALL_KEY = 'pantheon-hall-v1';
-const HALL_PROMPTED_KEY = 'pantheon-hall-prompted-v1';
-const CROWNS_KEY = 'pantheon-crowns-v1'; // {accountId: nombre de couronnes gagnées en fin de saison}
-const ACCOUNTS_KEY = 'pantheon-accounts-v1';
-const ACTIVE_ACCOUNT_KEY = 'pantheon-active-account-v1';
-const STATES_KEY = 'pantheon-states-v1';
+const STORAGE_KEY = 'Panthéon-cases-v1';
+const HALL_KEY = 'Panthéon-hall-v1';
+const HALL_PROMPTED_KEY = 'Panthéon-hall-prompted-v1';
+const CROWNS_KEY = 'Panthéon-crowns-v1'; // {accountId: nombre de couronnes gagnées en fin de saison}
+const ACCOUNTS_KEY = 'Panthéon-accounts-v1';
+const ACTIVE_ACCOUNT_KEY = 'Panthéon-active-account-v1';
+const STATES_KEY = 'Panthéon-states-v1';
 const TEMP_ACCOUNT_ID = 'temp-admin';
 const SECRET_VOID_ID = 'secret-void';
-const SECRETS_KEY = 'pantheon-secrets-v1';
-const CLICKER_KEY = 'pantheon-clicker-v1'; // {compte: nombre total de clics} — propre à chaque profil
-const CLICKER_POINTS_PER_1000 = 100;
+const SECRETS_KEY = 'Panthéon-secrets-v1';
+const CLICKER_KEY = 'Panthéon-clicker-v1'; // {compte: nombre total de clics} — propre à chaque profil
+const CLICKER_FRAGMENTS_PER_1000 = 250; // fragments donnés tous les 1000 clics (remplace les points)
+const CLICKER_COOLDOWN_MS = 2 * 60 * 60 * 1000; // 2h de pause après avoir atteint le palier de 1000 clics
+const CLICKER_COOLDOWN_KEY = 'Panthéon-clicker-cooldown-v1'; // {compte: timestamp de fin de cooldown}
 const CLICKER_EASTER_EGG_CHANCE = 0.001; // 0.1%
 const CLICKER_EASTER_EGG_BONUS = 521;
+const FRAGMENTS_KEY = 'Panthéon-fragments-v1'; // {compte: nombre de fragments}
+const FRAGMENTS_EXCHANGE_COST = 500; // fragments nécessaires
+const FRAGMENTS_EXCHANGE_GAIN = 120; // points obtenus en échange
+const STICKER_DUP_FRAGMENTS = 10; // fragments gagnés à chaque doublon de carte
 
 // ---------- Saisons / points / shop ----------
-const SEASON_KEY = 'pantheon-season-v1';               // {start:{y,m,d}|null, end:{y,m,d}|null}
-const SEASON_HISTORY_KEY = 'pantheon-season-history-v1'; // [{start,end,closedAt,top:[{name,points}]}]
-const POINTS_KEY = 'pantheon-points-v1';               // {accountId: points}
-const POINTS_AWARDED_KEY = 'pantheon-points-awarded-v1'; // {accountId:{cases:{},quests:{},valkyrie:bool,challenges:{}}}
-const SHOP_ITEMS_KEY = 'pantheon-shop-items-v1';       // [{id,name,icon,cost,desc}]
-const SHOP_PURCHASES_KEY = 'pantheon-shop-purchases-v1'; // {accountId:[itemId,...]}
-const CARD_INVENTORY_KEY = 'pantheon-card-inventory-v1'; // {accountId:[{packId,packName,cardId,name,image,rarity,ts},...]}
+const SEASON_KEY = 'Panthéon-season-v1';               // {start:{y,m,d}|null, end:{y,m,d}|null}
+const SEASON_HISTORY_KEY = 'Panthéon-season-history-v1'; // [{start,end,closedAt,top:[{name,points}]}]
+const POINTS_KEY = 'Panthéon-points-v1';               // {accountId: points}
+const POINTS_AWARDED_KEY = 'Panthéon-points-awarded-v1'; // {accountId:{cases:{},quests:{},valkyrie:bool,challenges:{}}}
+const SHOP_ITEMS_KEY = 'Panthéon-shop-items-v1';       // [{id,name,icon,cost,desc}]
+const SHOP_PURCHASES_KEY = 'Panthéon-shop-purchases-v1'; // {accountId:[itemId,...]}
+const STICKER_INVENTORY_KEY = 'Panthéon-card-inventory-v1'; // {accountId:[{packId,packName,stickerId,name,image,rarity,ts},...]}
 const POINT_VALUES = { case:10, challenge:15, quest:40, valkyrie:100 };
 
 let seasonConfig = {start:null, end:null};
@@ -1749,22 +1847,24 @@ let accountPoints = {};
 let pointsAwarded = {};
 let shopItems = [];
 let shopPurchases = {};
-let cardInventory = {};
+let stickerInventory = {};
+let accountFragments = {};
+let clickerCooldownEndByAccount = {};
 let activePackId = null;
 let editFieldCallback = null;
-let pendingCardImageDataUrl = null;
-const CARD_IMG_W = 240, CARD_IMG_H = 320;
+let pendingStickerImageDataUrl = null;
+const STICKER_IMG_W = 240, STICKER_IMG_H = 320;
 
 // Quêtes cachées : contrairement aux piliers/secrets (propres à chaque profil),
 // leur état est UNIQUE et PARTAGÉ par tous les comptes de cet appareil :
 // si un joueur valide une quête ou change le verrou, ça change pour tout le monde.
-const QUESTS_KEY = 'pantheon-quests-v1';
+const QUESTS_KEY = 'Panthéon-quests-v1';
 
-// Tchat partagé entre TOUS les utilisateurs de l'appli (pas seulement
+// Tchat partagé entre TOUS les utilisateurs de Panthéon (pas seulement
 // ce compte / cet appareil) : stocké en "shared" côté cloud.
-const CHAT_KEY = 'pantheon-chat-v1';
-const CHAT_PSEUDO_KEY = 'pantheon-chat-pseudo-v1'; // propre à cet appareil/navigateur
-const CHAT_SEEN_KEY = 'pantheon-chat-seen-v1';     // propre à cet appareil/navigateur
+const CHAT_KEY = 'Panthéon-chat-v1';
+const CHAT_PSEUDO_KEY = 'Panthéon-chat-pseudo-v1'; // propre à cet appareil/navigateur
+const CHAT_SEEN_KEY = 'Panthéon-chat-seen-v1';     // propre à cet appareil/navigateur
 const CHAT_MAX_MESSAGES = 200;
 let chatMessages = [];
 // TODO : donner un nom (et éventuellement une icône) à chaque quête une fois définie.
@@ -1839,7 +1939,7 @@ function hashStr(s){
 
 // Même pilier mis en avant pour tout le monde, change chaque jour.
 function getDailyChallengeNum(){
-  return (hashStr('pantheon-daily-'+todayStr()) % 24) + 1;
+  return (hashStr('Panthéon-daily-'+todayStr()) % 24) + 1;
 }
 
 async function loadValidationDates(){
@@ -2067,18 +2167,68 @@ function saveClickerCount(){
   try{ syncStorage.setItem(clickerKeyFor(activeAccountId), String(accountClickerCount)); }catch(e){}
 }
 
+// Renvoie le temps de cooldown restant (ms) pour le compte actif, 0 si terminé.
+function clickerCooldownRemaining(){
+  const end = clickerCooldownEndByAccount[activeAccountId] || 0;
+  return Math.max(0, end - Date.now());
+}
+
+function formatCooldown(ms){
+  const totalSec = Math.ceil(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+let clickerCooldownTimer = null;
+
 function renderClickerView(){
   const statsEl = document.getElementById('clicker-stats');
   const progress = accountClickerCount % 1000;
-  statsEl.textContent = `${accountClickerCount} clics · ${progress} / 1000`;
+  const frags = accountFragments[activeAccountId] || 0;
+  statsEl.innerHTML = `${accountClickerCount} clics · ${progress} / 1000<br>💠 ${frags} fragment(s)`;
+
   const btn = document.getElementById('clicker-btn');
   const view = document.getElementById('view-clicker');
-  btn.classList.toggle('golden', clickerGoldenMode);
-  btn.textContent = clickerGoldenMode ? '???' : '420';
-  view.classList.toggle('clicker-golden-bg', clickerGoldenMode);
+  const exchangeBtn = document.getElementById('clicker-exchange-btn');
+  const cooldownEl = document.getElementById('clicker-cooldown');
+
+  const remaining = clickerCooldownRemaining();
+  clearInterval(clickerCooldownTimer);
+
+  if(remaining > 0){
+    btn.disabled = true;
+    btn.classList.remove('golden');
+    btn.textContent = '420';
+    view.classList.remove('clicker-golden-bg');
+    if(cooldownEl){
+      cooldownEl.style.display = 'block';
+      cooldownEl.textContent = `⏳ Pause de 2h — reprend dans ${formatCooldown(remaining)}`;
+    }
+    clickerCooldownTimer = setInterval(()=>{
+      const left = clickerCooldownRemaining();
+      if(left <= 0){
+        clearInterval(clickerCooldownTimer);
+        renderClickerView();
+      } else if(cooldownEl){
+        cooldownEl.textContent = `⏳ Pause de 2h — reprend dans ${formatCooldown(left)}`;
+      }
+    }, 1000);
+  } else {
+    btn.disabled = false;
+    if(cooldownEl) cooldownEl.style.display = 'none';
+    btn.classList.toggle('golden', clickerGoldenMode);
+    btn.textContent = clickerGoldenMode ? '???' : '420';
+    view.classList.toggle('clicker-golden-bg', clickerGoldenMode);
+  }
+
+  if(exchangeBtn) exchangeBtn.disabled = frags < FRAGMENTS_EXCHANGE_COST;
 }
 
 function handleClickerClick(){
+  if(clickerCooldownRemaining() > 0) return; // en pause, aucun clic ne compte
+
   if(clickerGoldenMode){
     // Clic bonus sur le bouton transformé : +521 points et déblocage de la quête 2.
     clickerGoldenMode = false;
@@ -2091,8 +2241,11 @@ function handleClickerClick(){
   accountClickerCount++;
   saveClickerCount();
 
-  if(accountClickerCount % 1000 === 0 && accountEarnsPoints(activeAccountId)){
-    awardPoints(activeAccountId, CLICKER_POINTS_PER_1000);
+  if(accountClickerCount % 1000 === 0){
+    if(accountEarnsPoints(activeAccountId)) awardFragments(activeAccountId, CLICKER_FRAGMENTS_PER_1000);
+    // Palier atteint : pause de 2h avant de pouvoir recliquer.
+    clickerCooldownEndByAccount[activeAccountId] = Date.now() + CLICKER_COOLDOWN_MS;
+    saveClickerCooldowns();
   }
 
   if(Math.random() < CLICKER_EASTER_EGG_CHANCE){
@@ -2327,7 +2480,7 @@ function renderHallOfShame(){
         <div>
           <div class="hos-name">${escapeHtml(h.name)}</div>
           ${h.message ? `<div class="hos-message">« ${escapeHtml(h.message)} »</div>` : ''}
-          ${claimable ? '<div class="hos-message" style="color:var(--purple-neon);">Cliquer pour être absous</div>' : ''}
+          ${claimable ? '<div class="hos-message" style="color:var(--purple-neon);">Cliquer pour être déchue</div>' : ''}
         </div>
       </div>
     </div>
@@ -2341,7 +2494,7 @@ function renderHallOfShame(){
       <div class="name-overlay">
         <div>
           <div class="hos-name">Vous</div>
-          <div class="hos-message">« Absous de Void le ${absolved.date} »</div>
+          <div class="hos-message">« déchue dans le Void le ${absolved.date} »</div>
         </div>
       </div>
     </div>
@@ -2398,41 +2551,32 @@ function renderInventory(){
   const itemsGrid = document.getElementById('inv-items-grid');
   const owned = shopPurchases[activeAccountId] || [];
   const ownedItems = shopItems.filter(it=>owned.includes(it.id));
-  const hasCards = (cardInventory[activeAccountId] || []).length > 0;
+  const hasStickers = (stickerInventory[activeAccountId] || []).length > 0;
   const crownCount = accountCrowns[activeAccountId] || 0;
-  if(ownedItems.length === 0 && !hasCards && crownCount === 0){
+  if(ownedItems.length === 0 && !hasStickers && crownCount === 0){
     itemsGrid.innerHTML = '<div class="empty-note" style="grid-column:1/-1;text-align:center;">Aucun objet acheté pour l\'instant.</div>';
   } else {
     const crownHtml = crownCount > 0 ? `
       <div class="shop-item owned no-buy">
         <div class="shop-item-name">👑 Couronne du Panthéon${crownCount>1?' x'+crownCount:''}</div>
-        <div class="shop-item-hover">
-          <div class="shop-item-desc">Obtenue en faisant partie du Hall of Fame à la clôture d'une saison.</div>
-          <div class="shop-item-cost">✓ Possédé</div>
-        </div>
+        <div class="shop-item-cost">✓ Possédé</div>
       </div>
     ` : '';
-    const albumHtml = hasCards ? `
-      <div class="shop-item owned" id="inv-card-album-btn">
-        <div class="shop-item-name">📖 Album de cartes</div>
-        <div class="shop-item-hover">
-          <div class="shop-item-desc">Consultez toutes les cartes que vous avez obtenues.</div>
-          <div class="shop-item-cost">✓ Possédé</div>
-        </div>
+    const carnetHtml = hasStickers ? `
+      <div class="shop-item owned" id="inv-sticker-carnet-btn">
+        <div class="shop-item-name">📖 Carnet de stickers</div>
+        <div class="shop-item-cost">✓ Possédé</div>
       </div>
     ` : '';
-    itemsGrid.innerHTML = crownHtml + albumHtml + ownedItems.map(it=>`
+    itemsGrid.innerHTML = crownHtml + carnetHtml + ownedItems.map(it=>`
       <div class="shop-item owned no-buy">
         <div class="shop-item-name">${escapeHtml(it.name)}</div>
-        <div class="shop-item-hover">
-          <div class="shop-item-desc">${it.desc ? escapeHtml(it.desc) : 'Aucune description.'}</div>
-          <div class="shop-item-cost">✓ Possédé</div>
-        </div>
+        <div class="shop-item-cost">✓ Possédé</div>
       </div>
     `).join('');
-    if(hasCards){
-      const albumBtn = document.getElementById('inv-card-album-btn');
-      if(albumBtn) albumBtn.addEventListener('click', openCardAlbum);
+    if(hasStickers){
+      const carnetBtn = document.getElementById('inv-sticker-carnet-btn');
+      if(carnetBtn) carnetBtn.addEventListener('click', openStickerCarnet);
     }
   }
 }
@@ -2452,8 +2596,12 @@ function loadSeasonData(){
   catch(e){ shopItems = []; }
   try{ const raw = syncStorage.getItem(SHOP_PURCHASES_KEY); shopPurchases = raw ? JSON.parse(raw) : {}; }
   catch(e){ shopPurchases = {}; }
-  try{ const raw = syncStorage.getItem(CARD_INVENTORY_KEY); cardInventory = raw ? JSON.parse(raw) : {}; }
-  catch(e){ cardInventory = {}; }
+  try{ const raw = syncStorage.getItem(STICKER_INVENTORY_KEY); stickerInventory = raw ? JSON.parse(raw) : {}; }
+  catch(e){ stickerInventory = {}; }
+  try{ const raw = syncStorage.getItem(FRAGMENTS_KEY); accountFragments = raw ? JSON.parse(raw) : {}; }
+  catch(e){ accountFragments = {}; }
+  try{ const raw = syncStorage.getItem(CLICKER_COOLDOWN_KEY); clickerCooldownEndByAccount = raw ? JSON.parse(raw) : {}; }
+  catch(e){ clickerCooldownEndByAccount = {}; }
 }
 function saveSeasonConfigData(){ try{ syncStorage.setItem(SEASON_KEY, JSON.stringify(seasonConfig)); }catch(e){} }
 function saveSeasonHistory(){ try{ syncStorage.setItem(SEASON_HISTORY_KEY, JSON.stringify(seasonHistory)); }catch(e){} }
@@ -2461,21 +2609,46 @@ function savePoints(){ try{ syncStorage.setItem(POINTS_KEY, JSON.stringify(accou
 function savePointsAwarded(){ try{ syncStorage.setItem(POINTS_AWARDED_KEY, JSON.stringify(pointsAwarded)); }catch(e){} }
 function saveShopItems(){ try{ syncStorage.setItem(SHOP_ITEMS_KEY, JSON.stringify(shopItems)); }catch(e){} }
 function saveShopPurchases(){ try{ syncStorage.setItem(SHOP_PURCHASES_KEY, JSON.stringify(shopPurchases)); }catch(e){} }
-function saveCardInventory(){ try{ syncStorage.setItem(CARD_INVENTORY_KEY, JSON.stringify(cardInventory)); }catch(e){} }
+function saveStickerInventory(){ try{ syncStorage.setItem(STICKER_INVENTORY_KEY, JSON.stringify(stickerInventory)); }catch(e){} }
+function saveFragments(){ try{ syncStorage.setItem(FRAGMENTS_KEY, JSON.stringify(accountFragments)); }catch(e){} }
+function saveClickerCooldowns(){ try{ syncStorage.setItem(CLICKER_COOLDOWN_KEY, JSON.stringify(clickerCooldownEndByAccount)); }catch(e){} }
 
-// Crée automatiquement une case "Paquet de cartes" dans le shop si aucune n'existe
+// Fragments : monnaie à part, gagnée via le 420 (tous les 1000 clics) et les
+// doublons de cartes. Comme pour les points, les comptes de test/secrets n'en
+// gagnent jamais.
+function awardFragments(accountId, amount){
+  if(!accountEarnsPoints(accountId) || !amount) return;
+  accountFragments[accountId] = (accountFragments[accountId] || 0) + amount;
+  saveFragments();
+}
+
+// Échange 500 fragments contre 120 points (montants fixés par FRAGMENTS_EXCHANGE_*).
+function exchangeFragmentsForPoints(){
+  const accountId = activeAccountId;
+  if(!accountEarnsPoints(accountId)) return;
+  const frags = accountFragments[accountId] || 0;
+  if(frags < FRAGMENTS_EXCHANGE_COST) return;
+  accountFragments[accountId] = frags - FRAGMENTS_EXCHANGE_COST;
+  saveFragments();
+  accountPoints[accountId] = (accountPoints[accountId] || 0) + FRAGMENTS_EXCHANGE_GAIN;
+  savePoints();
+  renderClickerView();
+  if(document.getElementById('view-shop').classList.contains('active')) renderShop(true);
+}
+
+// Crée automatiquement une case "Paquet de stickers" dans le shop si aucune n'existe
 // encore (aucun objet de type 'pack'). L'admin n'a plus qu'à faire clic droit dessus
-// pour y ajouter des cartes.
-function ensureDefaultCardPack(){
+// pour y ajouter des stickers.
+function ensureDefaultStickerPack(){
   const hasPack = shopItems.some(it=>it.type==='pack');
   if(hasPack) return;
   shopItems.push({
     id:'shop-'+Date.now(),
-    name:'Paquet de cartes',
+    name:'Paquet de stickers',
     cost:20,
-    desc:'Contient une carte à collectionner au hasard.',
+    desc:'Contient un sticker à collectionner au hasard.',
     type:'pack',
-    cards:[]
+    stickers:[]
   });
   saveShopItems();
 }
@@ -2575,10 +2748,7 @@ function renderShop(bump){
         <div class="shop-item ${isOwned?'owned':''} ${isPack?'pack-item':''} ${(!isOwned && !canBuy)?'unaffordable':''}" data-id="${it.id}">
           ${isUnlocked ? `<span class="shop-item-del" onclick="event.stopPropagation();confirmDeleteShopItem('${it.id}')">✕</span>` : ''}
           <div class="shop-item-name">${isPack?'🃏 ':''}${escapeHtml(it.name)}</div>
-          <div class="shop-item-hover">
-            <div class="shop-item-desc">${it.desc ? escapeHtml(it.desc) : 'Aucune description.'}${isPack ? ` (${(it.cards||[]).length} carte(s) possible(s))` : ''}</div>
-            <div class="shop-item-cost">${isOwned ? '✓ Possédé' : it.cost + ' pts'}</div>
-          </div>
+          <div class="shop-item-cost">${isOwned ? '✓ Possédé' : it.cost + ' pts'}</div>
         </div>
       `;
     }).join('');
@@ -2605,7 +2775,7 @@ function openShopBuyPopup(id){
   const isPack = it.type === 'pack';
   const owned = shopPurchases[activeAccountId] || [];
   if(!isPack && owned.includes(id)) return;
-  if(isPack && (!it.cards || it.cards.length===0)) return;
+  if(isPack && (!it.stickers || it.stickers.length===0)) return;
   const pts = accountPoints[activeAccountId] || 0;
   document.getElementById('shop-buy-title').textContent = isPack ? `Ouvrir "${it.name}" ?` : `Acheter "${it.name}" ?`;
   const btn = document.getElementById('shop-buy-confirm-btn');
@@ -2646,17 +2816,17 @@ function buyShopItem(id){
   renderShop(true);
 }
 
-// ---------- Cartes à collectionner ----------
+// ---------- Stickers à collectionner ----------
 
-function pickWeightedCard(cards){
-  const total = cards.reduce((s,c)=> s + (Number(c.chance)||0), 0);
-  if(total <= 0) return cards[Math.floor(Math.random()*cards.length)];
+function pickWeightedSticker(stickers){
+  const total = stickers.reduce((s,c)=> s + (Number(c.chance)||0), 0);
+  if(total <= 0) return stickers[Math.floor(Math.random()*stickers.length)];
   let r = Math.random() * total;
-  for(const c of cards){
+  for(const c of stickers){
     r -= (Number(c.chance)||0);
     if(r <= 0) return c;
   }
-  return cards[cards.length-1];
+  return stickers[stickers.length-1];
 }
 
 function openPackOpening(pack){
@@ -2667,38 +2837,35 @@ function openPackOpening(pack){
   document.getElementById('pack-open-continue').style.display = 'none';
   openOverlay('overlay-pack-open');
   setTimeout(()=>{
-    const card = pickWeightedCard(pack.cards);
-    if(!card){ closeOverlay('overlay-pack-open'); return; }
-    revealPackCard(pack, card);
+    const sticker = pickWeightedSticker(pack.stickers);
+    if(!sticker){ closeOverlay('overlay-pack-open'); return; }
+    revealPackSticker(pack, sticker);
   }, 1400);
 }
 
-function revealPackCard(pack, card){
+function revealPackSticker(pack, sticker){
   const accountId = activeAccountId;
-  if(!cardInventory[accountId]) cardInventory[accountId] = [];
-  const priorCount = cardInventory[accountId].filter(c=>c.cardId===card.id).length;
-  const isFirstEver = cardInventory[accountId].length === 0;
+  if(!stickerInventory[accountId]) stickerInventory[accountId] = [];
+  const priorCount = stickerInventory[accountId].filter(c=>c.stickerId===sticker.id).length;
+  const isFirstEver = stickerInventory[accountId].length === 0;
   const isDup = priorCount > 0;
-  let refund = 0;
   if(isDup){
-    refund = card.rarity === 2 ? pack.cost : Math.floor(pack.cost * 0.5);
-    accountPoints[accountId] = (accountPoints[accountId] || 0) + refund;
-    savePoints();
+    awardFragments(accountId, STICKER_DUP_FRAGMENTS);
   }
-  cardInventory[accountId].push({packId:pack.id, packName:pack.name, cardId:card.id, name:card.name, image:card.image||null, rarity:card.rarity, ts:Date.now()});
-  saveCardInventory();
+  stickerInventory[accountId].push({packId:pack.id, packName:pack.name, stickerId:sticker.id, name:sticker.name, image:sticker.image||null, rarity:sticker.rarity, ts:Date.now()});
+  saveStickerInventory();
 
   const stage = document.getElementById('pack-open-stage');
   stage.innerHTML = `
-    <div class="pack-card-reveal ${card.rarity===2?'rare':''}">
-      ${card.image ? `<img src="${card.image}" alt="">` : '<div class="pack-card-noimg">🃏</div>'}
+    <div class="pack-sticker-reveal ${sticker.rarity===2?'rare':''}">
+      ${sticker.image ? `<img src="${sticker.image}" alt="">` : '<div class="pack-sticker-noimg">🃏</div>'}
     </div>`;
-  document.getElementById('pack-open-title').textContent = card.name;
+  document.getElementById('pack-open-title').textContent = sticker.name;
   const resultEl = document.getElementById('pack-open-result');
   resultEl.style.display = 'block';
-  let html = card.rarity===2 ? '✨ Carte rare !' : 'Carte obtenue.';
-  if(isDup) html += `<br>Déjà possédée — +${refund} pts remboursés.`;
-  if(isFirstEver) html += `<br>🎁 Nouvel objet débloqué : Album de cartes (dans l'inventaire).`;
+  let html = sticker.rarity===2 ? '✨ Sticker rare !' : 'Sticker obtenu.';
+  if(isDup) html += `<br>Déjà possédé — +${STICKER_DUP_FRAGMENTS} fragment(s) 💠.`;
+  if(isFirstEver) html += `<br>🎁 Nouvel objet débloqué : Carnet de stickers (dans l'inventaire).`;
   resultEl.innerHTML = html;
   document.getElementById('pack-open-continue').style.display = 'inline-block';
 
@@ -2707,50 +2874,108 @@ function revealPackCard(pack, card){
   if(document.getElementById('view-shop').classList.contains('active')) renderShop();
 }
 
-function openCardAlbum(){
-  const list = document.getElementById('card-album-list');
-  const entries = cardInventory[activeAccountId] || [];
+// Le carnet garde en mémoire la liste des sections (une par paquet) et la section
+// actuellement affichée. Les deux sont reconstruites à chaque ouverture, donc le
+// carnet reflète toujours les paquets actuellement créés côté admin (un paquet
+// supprimé disparaît des onglets, un paquet créé apparaît dès la prochaine ouverture).
+let carnetPages = [];
+let activeCarnetPackId = null;
+
+function openStickerCarnet(){
+  buildCarnetPages();
+  renderStickerCarnetTabs();
+  renderStickerCarnetPage();
+  openOverlay('overlay-sticker-carnet');
+}
+
+// Reconstruit la liste des sections à partir des paquets existant actuellement dans
+// le shop, en y ajoutant aussi les paquets déjà collectés même s'ils ont depuis été
+// supprimés du shop (pour ne jamais perdre l'affichage de stickers déjà obtenus).
+function buildCarnetPages(){
+  const entries = stickerInventory[activeAccountId] || [];
   const byPack = {};
   entries.forEach(e=>{
-    if(!byPack[e.packId]) byPack[e.packId] = {name:e.packName, cards:{}};
-    if(!byPack[e.packId].cards[e.cardId]) byPack[e.packId].cards[e.cardId] = {...e, count:0};
-    byPack[e.packId].cards[e.cardId].count++;
+    if(!byPack[e.packId]) byPack[e.packId] = {name:e.packName, stickers:{}};
+    if(!byPack[e.packId].stickers[e.stickerId]) byPack[e.packId].stickers[e.stickerId] = {...e, count:0};
+    byPack[e.packId].stickers[e.stickerId].count++;
   });
 
   const allPackDefs = shopItems.filter(it=>it.type==='pack');
-  const totalCardsDefined = allPackDefs.reduce((s,p)=> s + (p.cards ? p.cards.length : 0), 0);
-  const totalCardsOwned = Object.values(byPack).reduce((s,p)=> s + Object.keys(p.cards).length, 0);
-  const header = `<div class="card-album-total">Collection : ${totalCardsOwned} / ${totalCardsDefined} cartes</div>`;
+  const packIds = new Set([...allPackDefs.map(p=>p.id), ...Object.keys(byPack)]);
 
-  if(entries.length === 0){
-    list.innerHTML = header + '<div class="empty-note" style="text-align:center;">Aucune carte pour l\'instant.</div>';
-    openOverlay('overlay-card-album');
+  carnetPages = Array.from(packIds).map(packId=>{
+    const packDef = shopItems.find(it=>it.id===packId);
+    const owned = byPack[packId] ? byPack[packId].stickers : {};
+    const name = packDef ? packDef.name : (byPack[packId] ? byPack[packId].name : 'Paquet');
+    const ownedInPack = Object.keys(owned).length;
+    const totalInPack = packDef && packDef.stickers ? packDef.stickers.length : ownedInPack;
+    const stickers = Object.values(owned).sort((a,b)=> b.rarity - a.rarity || a.ts - b.ts);
+    return {packId, name, ownedInPack, totalInPack, stickers};
+  }).sort((a,b)=> a.name.localeCompare(b.name, 'fr'));
+
+  // Si le paquet actuellement sélectionné a disparu (supprimé), on retombe sur le premier.
+  if(!carnetPages.some(p=>p.packId===activeCarnetPackId)){
+    activeCarnetPackId = carnetPages.length ? carnetPages[0].packId : null;
+  }
+}
+
+function renderStickerCarnetTabs(){
+  const totalStickersOwned = carnetPages.reduce((s,p)=> s + p.ownedInPack, 0);
+  const totalStickersDefined = carnetPages.reduce((s,p)=> s + p.totalInPack, 0);
+  document.getElementById('sticker-carnet-total').textContent = `Collection : ${totalStickersOwned} / ${totalStickersDefined} stickers`;
+
+  const tabsEl = document.getElementById('sticker-carnet-tabs');
+  if(carnetPages.length === 0){
+    tabsEl.innerHTML = '';
     return;
   }
-  list.innerHTML = header + Object.keys(byPack).map(packId=>{
-    const pack = byPack[packId];
-    const packDef = shopItems.find(it=>it.id===packId);
-    const ownedInPack = Object.keys(pack.cards).length;
-    const totalInPack = packDef && packDef.cards ? packDef.cards.length : ownedInPack;
-    const cards = Object.values(pack.cards).sort((a,b)=> b.rarity - a.rarity || a.ts - b.ts);
-    return `<div class="card-album-pack">
-      <div class="card-album-pack-name">${escapeHtml(pack.name)} <span class="card-album-pack-count">${ownedInPack} / ${totalInPack}</span></div>
-      <div class="card-album-grid">
-        ${cards.map(c=>`
-          <div class="card-album-item ${c.rarity===2?'rare':''}">
-            ${c.image ? `<img src="${c.image}" alt="">` : '<div class="pack-card-noimg small">🃏</div>'}
-            <div class="card-album-item-name">${escapeHtml(c.name)}</div>
-            ${c.count>1 ? `<div class="card-album-item-count">x${c.count}</div>` : ''}
-          </div>
-        `).join('')}
-      </div>
-    </div>`;
-  }).join('');
-  openOverlay('overlay-card-album');
+  tabsEl.innerHTML = carnetPages.map(p=>`
+    <div class="sticker-carnet-tab ${p.packId===activeCarnetPackId?'active':''}" data-pack-id="${p.packId}">
+      ${escapeHtml(p.name)} <span class="tab-count">${p.ownedInPack}/${p.totalInPack}</span>
+    </div>
+  `).join('');
+  tabsEl.querySelectorAll('.sticker-carnet-tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      activeCarnetPackId = tab.dataset.packId;
+      renderStickerCarnetTabs();
+      renderStickerCarnetPage();
+    });
+  });
+}
+
+function renderStickerCarnetPage(){
+  const pageEl = document.getElementById('sticker-carnet-page');
+  const page = carnetPages.find(p=>p.packId===activeCarnetPackId);
+  if(!page){
+    pageEl.innerHTML = '<div class="empty-note" style="text-align:center;">Aucun paquet de stickers pour l\'instant.</div>';
+    return;
+  }
+  if(page.stickers.length === 0){
+    pageEl.innerHTML = `
+      <div class="sticker-carnet-page-name">${escapeHtml(page.name)} <span class="sticker-carnet-page-count">0 / ${page.totalInPack}</span></div>
+      <div class="empty-note" style="text-align:center;">Aucun sticker obtenu de ce paquet pour l'instant.</div>
+    `;
+    return;
+  }
+  pageEl.innerHTML = `
+    <div class="sticker-carnet-page-name">${escapeHtml(page.name)} <span class="sticker-carnet-page-count">${page.ownedInPack} / ${page.totalInPack}</span></div>
+    <div class="sticker-carnet-grid">
+      ${page.stickers.map(c=>`
+        <div class="sticker-carnet-item ${c.rarity===2?'rare':''}">
+          ${c.image ? `<img src="${c.image}" alt="">` : '<div class="pack-sticker-noimg small">🃏</div>'}
+          <div class="sticker-carnet-item-name">${escapeHtml(c.name)}</div>
+          ${c.count>1 ? `<div class="sticker-carnet-item-count">x${c.count}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
 // Menu contextuel (admin) sur un objet du shop : prix, description, gestion du paquet, suppression.
+// Garde explicite : jamais utilisable si l'admin n'est pas déverrouillé, même si la fonction
+// venait à être appelée par un autre chemin que le listener conditionnel de renderShop().
 function openShopItemCtxMenu(e, id){
+  if(!isUnlocked) return;
   const it = shopItems.find(i=>i.id===id);
   if(!it) return;
   const items = [];
@@ -2764,7 +2989,7 @@ function openShopItemCtxMenu(e, id){
   })]);
   if(it.type === 'pack'){
     items.push(['🃏 Voir le contenu du paquet', ()=> openPackContentModal(id)]);
-    items.push(['➕ Ajouter une carte', ()=> openCardAddModal(id)]);
+    items.push(['➕ Ajouter un sticker', ()=> openStickerAddModal(id)]);
   }
   items.push(['⛔ Supprimer l\'objet', ()=> confirmDeleteShopItem(id), true]);
   showCtxMenuAt(e, items);
@@ -2788,7 +3013,7 @@ function submitEditFieldModal(){
 function openPackContentModal(packId){
   activePackId = packId;
   renderPackContentModal();
-  document.getElementById('pack-content-addcard-btn').onclick = ()=> openCardAddModal(packId);
+  document.getElementById('pack-content-addsticker-btn').onclick = ()=> openStickerAddModal(packId);
   openOverlay('overlay-pack-content');
 }
 function renderPackContentModal(){
@@ -2796,95 +3021,136 @@ function renderPackContentModal(){
   if(!pack) return;
   document.getElementById('pack-content-title').textContent = `Contenu : ${pack.name}`;
   const list = document.getElementById('pack-content-list');
-  if(!pack.cards || pack.cards.length === 0){
-    list.innerHTML = '<div class="empty-note">Aucune carte dans ce paquet.</div>';
+  const totalEl = document.getElementById('pack-content-total');
+  if(!pack.stickers || pack.stickers.length === 0){
+    list.innerHTML = '<div class="empty-note">Aucun sticker dans ce paquet.</div>';
+    if(totalEl) totalEl.textContent = '';
     return;
   }
-  list.innerHTML = pack.cards.map(c=>`
+  // Le total des "chance" ne fait pas forcément 100 : la probabilité RÉELLE de
+  // tirer un sticker donné est chance / total (et non chance directement), donc
+  // on l'affiche à côté de chaque valeur pour que l'admin voie ce qui sera
+  // vraiment tiré plutôt que le chiffre brut qu'il a saisi.
+  const total = pack.stickers.reduce((s,c)=> s + (Number(c.chance)||0), 0);
+  if(totalEl){
+    totalEl.textContent = total === 100
+      ? `Total des chances : 100% (les % affichés correspondent aux tirages réels).`
+      : `Total des chances : ${total}% — les % réels de tirage sont recalculés ci-dessous (chance ÷ total). Clique "Normaliser" pour que les valeurs affichées soient les vraies probabilités.`;
+  }
+  list.innerHTML = pack.stickers.map(c=>{
+    const real = total > 0 ? (Number(c.chance)||0) / total * 100 : 0;
+    return `
     <div class="pack-content-row">
-      ${c.image ? `<img src="${c.image}" alt="">` : '<div class="pack-card-noimg small">🃏</div>'}
+      ${c.image ? `<img src="${c.image}" alt="">` : '<div class="pack-sticker-noimg small">🃏</div>'}
       <div class="pack-content-info">
         <div class="pack-content-name">${escapeHtml(c.name)} ${c.rarity===2?'✨':''}</div>
         <div class="pack-content-controls">
-          <label>Chance <input type="number" min="0" max="100" step="0.1" value="${c.chance}" class="pack-chance-input" data-card-id="${c.id}"> %</label>
-          <label><input type="checkbox" class="pack-rare-checkbox" data-card-id="${c.id}" ${c.rarity===2?'checked':''}> Rare</label>
+          <label>Chance <input type="number" min="0" max="100" step="0.1" value="${c.chance}" class="pack-chance-input" data-sticker-id="${c.id}"> %</label>
+          <span style="color:var(--gold);">≈ ${real.toFixed(1)}% réel</span>
+          <label><input type="checkbox" class="pack-rare-checkbox" data-sticker-id="${c.id}" ${c.rarity===2?'checked':''}> Rare</label>
         </div>
       </div>
-      <span class="shop-item-del" data-card-id="${c.id}">✕</span>
+      <span class="shop-item-del" data-sticker-id="${c.id}">✕</span>
     </div>
-  `).join('');
+  `;
+  }).join('');
   list.querySelectorAll('.pack-chance-input').forEach(inp=>{
     inp.addEventListener('change', ()=>{
-      const card = pack.cards.find(c=>c.id===inp.dataset.cardId);
+      const sticker = pack.stickers.find(c=>c.id===inp.dataset.stickerId);
       const v = parseFloat(inp.value);
-      if(card && !isNaN(v)) card.chance = Math.max(0, v);
+      if(sticker && !isNaN(v)) sticker.chance = Math.max(0, v);
       saveShopItems();
+      renderPackContentModal();
     });
   });
   list.querySelectorAll('.pack-rare-checkbox').forEach(chk=>{
     chk.addEventListener('change', ()=>{
-      const card = pack.cards.find(c=>c.id===chk.dataset.cardId);
-      if(card) card.rarity = chk.checked ? 2 : 1;
+      const sticker = pack.stickers.find(c=>c.id===chk.dataset.stickerId);
+      if(sticker) sticker.rarity = chk.checked ? 2 : 1;
       saveShopItems();
       renderPackContentModal();
     });
   });
   list.querySelectorAll('.shop-item-del').forEach(btn=>{
     btn.addEventListener('click', ()=>{
-      pack.cards = pack.cards.filter(c=>c.id !== btn.dataset.cardId);
+      pack.stickers = pack.stickers.filter(c=>c.id !== btn.dataset.stickerId);
       saveShopItems();
       renderPackContentModal();
     });
   });
 }
 
-function openCardAddModal(packId){
+// Rééchelonne toutes les "chance" du paquet pour qu'elles somment exactement à
+// 100, en gardant leurs proportions relatives intactes : après ça, la valeur
+// affichée pour chaque sticker EST sa vraie probabilité de tirage (fini l'écart
+// entre le % saisi et le % réellement tiré).
+function normalizePackChances(){
+  const pack = shopItems.find(i=>i.id===activePackId);
+  if(!pack || !pack.stickers || pack.stickers.length === 0) return;
+  const total = pack.stickers.reduce((s,c)=> s + (Number(c.chance)||0), 0);
+  if(total <= 0){
+    // Aucune chance définie : on répartit équitablement entre tous les stickers.
+    const equal = +(100 / pack.stickers.length).toFixed(1);
+    pack.stickers.forEach(c=>{ c.chance = equal; });
+  } else {
+    pack.stickers.forEach(c=>{
+      c.chance = +((Number(c.chance)||0) / total * 100).toFixed(1);
+    });
+  }
+  saveShopItems();
+  renderPackContentModal();
+}
+
+function openStickerAddModal(packId){
   activePackId = packId;
-  document.getElementById('card-add-name').value = '';
-  document.getElementById('card-add-file').value = '';
-  document.getElementById('card-add-chance').value = '10';
-  document.getElementById('card-add-rare').checked = false;
-  pendingCardImageDataUrl = null;
-  const canvas = document.getElementById('card-add-canvas');
-  canvas.width = CARD_IMG_W; canvas.height = CARD_IMG_H;
+  document.getElementById('sticker-add-name').value = '';
+  document.getElementById('sticker-add-file').value = '';
+  document.getElementById('sticker-add-chance').value = '10';
+  document.getElementById('sticker-add-rare').checked = false;
+  pendingStickerImageDataUrl = null;
+  const canvas = document.getElementById('sticker-add-canvas');
+  canvas.width = STICKER_IMG_W; canvas.height = STICKER_IMG_H;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#1a1610'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  openOverlay('overlay-card-add');
+  openOverlay('overlay-sticker-add');
 }
-document.getElementById('card-add-file').addEventListener('change', (e)=>{
+document.getElementById('sticker-add-file').addEventListener('change', (e)=>{
   const file = e.target.files[0];
   if(!file) return;
   const reader = new FileReader();
   reader.onload = (ev)=>{
     const img = new Image();
     img.onload = ()=>{
-      const canvas = document.getElementById('card-add-canvas');
-      canvas.width = CARD_IMG_W; canvas.height = CARD_IMG_H;
+      const canvas = document.getElementById('sticker-add-canvas');
+      canvas.width = STICKER_IMG_W; canvas.height = STICKER_IMG_H;
       const ctx = canvas.getContext('2d');
-      // Rognage "cover" pour que toutes les cartes aient la même taille.
-      const targetRatio = CARD_IMG_W / CARD_IMG_H;
+      // Pas de rognage : la photo entière est conservée (mise à l'échelle façon
+      // "contain"), centrée sur un fond uni pour garder un format de sticker homogène.
+      ctx.fillStyle = '#1a1610';
+      ctx.fillRect(0, 0, STICKER_IMG_W, STICKER_IMG_H);
+      const targetRatio = STICKER_IMG_W / STICKER_IMG_H;
       const srcRatio = img.width / img.height;
-      let sx, sy, sw, sh;
-      if(srcRatio > targetRatio){ sh = img.height; sw = sh * targetRatio; sx = (img.width - sw) / 2; sy = 0; }
-      else { sw = img.width; sh = sw / targetRatio; sx = 0; sy = (img.height - sh) / 2; }
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, CARD_IMG_W, CARD_IMG_H);
-      pendingCardImageDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      let dw, dh, dx, dy;
+      if(srcRatio > targetRatio){ dw = STICKER_IMG_W; dh = dw / srcRatio; dx = 0; dy = (STICKER_IMG_H - dh) / 2; }
+      else { dh = STICKER_IMG_H; dw = dh * srcRatio; dy = 0; dx = (STICKER_IMG_W - dw) / 2; }
+      ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, dw, dh);
+      pendingStickerImageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 });
-function submitCardAdd(){
+function submitStickerAdd(){
   const pack = shopItems.find(i=>i.id===activePackId);
   if(!pack) return;
-  const name = document.getElementById('card-add-name').value.trim();
-  const chance = parseFloat(document.getElementById('card-add-chance').value) || 0;
-  const rare = document.getElementById('card-add-rare').checked;
+  const name = document.getElementById('sticker-add-name').value.trim();
+  const chance = parseFloat(document.getElementById('sticker-add-chance').value) || 0;
+  const rare = document.getElementById('sticker-add-rare').checked;
   if(!name) return;
-  if(!pack.cards) pack.cards = [];
-  pack.cards.push({id:'card-'+Date.now()+'-'+Math.floor(Math.random()*1000), name, image: pendingCardImageDataUrl, rarity: rare?2:1, chance});
+  if(!pack.stickers) pack.stickers = [];
+  pack.stickers.push({id:'sticker-'+Date.now()+'-'+Math.floor(Math.random()*1000), name, image: pendingStickerImageDataUrl, rarity: rare?2:1, chance});
   saveShopItems();
-  closeOverlay('overlay-card-add');
+  closeOverlay('overlay-sticker-add');
   if(document.getElementById('overlay-pack-content').style.display === 'flex') renderPackContentModal();
 }
 
@@ -2894,15 +3160,18 @@ function addShopItem(){
   const cost = parseInt(document.getElementById('shop-new-cost').value, 10);
   const desc = document.getElementById('shop-new-desc').value.trim();
   const isPack = document.getElementById('shop-new-ispack').checked;
+  const isCollector = document.getElementById('shop-new-collector').checked;
   if(!name || !cost || cost < 1) return;
   const item = {id:'shop-'+Date.now(), name, cost, desc};
-  if(isPack){ item.type = 'pack'; item.cards = []; }
+  if(isPack){ item.type = 'pack'; item.stickers = []; item.collector = isCollector; }
   shopItems.push(item);
   saveShopItems();
   document.getElementById('shop-new-name').value = '';
   document.getElementById('shop-new-cost').value = '';
   document.getElementById('shop-new-desc').value = '';
   document.getElementById('shop-new-ispack').checked = false;
+  document.getElementById('shop-new-collector').checked = false;
+  document.getElementById('shop-new-collector-wrap').style.display = 'none';
   renderShop();
 }
 
@@ -2910,11 +3179,23 @@ function confirmDeleteShopItem(id){
   const it = shopItems.find(i=>i.id===id);
   if(!it) return;
   resetConfirmBtnStyle();
-  document.getElementById('confirm-title').textContent = `Supprimer "${it.name}" du shop ?`;
+  const isNonCollectorPack = it.type === 'pack' && !it.collector;
+  document.getElementById('confirm-title').textContent = isNonCollectorPack
+    ? `Supprimer "${it.name}" du shop ? Les cartes déjà obtenues et la section du carnet seront aussi supprimées (paquet non collector).`
+    : `Supprimer "${it.name}" du shop ?`;
   const btn = document.getElementById('confirm-btn');
   btn.onclick = ()=>{
     shopItems = shopItems.filter(i=>i.id!==id);
     saveShopItems();
+    // Paquet "collector" : on garde les cartes déjà obtenues et la section du
+    // carnet même après suppression du paquet côté shop. Sinon (non collector),
+    // on supprime aussi les cartes de tous les comptes ainsi que la section.
+    if(isNonCollectorPack){
+      Object.keys(stickerInventory).forEach(accId=>{
+        stickerInventory[accId] = (stickerInventory[accId] || []).filter(c=>c.packId !== id);
+      });
+      saveStickerInventory();
+    }
     renderShop();
     closeOverlay('overlay-confirm');
   };
@@ -3022,7 +3303,7 @@ document.getElementById('adminBtn').addEventListener('contextmenu', (e)=>{
 });
 
 // Panel admin général : choisir un compte et réinitialiser ce qu'on veut dessus
-// (progression, succès, points, cartes, achats du shop, ou tout).
+// (progression, succès, points, stickers, achats du shop, ou tout).
 function openAdminPanel(){
   if(!isUnlocked) return;
   const sel = document.getElementById('admin-panel-account');
@@ -3033,18 +3314,42 @@ function openAdminPanel(){
     sel.innerHTML = realAccounts.map(a=>`<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
     if(activeAccountId && realAccounts.some(a=>a.id===activeAccountId)) sel.value = activeAccountId;
   }
+  document.getElementById('admin-panel-reset-type').value = 'progress';
+  updateAdminPanelActionBtn();
   openOverlay('overlay-admin-panel');
 }
+
+// Le bouton du panel sert à la fois à réinitialiser et à "donner" un montant
+// infini : son texte/couleur s'adaptent au type sélectionné dans le menu.
+function updateAdminPanelActionBtn(){
+  const type = document.getElementById('admin-panel-reset-type').value;
+  const btn = document.getElementById('admin-panel-action-btn');
+  if(!btn) return;
+  if(type === 'give-infinite'){
+    btn.textContent = '🎁 Donner';
+    btn.style.background = 'var(--gold)';
+    btn.style.borderColor = 'var(--gold)';
+    btn.style.color = '#1a1206';
+  } else {
+    btn.textContent = '🗑 Réinitialiser';
+    btn.style.background = '#ff6b6b';
+    btn.style.borderColor = '#ff6b6b';
+    btn.style.color = '#1a0505';
+  }
+}
+
+const ADMIN_INFINITE_AMOUNT = 999999999;
 
 const ADMIN_RESET_LABELS = {
   progress: 'la progression (piliers)',
   badges: 'les succès / badges',
   points: 'les points de saison',
-  cards: 'les cartes obtenues',
+  stickers: 'les stickers obtenus',
   shop: 'les achats du shop',
   crowns: 'les couronnes du Panthéon',
   clicker: 'les clics du jeu 420',
-  all: 'TOUTES les données'
+  all: 'TOUTES les données',
+  'give-infinite': 'un montant infini de points et de fragments'
 };
 
 function confirmAdminPanelReset(){
@@ -3053,12 +3358,22 @@ function confirmAdminPanelReset(){
   const acc = accounts.find(a=>a.id===accId);
   if(!acc) return;
   resetConfirmBtnStyle();
-  document.getElementById('confirm-title').textContent = `Réinitialiser ${ADMIN_RESET_LABELS[type]} de "${acc.name}" ?`;
+  const isGive = type === 'give-infinite';
+  document.getElementById('confirm-title').textContent = isGive
+    ? `Donner ${ADMIN_RESET_LABELS[type]} à "${acc.name}" ?`
+    : `Réinitialiser ${ADMIN_RESET_LABELS[type]} de "${acc.name}" ?`;
   const btn = document.getElementById('confirm-btn');
-  btn.textContent = 'Réinitialiser';
-  btn.style.background = '#ff6b6b';
-  btn.style.borderColor = '#ff6b6b';
-  btn.style.color = '#1a0505';
+  if(isGive){
+    btn.textContent = 'Donner';
+    btn.style.background = 'var(--gold)';
+    btn.style.borderColor = 'var(--gold)';
+    btn.style.color = '#1a1206';
+  } else {
+    btn.textContent = 'Réinitialiser';
+    btn.style.background = '#ff6b6b';
+    btn.style.borderColor = '#ff6b6b';
+    btn.style.color = '#1a0505';
+  }
   btn.onclick = ()=>{
     performAdminReset(accId, type);
     closeOverlay('overlay-confirm');
@@ -3104,9 +3419,9 @@ async function performAdminReset(accId, type){
     savePoints();
     savePointsAwarded();
   }
-  if(type==='cards' || type==='all'){
-    delete cardInventory[accId];
-    saveCardInventory();
+  if(type==='stickers' || type==='all'){
+    delete stickerInventory[accId];
+    saveStickerInventory();
   }
   if(type==='shop' || type==='all'){
     delete shopPurchases[accId];
@@ -3118,6 +3433,12 @@ async function performAdminReset(accId, type){
   }
   if(type==='clicker' || type==='all'){
     try{ syncStorage.removeItem(clickerKeyFor(accId)); }catch(e){}
+  }
+  if(type==='give-infinite'){
+    accountPoints[accId] = ADMIN_INFINITE_AMOUNT;
+    savePoints();
+    accountFragments[accId] = ADMIN_INFINITE_AMOUNT;
+    saveFragments();
   }
 
   if(activeAccountId === accId){
@@ -3249,7 +3570,7 @@ async function setValkyrieState(state){
 let valkyrieSequencePlaying = false;
 function wait(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
 
-// Tant que verrouillée : rien au clic. Une fois débloquée : le pantheon classique
+// Tant que verrouillée : rien au clic. Une fois débloquée : le Panthéon classique
 // s'assombrit, les piliers se rayent puis tombent un par un, Valkyrie apparaît au
 // centre, puis redirection vers le lien et retour à la normale.
 function onValkyrieClick(){
@@ -3489,7 +3810,7 @@ function selectMenuView(name){
   showView(name);
 }
 
-// Carte de l'app : popup de repérage, contenu statique (voir HTML de
+// Carte du Panthéon : popup de repérage, contenu statique (voir HTML de
 // overlay-map). Volontairement pas rattachée à showView : c'est une
 // référence consultable depuis n'importe quelle vue, pas une vue en soi.
 function openMapPopup(){
@@ -3603,11 +3924,11 @@ function render(){
   document.getElementById('count-neutral').textContent = neu;
 
   const validPillars = cases.filter(c=>c.num!=null && getState(c.id)==='valid').length;
-  updatePantheonMessage(validPillars);
+  updatePanthéonMessage(validPillars);
   checkHallCompletion(validPillars);
 }
 
-const PANTHEON_STAGES = [
+const Panthéon_STAGES = [
   {min:0,  text:"..."},
   {min:1,  text:"Rien."},
   {min:3,  text:"Vous entendez des voix lointaines, presque inaudibles."},
@@ -3619,18 +3940,18 @@ const PANTHEON_STAGES = [
   {min:24, text:"Vous avez franchi le Panthéon."}
 ];
 
-let lastPantheonStageText = null;
-function updatePantheonMessage(validCount){
-  let stage = PANTHEON_STAGES[0];
-  for(const s of PANTHEON_STAGES){
+let lastPanthéonStageText = null;
+function updatePanthéonMessage(validCount){
+  let stage = Panthéon_STAGES[0];
+  for(const s of Panthéon_STAGES){
     if(validCount >= s.min) stage = s;
   }
-  const el = document.getElementById('pantheon-message');
-  if(stage.text === lastPantheonStageText){
+  const el = document.getElementById('Panthéon-message');
+  if(stage.text === lastPanthéonStageText){
     el.textContent = stage.text;
     return;
   }
-  lastPantheonStageText = stage.text;
+  lastPanthéonStageText = stage.text;
   el.classList.add('fade');
   setTimeout(()=>{
     el.textContent = stage.text;
@@ -3901,7 +4222,7 @@ async function loadAccounts(){
     accounts = raw ? JSON.parse(raw) : [];
   }catch(e){ accounts = []; }
   // Volontairement : on ne restaure JAMAIS le dernier compte connecté au
-  // lancement. Chaque personne qui ouvre l'appli (sur n'importe quel appareil)
+  // lancement. Chaque personne qui ouvre Panthéon (sur n'importe quel appareil)
   // démarre sur "Invité" et doit se reconnecter elle-même à son compte.
   activeAccountId = null;
 }
@@ -4225,7 +4546,7 @@ async function loadChatFromCloud(){
   if(window.__fb){
     try{
       const fb = window.__fb;
-      const snap = await fb.get(fb.ref(fb.db, 'pantheon_data/' + CHAT_KEY));
+      const snap = await fb.get(fb.ref(fb.db, 'Panthéon_data/' + CHAT_KEY));
       if(snap.exists()){
         const v = snap.val();
         if(typeof v === 'string'){
@@ -4250,7 +4571,7 @@ async function startChatRealtimeListener(){
   try{ await window.__fbReady; }catch(e){}
   if(!window.__fb) return; // mode local uniquement : pas de temps réel possible
   const fb = window.__fb;
-  chatListenerRef = fb.ref(fb.db, 'pantheon_data/' + CHAT_KEY);
+  chatListenerRef = fb.ref(fb.db, 'Panthéon_data/' + CHAT_KEY);
   chatListenerCb = (snap)=>{ applyIncomingChat(snap.val()); };
   fb.onValue(chatListenerRef, chatListenerCb);
 }
@@ -4269,7 +4590,7 @@ async function saveChatToCloud(){
   if(window.__fb){
     try{
       const fb = window.__fb;
-      await fb.set(fb.ref(fb.db, 'pantheon_data/' + CHAT_KEY), json);
+      await fb.set(fb.ref(fb.db, 'Panthéon_data/' + CHAT_KEY), json);
     }catch(e){}
   }
 }
@@ -4390,7 +4711,7 @@ function startChatBackgroundWatch(){
   startChatRealtimeListener();
 }
 
-// Rejoue tout ce que l'appli affiche à partir des données rechargées, sans
+// Rejoue tout ce que Panthéon affiche à partir des données rechargées, sans
 // toucher aux formulaires en cours de saisie (admin, création de case,
 // configuration de saison...) pour ne rien écraser sous les doigts de
 // quelqu'un en train de taper — ces écrans-là restent à rouvrir pour voir
@@ -4398,13 +4719,13 @@ function startChatBackgroundWatch(){
 let cloudRefreshTimer = null;
 function refreshFromCloud(){
   // Regroupe les changements rapprochés (plusieurs clics d'affilée ailleurs)
-  // en un seul rafraîchissement, pour éviter de re-rendre l'appli en rafale.
+  // en un seul rafraîchissement, pour éviter de re-rendre Panthéon en rafale.
   if(cloudRefreshTimer) clearTimeout(cloudRefreshTimer);
   cloudRefreshTimer = setTimeout(applyCloudRefresh, 150);
 }
 
 // loadAccounts() remet toujours activeAccountId à null (comportement voulu
-// au lancement de l'appli, voir sa définition). En plein rafraîchissement
+// au lancement de Panthéon, voir sa définition). En plein rafraîchissement
 // temps réel, il ne faut surtout PAS déconnecter la personne en cours de
 // session à chaque changement distant : on recharge la liste des comptes
 // mais on restaure ensuite le compte actif s'il existe toujours.
@@ -4431,7 +4752,7 @@ async function applyCloudRefresh(){
   await loadHallShameData();
   loadQuests();
   loadSeasonData();
-  ensureDefaultCardPack();
+  ensureDefaultStickerPack();
   checkValkyrieAutoUnlock();
 
   render();
@@ -4454,6 +4775,14 @@ async function applyCloudRefresh(){
   if(document.getElementById('overlay-comparison').style.display === 'flex'){
     openComparisonPopup();
   }
+  // Idem pour le carnet de stickers : si un paquet est créé/supprimé pendant qu'il
+  // est ouvert (par un autre appareil ou via un autre onglet), ses sections (onglets)
+  // se régénèrent immédiatement sans que l'utilisateur ait à le rouvrir.
+  if(document.getElementById('overlay-sticker-carnet').style.display === 'flex'){
+    buildCarnetPages();
+    renderStickerCarnetTabs();
+    renderStickerCarnetPage();
+  }
 }
 
 // IMPORTANT : le script Firebase (plus haut, en type="module") s'exécute en
@@ -4463,7 +4792,7 @@ async function applyCloudRefresh(){
 // que le cloud n'est pas configuré (hasCloud resterait bloqué à false pour
 // toute la session). On attend donc l'événement DOMContentLoaded, qui ne se
 // déclenche qu'une fois tous les scripts différés/modules exécutés.
-function startPantheonApp(){
+function startPanthéonApp(){
   (async function init(){
     await syncStorage.preloadAndSync(refreshFromCloud);
     await loadAccounts();
@@ -4477,7 +4806,7 @@ function startPantheonApp(){
     await loadHallShameData();
     loadQuests();
     loadSeasonData();
-    ensureDefaultCardPack();
+    ensureDefaultStickerPack();
     checkValkyrieAutoUnlock();
     render();
     updateAccountButton();
@@ -4487,11 +4816,11 @@ function startPantheonApp(){
 }
 
 if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', startPantheonApp);
+  document.addEventListener('DOMContentLoaded', startPanthéonApp);
 } else {
   // Cas rare où le script s'exécute alors que le DOM est déjà chargé :
   // on démarre directement.
-  startPantheonApp();
+  startPanthéonApp();
 }
 </script>
 </body>
