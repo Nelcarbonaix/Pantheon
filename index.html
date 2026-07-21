@@ -236,6 +236,8 @@
     .stat{padding:5px 10px;}
     .menu-btn{top:10px;left:10px;font-size:11px;padding:7px 12px;}
     .menu-dropdown{top:46px;left:10px;}
+    .chill-btn{left:100px;}
+    .chill-dropdown{left:100px;}
     .account-btn{bottom:10px;left:10px;max-width:150px;padding:5px 12px 5px 5px;}
     .account-btn-avatar{width:22px;height:22px;font-size:12px;}
     .fab{right:16px;bottom:16px;width:52px;height:52px;font-size:26px;}
@@ -547,6 +549,35 @@
   .menu-item.shame{color:var(--purple-neon);}
   .menu-item.shame:hover{background:rgba(192,96,255,0.12);}
   .menu-item.unlocked{color:var(--green-neon);}
+
+  .chill-btn{left:130px;border-color:var(--purple-neon);color:var(--purple-neon);
+    box-shadow:0 0 10px rgba(192,96,255,0.25);}
+  .chill-btn:hover{background:rgba(192,96,255,0.12);}
+  .chill-dropdown{left:130px;border-color:var(--purple-neon);min-width:140px;
+    box-shadow:0 6px 24px rgba(0,0,0,0.5), 0 0 10px rgba(192,96,255,0.25);}
+
+  .clicker-stats{color:var(--stone);font-size:13px;margin-bottom:26px;letter-spacing:0.5px;}
+  .clicker-wrap{display:flex;justify-content:center;padding:40px 0;}
+  .clicker-btn{
+    width:180px;height:180px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #2a2013, var(--bg-panel));
+    border:3px solid var(--gold);color:var(--gold);
+    font-size:34px;font-weight:700;letter-spacing:2px;cursor:pointer;
+    box-shadow:0 0 20px rgba(230,196,95,0.35), inset 0 0 20px rgba(230,196,95,0.15);
+    transition:transform .08s ease, background .3s ease, border-color .3s ease, color .3s ease, box-shadow .3s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .clicker-btn:active{transform:scale(0.94);}
+  .clicker-btn.golden{
+    background:#000;border-color:#fff;color:#fff;
+    box-shadow:0 0 30px rgba(255,255,255,0.5), inset 0 0 20px rgba(255,255,255,0.2);
+    animation:golden-pulse 1s ease-in-out infinite;
+  }
+  @keyframes golden-pulse{
+    0%,100%{box-shadow:0 0 30px rgba(255,255,255,0.5), inset 0 0 20px rgba(255,255,255,0.2);}
+    50%{box-shadow:0 0 50px rgba(255,255,255,0.85), inset 0 0 30px rgba(255,255,255,0.35);}
+  }
+  #view-clicker.clicker-golden-bg{background:#000;border-radius:16px;}
 
   .hof-grid{
     display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
@@ -1129,6 +1160,21 @@
     <div class="shop-grid" id="inv-items-grid"></div>
   </div>
 
+  <!-- VUE CLICKER (420) -->
+  <div class="view" id="view-clicker">
+    <div class="top-row">
+      <span class="link-back" onclick="showView('grid')">← Retour au Panthéon</span>
+    </div>
+    <header style="margin-bottom:20px;">
+      <h1 style="font-size:clamp(22px,4vw,32px);">420</h1>
+      <div class="subtitle">1000 clics = 100 points</div>
+    </header>
+    <div class="clicker-stats" id="clicker-stats">0 clics · 0 / 1000</div>
+    <div class="clicker-wrap" id="clicker-wrap">
+      <button class="clicker-btn" id="clicker-btn" onclick="handleClickerClick()">420</button>
+    </div>
+  </div>
+
 </div>
 
 <div class="menu-btn" id="menuBtn" onclick="toggleMenuDropdown(event)" title="Menu">☰ Menu</div>
@@ -1139,6 +1185,11 @@
   <div class="menu-item" id="questsBtn" onclick="selectMenuView('quests')" title="Voir les quêtes cachées">🔒 Quêtes</div>
   <div class="menu-item" onclick="selectMenuView('shop')" title="Voir le Shop">🛒 Shop</div>
   <div class="menu-item" onclick="selectMenuView('inventory')" title="Voir le profil">👤 Profil</div>
+</div>
+
+<div class="menu-btn chill-btn" id="chillBtn" onclick="toggleChillDropdown(event)" title="Chill">😎 Chill</div>
+<div class="menu-dropdown chill-dropdown" id="chillDropdown">
+  <div class="menu-item" onclick="selectMenuView('clicker')">🔥 420</div>
 </div>
 
 
@@ -1246,11 +1297,8 @@
     <h3>💬 Tchat</h3>
     <p class="chat-sub">Partagé entre tous ceux qui utilisent l'appli.</p>
     <div class="chat-messages" id="chat-messages"></div>
-    <div class="chat-pseudo-row" id="chat-pseudo-row" style="display:none;">
-      <label style="margin-top:0;">Ton pseudo</label>
-      <input type="text" id="chat-pseudo-input" placeholder="Pseudo affiché dans le tchat" maxlength="24">
-    </div>
-    <div class="chat-input-row">
+    <p class="chat-sub" id="chat-guest-note" style="display:none;color:var(--stone);">Connecte-toi à un compte pour pouvoir écrire dans le tchat.</p>
+    <div class="chat-input-row" id="chat-input-row">
       <input type="text" id="chat-input" placeholder="Écrire un message..." maxlength="500" onkeydown="if(event.key==='Enter')sendChatMessage();">
       <button class="btn primary" onclick="sendChatMessage()">Envoyer</button>
     </div>
@@ -1258,6 +1306,7 @@
       <button class="btn ghost" onclick="closeChatPopup()">Fermer</button>
     </div>
   </div>
+
 </div>
 
 <!-- modal classement -->
@@ -1520,6 +1569,10 @@ const STATES_KEY = 'pantheon-states-v1';
 const TEMP_ACCOUNT_ID = 'temp-admin';
 const SECRET_VOID_ID = 'secret-void';
 const SECRETS_KEY = 'pantheon-secrets-v1';
+const CLICKER_KEY = 'pantheon-clicker-v1'; // {compte: nombre total de clics} — propre à chaque profil
+const CLICKER_POINTS_PER_1000 = 100;
+const CLICKER_EASTER_EGG_CHANCE = 0.001; // 0.1%
+const CLICKER_EASTER_EGG_BONUS = 521;
 
 // ---------- Saisons / points / shop ----------
 const SEASON_KEY = 'pantheon-season-v1';               // {start:{y,m,d}|null, end:{y,m,d}|null}
@@ -1833,6 +1886,63 @@ async function saveStates(){
   }
 }
 
+/* ---------- Clicker 420 (Chill) ---------- */
+
+function clickerKeyFor(accountId){
+  return accountId ? (CLICKER_KEY + '-acc-' + accountId) : CLICKER_KEY;
+}
+
+let accountClickerCount = 0;
+let clickerGoldenMode = false; // true si l'easter egg a été déclenché et attend le clic bonus
+
+async function loadClickerCount(){
+  try{
+    const raw = syncStorage.getItem(clickerKeyFor(activeAccountId));
+    accountClickerCount = raw ? (parseInt(raw, 10) || 0) : 0;
+  }catch(e){ accountClickerCount = 0; }
+  clickerGoldenMode = false;
+}
+
+function saveClickerCount(){
+  if(activeAccountId === TEMP_ACCOUNT_ID || activeAccountId === SECRET_VOID_ID) return;
+  try{ syncStorage.setItem(clickerKeyFor(activeAccountId), String(accountClickerCount)); }catch(e){}
+}
+
+function renderClickerView(){
+  const statsEl = document.getElementById('clicker-stats');
+  const progress = accountClickerCount % 1000;
+  statsEl.textContent = `${accountClickerCount} clics · ${progress} / 1000`;
+  const btn = document.getElementById('clicker-btn');
+  const view = document.getElementById('view-clicker');
+  btn.classList.toggle('golden', clickerGoldenMode);
+  btn.textContent = clickerGoldenMode ? '???' : '420';
+  view.classList.toggle('clicker-golden-bg', clickerGoldenMode);
+}
+
+function handleClickerClick(){
+  if(clickerGoldenMode){
+    // Clic bonus sur le bouton transformé : +521 points et déblocage de la quête 2.
+    clickerGoldenMode = false;
+    if(accountEarnsPoints(activeAccountId)) awardPoints(activeAccountId, CLICKER_EASTER_EGG_BONUS);
+    if(questsState.states['quest-2'] !== 'valid') setQuestState('quest-2', 'valid');
+    renderClickerView();
+    return;
+  }
+
+  accountClickerCount++;
+  saveClickerCount();
+
+  if(accountClickerCount % 1000 === 0 && accountEarnsPoints(activeAccountId)){
+    awardPoints(activeAccountId, CLICKER_POINTS_PER_1000);
+  }
+
+  if(Math.random() < CLICKER_EASTER_EGG_CHANCE){
+    clickerGoldenMode = true;
+  }
+
+  renderClickerView();
+}
+
 let saveIndicatorTimeout = null;
 function showSaveIndicator(isError){
   let el = document.getElementById('save-indicator');
@@ -1945,6 +2055,7 @@ async function claimVoidBadge(){
   accounts = accounts.filter(a=>a.id!==SECRET_VOID_ID);
   setActiveAccount(targetId);
   await loadStates();
+  await loadClickerCount();
   await loadValidationDates();
   await loadSecrets();
   await unlockSecret('void', 'Void');
@@ -2824,6 +2935,7 @@ async function performAdminReset(accId, type){
 
   if(activeAccountId === accId){
     await loadStates();
+    await loadClickerCount();
     await loadValidationDates();
     await loadSecrets();
     render();
@@ -3159,6 +3271,7 @@ function showView(name){
   document.getElementById('view-quests').classList.toggle('active', name==='quests');
   document.getElementById('view-shop').classList.toggle('active', name==='shop');
   document.getElementById('view-inventory').classList.toggle('active', name==='inventory');
+  document.getElementById('view-clicker').classList.toggle('active', name==='clicker');
   document.querySelector('.fab').style.display = (name==='grid') ? 'flex' : 'none';
   if(name==='create') renderCustomList();
   if(name==='halloffame') renderHallOfFame();
@@ -3167,15 +3280,24 @@ function showView(name){
   if(name==='quests') renderQuests();
   if(name==='shop') renderShop();
   if(name==='inventory') renderInventory();
+  if(name==='clicker') renderClickerView();
 }
 
 function toggleMenuDropdown(e){
   e.stopPropagation();
+  document.getElementById('chillDropdown').classList.remove('open');
   document.getElementById('menuDropdown').classList.toggle('open');
+}
+
+function toggleChillDropdown(e){
+  e.stopPropagation();
+  document.getElementById('menuDropdown').classList.remove('open');
+  document.getElementById('chillDropdown').classList.toggle('open');
 }
 
 function selectMenuView(name){
   document.getElementById('menuDropdown').classList.remove('open');
+  document.getElementById('chillDropdown').classList.remove('open');
   showView(name);
 }
 
@@ -3183,6 +3305,10 @@ document.addEventListener('click', (e)=>{
   const dd = document.getElementById('menuDropdown');
   if(dd && dd.classList.contains('open') && !e.target.closest('.menu-dropdown') && !e.target.closest('#menuBtn')){
     dd.classList.remove('open');
+  }
+  const cd = document.getElementById('chillDropdown');
+  if(cd && cd.classList.contains('open') && !e.target.closest('.chill-dropdown') && !e.target.closest('#chillBtn')){
+    cd.classList.remove('open');
   }
 });
 
@@ -3577,10 +3703,10 @@ async function loadAccounts(){
     const raw = syncStorage.getItem(ACCOUNTS_KEY);
     accounts = raw ? JSON.parse(raw) : [];
   }catch(e){ accounts = []; }
-  try{
-    const savedId = syncStorage.getItem(ACTIVE_ACCOUNT_KEY);
-    activeAccountId = (savedId && accounts.find(a=>a.id===savedId)) ? savedId : null;
-  }catch(e){ activeAccountId = null; }
+  // Volontairement : on ne restaure JAMAIS le dernier compte connecté au
+  // lancement. Chaque personne qui ouvre l'appli (sur n'importe quel appareil)
+  // démarre sur "Invité" et doit se reconnecter elle-même à son compte.
+  activeAccountId = null;
 }
 
 async function saveAccounts(){
@@ -3589,16 +3715,9 @@ async function saveAccounts(){
 }
 
 function setActiveAccount(id){
+  // Le compte actif n'est plus du tout persisté (ni localement, ni dans le
+  // cloud) : il ne vit qu'en mémoire, pour la durée de cette session/onglet.
   activeAccountId = id;
-  try{
-    if(id === TEMP_ACCOUNT_ID){
-      // Session de test uniquement : on ne touche pas au compte actif persisté,
-      // pour qu'un rafraîchissement retrouve le vrai profil précédent.
-      return;
-    }
-    if(id) syncStorage.setItem(ACTIVE_ACCOUNT_KEY, id);
-    else syncStorage.removeItem(ACTIVE_ACCOUNT_KEY);
-  }catch(e){}
 }
 
 function updateAccountButton(){
@@ -3699,6 +3818,7 @@ async function selectAccount(id, skipPasswordCheck){
 async function actuallySwitchAccount(id){
   setActiveAccount(id);
   await loadStates();
+  await loadClickerCount();
   await loadValidationDates();
   await loadSecrets();
   render();
@@ -3834,6 +3954,7 @@ function confirmDeleteAccount(id){
     if(activeAccountId === id){
       setActiveAccount(null);
       await loadStates();
+      await loadClickerCount();
       await loadValidationDates();
       await loadSecrets();
       render();
@@ -3916,32 +4037,18 @@ async function saveChatToCloud(){
 
 function getChatDisplayName(){
   const acc = accounts.find(a=>a.id===activeAccountId);
-  if(acc && acc.name) return acc.name;
-  let pseudo = '';
-  try{ pseudo = syncStorage.getItem(CHAT_PSEUDO_KEY) || ''; }catch(e){}
-  return pseudo || 'Invité';
-}
-
-function needsPseudoPrompt(){
-  const acc = accounts.find(a=>a.id===activeAccountId);
-  if(acc && acc.name) return false;
-  return !syncStorage.getItem(CHAT_PSEUDO_KEY);
+  return acc ? acc.name : null;
 }
 
 async function openChatPopup(){
   openOverlay('overlay-chat');
-  const pseudoRow = document.getElementById('chat-pseudo-row');
-  const pseudoInput = document.getElementById('chat-pseudo-input');
-  if(needsPseudoPrompt()){
-    pseudoRow.style.display = 'block';
-    pseudoInput.value = '';
-  } else {
-    pseudoRow.style.display = 'none';
-  }
+  const isGuest = !getChatDisplayName();
+  document.getElementById('chat-guest-note').style.display = isGuest ? 'block' : 'none';
+  document.getElementById('chat-input-row').style.display = isGuest ? 'none' : 'flex';
   await loadChatFromCloud();
   renderChat();
   markChatSeen();
-  document.getElementById('chat-input').focus();
+  if(!isGuest) document.getElementById('chat-input').focus();
   if(chatPollTimer) clearInterval(chatPollTimer);
   chatPollTimer = setInterval(async ()=>{
     await loadChatFromCloud();
@@ -3975,25 +4082,19 @@ function renderChat(){
 }
 
 async function sendChatMessage(){
+  const myName = getChatDisplayName();
+  if(!myName) return; // Invité : ne peut pas écrire dans le tchat
+
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if(!text) return;
-
-  const pseudoRow = document.getElementById('chat-pseudo-row');
-  if(pseudoRow.style.display !== 'none'){
-    const pseudoInput = document.getElementById('chat-pseudo-input');
-    const pseudo = pseudoInput.value.trim();
-    if(!pseudo){ pseudoInput.focus(); return; }
-    try{ syncStorage.setItem(CHAT_PSEUDO_KEY, pseudo); }catch(e){}
-    pseudoRow.style.display = 'none';
-  }
 
   // On récupère la version la plus récente avant d'ajouter, pour limiter
   // les pertes en cas d'écriture simultanée par un autre utilisateur.
   await loadChatFromCloud();
   chatMessages.push({
     id: 'msg-' + Date.now() + '-' + Math.random().toString(36).slice(2,8),
-    name: getChatDisplayName(),
+    name: myName,
     text: text,
     ts: Date.now()
   });
@@ -4041,6 +4142,7 @@ function startPantheonApp(){
     await loadAccounts();
     await loadData();
     await loadStates();
+    await loadClickerCount();
     await loadValidationDates();
     await loadSecrets();
     await loadHallData();
