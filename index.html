@@ -436,6 +436,23 @@
     background:var(--bg-deep);color:var(--white-neon);font-size:14px;
   }
   .modal input:focus{outline:none;border-color:var(--gold);}
+  .modal select{
+    width:100%;padding:10px 36px 10px 12px;border-radius:8px;border:1px solid #33291a;
+    background:var(--bg-deep);color:var(--white-neon);font-size:13.5px;cursor:pointer;
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23e6c45f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;
+    transition:border-color .15s ease;
+  }
+  .modal select:hover{border-color:var(--gold-deep);}
+  .modal select:focus{outline:none;border-color:var(--gold);}
+  .modal select option{background:var(--bg-panel);color:var(--white-neon);}
+  .admin-panel-modal h3{text-align:center;}
+  .admin-panel-sub{color:var(--stone);font-size:12.5px;margin:-8px 0 16px;text-align:center;}
+  .admin-panel-section{background:rgba(230,196,95,0.04);border:1px solid #2a2013;border-radius:12px;padding:14px 16px 16px;margin-bottom:14px;}
+  .admin-panel-section-title{font-size:11px;letter-spacing:1.2px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;opacity:0.85;}
+  .admin-panel-section label.modal{margin-top:0;}
+  .admin-panel-action-full{width:100%;margin-top:6px;font-weight:600;}
   .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
   .btn{padding:9px 18px;border-radius:8px;border:1px solid var(--gold-deep);background:transparent;
     color:var(--gold);cursor:pointer;font-size:13px;}
@@ -501,7 +518,7 @@
     background:var(--bg-deep);color:var(--white-neon);font-size:14px;
   }
   .field input[type=file]{color:var(--stone);font-size:12.5px;}
-  .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+  .top-row{display:flex;justify-content:flex-end;align-items:center;margin-bottom:18px;}
   .link-back{color:var(--gold);cursor:pointer;font-size:13px;letter-spacing:1px;}
   .link-back:hover{text-decoration:underline;}
 
@@ -1276,7 +1293,7 @@
     </div>
     <header style="margin-bottom:20px;">
       <h1 style="font-size:clamp(22px,4vw,32px);">420</h1>
-      <div class="subtitle">1000 clics = 250 fragments · pause de 2h ensuite</div>
+      <div class="subtitle" id="clicker-subtitle">free money, be quick !!</div>
     </header>
     <div class="clicker-stats" id="clicker-stats">0 clics · 0 / 1000</div>
     <div class="clicker-wrap" id="clicker-wrap">
@@ -1298,7 +1315,7 @@
   <div class="menu-item" id="questsBtn" onclick="selectMenuView('quests')" title="Voir les quêtes cachées">🔒 Quêtes</div>
   <div class="menu-item" onclick="selectMenuView('shop')" title="Voir le Shop">🛒 Shop</div>
   <div class="menu-item" onclick="selectMenuView('inventory')" title="Voir le profil">👤 Profil</div>
-  <div class="menu-item" onclick="openMapPopup()" title="Voir la carte de l'app">🗺️ Carte</div>
+  <div class="menu-item" onclick="openMapPopup()" title="Voir la carte du Panthéon">🗺️ Carte</div>
 </div>
 
 <div class="menu-btn chill-btn" id="chillBtn" onclick="toggleChillDropdown(event)" title="Chill">Chill</div>
@@ -1441,13 +1458,13 @@
      déclencheur, et rien de ce qui concerne l'admin n'y figure. -->
 <div class="overlay" id="overlay-map">
   <div class="modal" style="width:min(480px,92vw);">
-    <h3>🗺️ Carte de l'app</h3>
+    <h3>🗺️ Carte du Panthéon</h3>
     <p style="color:var(--stone);font-size:12.5px;margin-top:-6px;">Ce qui est relié à quoi, pour mieux se repérer.</p>
     <div class="map-list">
 
       <div class="map-item">
-        <div class="map-item-title">🗿 Piliers</div>
-        <div class="map-item-desc">La grille principale : chaque case peut être validée ou invalidée. C'est le cœur de l'app.</div>
+        <div class="map-item-title">⛓️ Piliers</div>
+        <div class="map-item-desc">Les escaliers menant au Panthéon.</div>
         <div class="map-item-links">→ relié à : Défi du jour, Badges, Hall of Fame, Points de saison, Comparaison</div>
       </div>
 
@@ -1476,7 +1493,7 @@
 
       <div class="map-item">
         <div class="map-item-title">✨ Points de saison</div>
-        <div class="map-item-desc">Gagnés en validant des piliers, en réussissant le défi du jour, et via certains éléments <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-desc">Gagnés en validant les piliers, en réussissant le défi du jour, en jouant aux mini-jeux, et aussi via certains éléments <span class="map-secret">[secret]</span>.</div>
         <div class="map-item-links">→ relié à : Shop</div>
       </div>
 
@@ -1488,7 +1505,7 @@
 
       <div class="map-item">
         <div class="map-item-title">🏷️ Stickers</div>
-        <div class="map-item-desc">Obtenus via les paquets du Shop, classés par rareté et consultables dans un carnet dédié.</div>
+        <div class="map-item-desc">Obtenus via les paquets du Shop, classés par rareté et consultables dans un carnet dédié. Offert au premier achat.</div>
         <div class="map-item-links">→ relié à : Shop, Profil</div>
       </div>
 
@@ -1515,8 +1532,14 @@
       </div>
 
       <div class="map-item">
-        <div class="map-item-title">🔥 Chill / 420</div>
-        <div class="map-item-desc">Mini-jeu de clics indépendant, qui rapporte aussi des points de saison à intervalle régulier. Contient un élément <span class="map-secret">[secret]</span>.</div>
+        <div class="map-item-title">🔥 Chill</div>
+        <div class="map-item-desc">Partie du Panthéon aidant à la collecte de points de saison.</div>
+        <div class="map-item-links">→ relié à : Points de saison</div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-item-title">🖱️ 420</div>
+        <div class="map-item-desc">Who doesn't like clicking? Maybe a secret lies here... who knows? <span class="map-secret">[secret]</span></div>
         <div class="map-item-links">→ relié à : Points de saison</div>
       </div>
 
@@ -1586,7 +1609,7 @@
     <div class="pack-content-list" id="pack-content-list"></div>
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeOverlay('overlay-pack-content')">Fermer</button>
-      <button class="btn ghost" id="pack-content-normalize-btn" onclick="normalizePackChances()">⚖️ Normaliser à 100%</button>
+      <button class="btn ghost" id="pack-content-normalize-btn" onclick="distributeEqualChances()">⚖️ Répartir équitablement</button>
       <button class="btn primary" id="pack-content-addsticker-btn">➕ Ajouter un sticker</button>
     </div>
   </div>
@@ -1637,35 +1660,38 @@
 
 <!-- panel admin général (clic droit sur le bouton admin invisible) -->
 <div class="overlay" id="overlay-admin-panel">
-  <div class="modal" style="width:min(420px,92vw);">
+  <div class="modal admin-panel-modal" style="width:min(440px,92vw);">
     <h3>🛠 Panel Admin</h3>
-    <p style="color:var(--stone);font-size:12.5px;margin-top:-6px;">Réservé à l'admin.</p>
+    <p class="admin-panel-sub">Réservé à l'admin.</p>
 
-    <label>Compte</label>
-    <select id="admin-panel-account"></select>
+    <div class="admin-panel-section">
+      <div class="admin-panel-section-title">Gestion d'un compte</div>
+      <label>Compte</label>
+      <select id="admin-panel-account"></select>
 
-    <label>Réinitialiser</label>
-    <select id="admin-panel-reset-type" onchange="updateAdminPanelActionBtn()">
-      <option value="progress">Piliers (progression)</option>
-      <option value="badges">Succès / badges</option>
-      <option value="points">Points de saison</option>
-      <option value="stickers">Stickers obtenus</option>
-      <option value="shop">Achats du shop</option>
-      <option value="crowns">Couronnes du Panthéon</option>
-      <option value="clicker">Clics du jeu 420</option>
-      <option value="all">⚠️ Tout réinitialiser</option>
-      <option value="give-infinite">🎁 Donner un montant infini (points + fragments)</option>
-    </select>
-    <div class="modal-actions" style="justify-content:flex-start;">
-      <button class="btn ghost" id="admin-panel-action-btn" style="background:#ff6b6b;border-color:#ff6b6b;color:#1a0505;" onclick="confirmAdminPanelReset()">🗑 Réinitialiser</button>
+      <label>Action</label>
+      <select id="admin-panel-reset-type" onchange="updateAdminPanelActionBtn()">
+        <option value="progress">Piliers (progression)</option>
+        <option value="badges">Succès / badges</option>
+        <option value="points">Points de saison</option>
+        <option value="stickers">Stickers obtenus</option>
+        <option value="shop">Achats du shop</option>
+        <option value="crowns">Couronnes du Panthéon</option>
+        <option value="clicker">Clics du jeu 420</option>
+        <option value="all">⚠️ Tout réinitialiser</option>
+        <option value="give-infinite">🎁 Donner un montant infini (points + fragments)</option>
+      </select>
+      <button class="btn ghost admin-panel-action-full" id="admin-panel-action-btn" style="background:#ff6b6b;border-color:#ff6b6b;color:#1a0505;" onclick="confirmAdminPanelReset()">🗑 Réinitialiser</button>
     </div>
 
-    <div class="modal-actions" style="justify-content:center;margin-top:10px;border-top:1px solid #2a2013;padding-top:12px;">
-      <button class="btn ghost" style="background:#ff6b6b;border-color:#ff6b6b;color:#1a0505;" onclick="confirmResetChat()">🗑 Réinitialiser le tchat</button>
+    <div class="admin-panel-section">
+      <div class="admin-panel-section-title">Tchat</div>
+      <button class="btn ghost" style="width:100%;background:#ff6b6b;border-color:#ff6b6b;color:#1a0505;" onclick="confirmResetChat()">🗑 Réinitialiser le tchat</button>
     </div>
 
-    <div class="modal-actions" style="justify-content:center;margin-top:10px;border-top:1px solid #2a2013;padding-top:12px;">
-      <button class="btn ghost" onclick="closeOverlay('overlay-admin-panel');openSeasonConfigPopup()">⚙️ Configurer la saison</button>
+    <div class="admin-panel-section">
+      <div class="admin-panel-section-title">Saison</div>
+      <button class="btn ghost" style="width:100%;" onclick="closeOverlay('overlay-admin-panel');openSeasonConfigPopup()">⚙️ Configurer la saison</button>
     </div>
 
     <div class="modal-actions">
@@ -2192,6 +2218,7 @@ function renderClickerView(){
   const view = document.getElementById('view-clicker');
   const exchangeBtn = document.getElementById('clicker-exchange-btn');
   const cooldownEl = document.getElementById('clicker-cooldown');
+  const subtitleEl = document.getElementById('clicker-subtitle');
 
   const remaining = clickerCooldownRemaining();
   clearInterval(clickerCooldownTimer);
@@ -2201,6 +2228,7 @@ function renderClickerView(){
     btn.classList.remove('golden');
     btn.textContent = '420';
     view.classList.remove('clicker-golden-bg');
+    if(subtitleEl) subtitleEl.textContent = "Don't be impatient.";
     if(cooldownEl){
       cooldownEl.style.display = 'block';
       cooldownEl.textContent = `⏳ Pause de 2h — reprend dans ${formatCooldown(remaining)}`;
@@ -2216,6 +2244,7 @@ function renderClickerView(){
     }, 1000);
   } else {
     btn.disabled = false;
+    if(subtitleEl) subtitleEl.textContent = 'free money, be quick !!';
     if(cooldownEl) cooldownEl.style.display = 'none';
     btn.classList.toggle('golden', clickerGoldenMode);
     btn.textContent = clickerGoldenMode ? '???' : '420';
@@ -2526,6 +2555,7 @@ function renderInventory(){
   const challengeRec = (pointsAwarded[activeAccountId] && pointsAwarded[activeAccountId].challenges) || {};
   const challengeCount = Object.keys(challengeRec).length;
   const money = accountPoints[activeAccountId] || 0;
+  const frags = activeAccountId ? (accountFragments[activeAccountId] || 0) : 0;
 
   const secretsUnlocked = BADGES_CATALOG.filter(b=>!!accountSecrets[b.id]).length;
   const totalBadges = pillars.length + BADGES_CATALOG.length;
@@ -2543,15 +2573,19 @@ function renderInventory(){
     <div class="inv-info-card"><div class="inv-info-num">${invalidCount}</div><div class="inv-info-label">Non validés</div></div>
     <div class="inv-info-card"><div class="inv-info-num">${challengeCount}</div><div class="inv-info-label">Défis du jour réussis</div></div>
     <div class="inv-info-card"><div class="inv-info-num">${money}</div><div class="inv-info-label">Argent</div></div>
+    <div class="inv-info-card"><div class="inv-info-num">💠 ${frags}</div><div class="inv-info-label">Fragments</div></div>
     <div class="inv-info-card"><div class="inv-info-num">${badgesUnlocked}/${totalBadges}</div><div class="inv-info-label">Badges</div></div>
     <div class="inv-info-card"><div class="inv-info-num">${rankLabel}</div><div class="inv-info-label">Rang de saison</div></div>
   `;
 
   const itemsGrid = document.getElementById('inv-items-grid');
-  const owned = shopPurchases[activeAccountId] || [];
+  // Le compte "Invité" (aucun profil sélectionné) ne peut jamais avoir de
+  // collectible : même si une donnée résiduelle existait sous une clé vide,
+  // on l'ignore explicitement ici.
+  const owned = activeAccountId ? (shopPurchases[activeAccountId] || []) : [];
   const ownedItems = shopItems.filter(it=>owned.includes(it.id));
-  const hasStickers = (stickerInventory[activeAccountId] || []).length > 0;
-  const crownCount = accountCrowns[activeAccountId] || 0;
+  const hasStickers = activeAccountId ? (stickerInventory[activeAccountId] || []).length > 0 : false;
+  const crownCount = activeAccountId ? (accountCrowns[activeAccountId] || 0) : 0;
   if(ownedItems.length === 0 && !hasStickers && crownCount === 0){
     itemsGrid.innerHTML = '<div class="empty-note" style="grid-column:1/-1;text-align:center;">Aucun objet acheté pour l\'instant.</div>';
   } else {
@@ -2891,7 +2925,7 @@ function openStickerCarnet(){
 // le shop, en y ajoutant aussi les paquets déjà collectés même s'ils ont depuis été
 // supprimés du shop (pour ne jamais perdre l'affichage de stickers déjà obtenus).
 function buildCarnetPages(){
-  const entries = stickerInventory[activeAccountId] || [];
+  const entries = activeAccountId ? (stickerInventory[activeAccountId] || []) : [];
   const byPack = {};
   entries.forEach(e=>{
     if(!byPack[e.packId]) byPack[e.packId] = {name:e.packName, stickers:{}};
@@ -3026,39 +3060,28 @@ function renderPackContentModal(){
     if(totalEl) totalEl.textContent = '';
     return;
   }
-  // Le total des "chance" ne fait pas forcément 100 : la probabilité RÉELLE de
-  // tirer un sticker donné est chance / total (et non chance directement), donc
-  // on l'affiche à côté de chaque valeur pour que l'admin voie ce qui sera
-  // vraiment tiré plutôt que le chiffre brut qu'il a saisi.
+  // Grâce à setStickerChance / removeStickerFromPack, le total fait TOUJOURS 100 :
+  // la valeur affichée pour chaque sticker est donc directement sa vraie probabilité
+  // de tirage, pas besoin de recalcul ni de bouton "Normaliser".
   const total = pack.stickers.reduce((s,c)=> s + (Number(c.chance)||0), 0);
-  if(totalEl){
-    totalEl.textContent = total === 100
-      ? `Total des chances : 100% (les % affichés correspondent aux tirages réels).`
-      : `Total des chances : ${total}% — les % réels de tirage sont recalculés ci-dessous (chance ÷ total). Clique "Normaliser" pour que les valeurs affichées soient les vraies probabilités.`;
-  }
-  list.innerHTML = pack.stickers.map(c=>{
-    const real = total > 0 ? (Number(c.chance)||0) / total * 100 : 0;
-    return `
+  if(totalEl) totalEl.textContent = `Total des chances : ${total.toFixed(1)}%.`;
+  list.innerHTML = pack.stickers.map(c=>`
     <div class="pack-content-row">
       ${c.image ? `<img src="${c.image}" alt="">` : '<div class="pack-sticker-noimg small">🃏</div>'}
       <div class="pack-content-info">
         <div class="pack-content-name">${escapeHtml(c.name)} ${c.rarity===2?'✨':''}</div>
         <div class="pack-content-controls">
           <label>Chance <input type="number" min="0" max="100" step="0.1" value="${c.chance}" class="pack-chance-input" data-sticker-id="${c.id}"> %</label>
-          <span style="color:var(--gold);">≈ ${real.toFixed(1)}% réel</span>
           <label><input type="checkbox" class="pack-rare-checkbox" data-sticker-id="${c.id}" ${c.rarity===2?'checked':''}> Rare</label>
         </div>
       </div>
       <span class="shop-item-del" data-sticker-id="${c.id}">✕</span>
     </div>
-  `;
-  }).join('');
+  `).join('');
   list.querySelectorAll('.pack-chance-input').forEach(inp=>{
     inp.addEventListener('change', ()=>{
-      const sticker = pack.stickers.find(c=>c.id===inp.dataset.stickerId);
       const v = parseFloat(inp.value);
-      if(sticker && !isNaN(v)) sticker.chance = Math.max(0, v);
-      saveShopItems();
+      setStickerChance(pack, inp.dataset.stickerId, isNaN(v) ? 0 : v);
       renderPackContentModal();
     });
   });
@@ -3072,32 +3095,56 @@ function renderPackContentModal(){
   });
   list.querySelectorAll('.shop-item-del').forEach(btn=>{
     btn.addEventListener('click', ()=>{
-      pack.stickers = pack.stickers.filter(c=>c.id !== btn.dataset.stickerId);
-      saveShopItems();
+      removeStickerFromPack(pack, btn.dataset.stickerId);
       renderPackContentModal();
     });
   });
 }
 
-// Rééchelonne toutes les "chance" du paquet pour qu'elles somment exactement à
-// 100, en gardant leurs proportions relatives intactes : après ça, la valeur
-// affichée pour chaque sticker EST sa vraie probabilité de tirage (fini l'écart
-// entre le % saisi et le % réellement tiré).
-function normalizePackChances(){
-  const pack = shopItems.find(i=>i.id===activePackId);
-  if(!pack || !pack.stickers || pack.stickers.length === 0) return;
+// Fixe la chance d'UN sticker à exactement la valeur saisie (ex: 90 => 90%
+// réel), puis rééchelonne tous les AUTRES stickers du paquet, proportionnellement
+// à leurs valeurs actuelles entre eux, pour occuper exactement le pourcentage
+// restant. Le total du paquet reste donc toujours à 100%, et chaque valeur
+// affichée EST la probabilité réelle de tirage — plus d'écart entre le chiffre
+// saisi et ce qui tombe vraiment.
+function setStickerChance(pack, stickerId, value){
+  const sticker = pack.stickers.find(c=>c.id===stickerId);
+  if(!sticker) return;
+  const v = Math.max(0, Math.min(100, value));
+  const others = pack.stickers.filter(c=>c.id !== stickerId);
+  const remaining = 100 - v;
+  if(others.length === 0){
+    sticker.chance = 100;
+  } else {
+    const othersTotal = others.reduce((s,c)=> s + (Number(c.chance)||0), 0);
+    if(othersTotal <= 0){
+      const equal = +(remaining / others.length).toFixed(1);
+      others.forEach(c=>{ c.chance = equal; });
+    } else {
+      others.forEach(c=>{
+        c.chance = +(((Number(c.chance)||0) / othersTotal) * remaining).toFixed(1);
+      });
+    }
+    sticker.chance = +v.toFixed(1);
+  }
+  saveShopItems();
+}
+
+// Retire un sticker du paquet puis redistribue sa part de chance aux autres,
+// proportionnellement, pour que le total reste à 100%.
+function removeStickerFromPack(pack, stickerId){
+  pack.stickers = pack.stickers.filter(c=>c.id !== stickerId);
+  if(pack.stickers.length === 0){ saveShopItems(); return; }
   const total = pack.stickers.reduce((s,c)=> s + (Number(c.chance)||0), 0);
   if(total <= 0){
-    // Aucune chance définie : on répartit équitablement entre tous les stickers.
     const equal = +(100 / pack.stickers.length).toFixed(1);
     pack.stickers.forEach(c=>{ c.chance = equal; });
-  } else {
+  } else if(Math.abs(total - 100) > 0.05){
     pack.stickers.forEach(c=>{
-      c.chance = +((Number(c.chance)||0) / total * 100).toFixed(1);
+      c.chance = +(((Number(c.chance)||0) / total) * 100).toFixed(1);
     });
   }
   saveShopItems();
-  renderPackContentModal();
 }
 
 function openStickerAddModal(packId){
@@ -3139,6 +3186,17 @@ document.getElementById('sticker-add-file').addEventListener('change', (e)=>{
   };
   reader.readAsDataURL(file);
 });
+// Bouton pratique : remet tous les stickers du paquet à une chance égale
+// (100 / nombre de stickers), pour repartir sur une base neutre.
+function distributeEqualChances(){
+  const pack = shopItems.find(i=>i.id===activePackId);
+  if(!pack || !pack.stickers || pack.stickers.length === 0) return;
+  const equal = +(100 / pack.stickers.length).toFixed(1);
+  pack.stickers.forEach(c=>{ c.chance = equal; });
+  saveShopItems();
+  renderPackContentModal();
+}
+
 function submitStickerAdd(){
   const pack = shopItems.find(i=>i.id===activePackId);
   if(!pack) return;
@@ -3147,8 +3205,11 @@ function submitStickerAdd(){
   const rare = document.getElementById('sticker-add-rare').checked;
   if(!name) return;
   if(!pack.stickers) pack.stickers = [];
-  pack.stickers.push({id:'sticker-'+Date.now()+'-'+Math.floor(Math.random()*1000), name, image: pendingStickerImageDataUrl, rarity: rare?2:1, chance});
-  saveShopItems();
+  const newSticker = {id:'sticker-'+Date.now()+'-'+Math.floor(Math.random()*1000), name, image: pendingStickerImageDataUrl, rarity: rare?2:1, chance: 0};
+  pack.stickers.push(newSticker);
+  // La chance saisie devient exacte, et les stickers déjà présents se
+  // rééchelonnent proportionnellement pour occuper le reste (total = 100%).
+  setStickerChance(pack, newSticker.id, chance);
   closeOverlay('overlay-sticker-add');
   if(document.getElementById('overlay-pack-content').style.display === 'flex') renderPackContentModal();
 }
@@ -3347,7 +3408,7 @@ const ADMIN_RESET_LABELS = {
   shop: 'les achats du shop',
   crowns: 'les couronnes du Panthéon',
   clicker: 'les clics du jeu 420',
-  all: 'TOUTES les données',
+  all: 'TOUTES les données de ce compte (dont les fragments), et remet aussi les quêtes cachées à zéro pour TOUT LE MONDE',
   'give-infinite': 'un montant infini de points et de fragments'
 };
 
@@ -3432,6 +3493,21 @@ async function performAdminReset(accId, type){
   }
   if(type==='clicker' || type==='all'){
     try{ syncStorage.removeItem(clickerKeyFor(accId)); }catch(e){}
+  }
+  if(type==='all'){
+    delete accountFragments[accId];
+    saveFragments();
+    delete clickerCooldownEndByAccount[accId];
+    saveClickerCooldowns();
+    // Les quêtes cachées sont un état PARTAGÉ entre tous les profils (pas propre
+    // à ce compte) : "Tout réinitialiser" les remet à zéro pour tout le monde,
+    // au même titre que le tchat.
+    questsState.states = {};
+    QUESTS.forEach(q=>{ questsState.states[q.id] = 'invalid'; });
+    questsState.unlocked = false;
+    saveQuests();
+    if(document.getElementById('view-quests').classList.contains('active')) renderQuests();
+    updateQuestsBtn();
   }
   if(type==='give-infinite'){
     accountPoints[accId] = ADMIN_INFINITE_AMOUNT;
