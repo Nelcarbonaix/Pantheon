@@ -1214,12 +1214,28 @@
     <div id="create-account-form" style="display:none;margin-top:18px;border-top:1px solid #2a2013;padding-top:16px;">
       <label>Nom</label>
       <input type="text" id="new-account-name" placeholder="Votre nom">
+      <label>Mot de passe (obligatoire — protège l'accès à ce compte)</label>
+      <input type="password" id="new-account-pass" placeholder="Choisissez un mot de passe" autocomplete="new-password">
       <label>Image de profil (optionnelle)</label>
       <input type="file" id="new-account-image" accept="image/*">
       <div class="modal-actions">
         <button class="btn ghost" onclick="cancelCreateAccountForm()">Annuler</button>
         <button class="btn primary" onclick="submitCreateAccount()">Créer et se connecter</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal saisie du mot de passe pour rejoindre un compte existant -->
+<div class="overlay" id="overlay-account-password">
+  <div class="modal" style="width:min(360px,92vw);">
+    <h3 id="account-password-title">Mot de passe requis</h3>
+    <label>Mot de passe</label>
+    <input type="password" id="account-password-input" autocomplete="current-password">
+    <div class="error-msg" id="account-password-error" style="display:none;color:#ff6b6b;font-size:12px;margin-top:8px;">Mot de passe incorrect</div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="cancelAccountPasswordPrompt()">Annuler</button>
+      <button class="btn primary" id="account-password-confirm-btn">Se connecter</button>
     </div>
   </div>
 </div>
@@ -1575,6 +1591,15 @@ function isValkyrieUnlocked(){
 let tempHallPrompted = false; // équivalent de promptedKeyFor, mais en mémoire pour le compte de test admin
 let accountStates = {}; // {caseId: 'valid'|'invalid'} — propre à chaque profil
 let accountValidationDates = {}; // {caseId: 'YYYY-MM-DD'} — date de la dernière validation, propre à chaque profil
+
+// Hache un mot de passe en SHA-256 (hex) via l'API Web Crypto native du
+// navigateur : on ne stocke jamais le mot de passe en clair, seulement
+// son empreinte, y compris dans la base partagée.
+async function hashPassword(pass){
+  const data = new TextEncoder().encode(pass);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 function statesKeyFor(accountId){
   return accountId ? (STATES_KEY + '-acc-' + accountId) : STATES_KEY;
@@ -3626,7 +3651,7 @@ function renderAccountList(){
     html += accounts.map(a => `
       <div class="account-item ${a.id===activeAccountId?'active':''}" data-id="${a.id}" title="${a.temporary ? 'Clic droit : tout valider / tout dévalider' : (isUnlocked ? 'Clic droit : réinitialiser les succès / supprimer' : '')}">
         ${a.image ? `<div class="account-item-avatar"><img src="${a.image}" alt=""></div>` : `<div class="account-item-avatar">👤</div>`}
-        <span class="account-item-name">${escapeHtml(a.name)}</span>
+        <span class="account-item-name">${escapeHtml(a.name)}${a.passHash ? ' 🔒' : ''}</span>
         ${a.temporary ? '<span class="account-item-tag" style="color:var(--purple-neon);">Temporaire</span>' : (a.id===activeAccountId ? '<span class="account-item-tag">Connecté</span>' : '')}
       </div>
     `).join('');
@@ -3653,8 +3678,25 @@ function renderAccountList(){
   });
 }
 
-async function selectAccount(id){
+// skipPasswordCheck : utilisé juste après la création d'un compte (le mot de
+// passe vient d'être saisi par son créateur, inutile de le redemander).
+async function selectAccount(id, skipPasswordCheck){
   if(id === activeAccountId){ closeOverlay('overlay-accounts'); return; }
+
+  if(id && id !== TEMP_ACCOUNT_ID && !skipPasswordCheck && !isUnlocked){
+    const acc = accounts.find(a=>a.id===id);
+    // Les comptes créés avant l'ajout du mot de passe (pas de passHash) restent
+    // accessibles librement, par compatibilité avec les comptes existants.
+    if(acc && acc.passHash){
+      promptAccountPassword(acc);
+      return;
+    }
+  }
+
+  await actuallySwitchAccount(id);
+}
+
+async function actuallySwitchAccount(id){
   setActiveAccount(id);
   await loadStates();
   await loadValidationDates();
@@ -3667,6 +3709,44 @@ async function selectAccount(id){
   closeOverlay('overlay-accounts');
 }
 
+let pendingPasswordAccountId = null;
+
+function promptAccountPassword(acc){
+  pendingPasswordAccountId = acc.id;
+  document.getElementById('account-password-title').textContent = `Mot de passe de "${acc.name}"`;
+  document.getElementById('account-password-input').value = '';
+  document.getElementById('account-password-error').style.display = 'none';
+  openOverlay('overlay-account-password');
+  setTimeout(()=> document.getElementById('account-password-input').focus(), 50);
+}
+
+function cancelAccountPasswordPrompt(){
+  pendingPasswordAccountId = null;
+  closeOverlay('overlay-account-password');
+}
+
+async function confirmAccountPassword(){
+  const acc = accounts.find(a=>a.id===pendingPasswordAccountId);
+  if(!acc) return;
+  const input = document.getElementById('account-password-input');
+  const pass = input.value;
+  const hash = await hashPassword(pass);
+  if(hash === acc.passHash){
+    pendingPasswordAccountId = null;
+    closeOverlay('overlay-account-password');
+    await actuallySwitchAccount(acc.id);
+  } else {
+    document.getElementById('account-password-error').style.display = 'block';
+    input.value = '';
+    input.focus();
+  }
+}
+
+document.getElementById('account-password-confirm-btn').addEventListener('click', confirmAccountPassword);
+document.getElementById('account-password-input').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') confirmAccountPassword();
+});
+
 function openCreateAccountForm(){
   document.getElementById('create-account-form').style.display = 'block';
   document.getElementById('new-account-name').focus();
@@ -3675,14 +3755,18 @@ function openCreateAccountForm(){
 function cancelCreateAccountForm(){
   document.getElementById('create-account-form').style.display = 'none';
   document.getElementById('new-account-name').value = '';
+  document.getElementById('new-account-pass').value = '';
   document.getElementById('new-account-image').value = '';
 }
 
 async function submitCreateAccount(){
   const nameInput = document.getElementById('new-account-name');
+  const passInput = document.getElementById('new-account-pass');
   const fileInput = document.getElementById('new-account-image');
   const name = nameInput.value.trim();
   if(!name){ nameInput.focus(); return; }
+  const pass = passInput.value;
+  if(!pass){ passInput.focus(); return; }
 
   let imageData = null;
   if(fileInput.files && fileInput.files[0]){
@@ -3694,15 +3778,17 @@ async function submitCreateAccount(){
     }).catch(()=>null);
   }
 
-  const acc = {id:'acc-'+Date.now(), name, image:imageData};
+  const passHash = await hashPassword(pass);
+  const acc = {id:'acc-'+Date.now(), name, image:imageData, passHash};
   accounts.push(acc);
   await saveAccounts();
 
   nameInput.value = '';
+  passInput.value = '';
   fileInput.value = '';
   document.getElementById('create-account-form').style.display = 'none';
 
-  await selectAccount(acc.id);
+  await selectAccount(acc.id, true);
 }
 
 // Réservé à l'admin : réinitialise les succès (badges) d'un compte, sans toucher à sa progression.
