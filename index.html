@@ -413,6 +413,7 @@
     display:block;width:100%;text-align:left;padding:10px 16px;
     background:none;border:none;color:var(--white-neon);font-size:13.5px;
     cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.06);
+    font-family:inherit;appearance:none;-webkit-appearance:none;-moz-appearance:none;
   }
   .ctx-menu button:last-child{border-bottom:none;}
   .ctx-menu button:hover{background:rgba(255,215,107,0.12);color:var(--gold);}
@@ -455,7 +456,8 @@
   .admin-panel-action-full{width:100%;margin-top:6px;font-weight:600;}
   .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
   .btn{padding:9px 18px;border-radius:8px;border:1px solid var(--gold-deep);background:transparent;
-    color:var(--gold);cursor:pointer;font-size:13px;}
+    color:var(--gold);cursor:pointer;font-size:13px;font-family:inherit;
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;}
   .btn:hover{background:rgba(255,215,107,0.1);}
   .btn.primary{background:var(--gold);color:#0a1130;border-color:var(--gold);font-weight:600;}
   .btn.primary:hover{background:#ffe08a;}
@@ -836,11 +838,21 @@
   .shop-item.unaffordable{opacity:0.55;}
   .shop-item .shop-item-del{position:absolute;top:4px;right:6px;color:#ff6b6b;font-size:11px;cursor:pointer;z-index:2;}
   .shop-admin-panel{
-    max-width:900px;margin:30px auto 0;border-top:1px solid #2a2013;padding-top:18px;
+    max-width:420px;margin:30px auto 0;
   }
-  .shop-admin-panel h3{color:var(--gold);font-size:13px;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
-  .shop-admin-form{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
-  .shop-admin-form input{flex:1;min-width:100px;}
+  .shop-admin-panel .admin-panel-section-title{text-align:center;}
+  .shop-admin-panel label{display:block;font-size:12px;color:var(--stone);margin:12px 0 6px;letter-spacing:0.5px;}
+  .shop-admin-panel label:first-of-type{margin-top:0;}
+  .shop-admin-panel input[type=text], .shop-admin-panel input[type=number]{
+    width:100%;padding:10px 12px;border-radius:8px;border:1px solid #33291a;
+    background:var(--bg-deep);color:var(--white-neon);font-size:14px;
+  }
+  .shop-admin-panel input:focus{outline:none;border-color:var(--gold);}
+  .shop-admin-panel .shop-admin-checkline{
+    display:flex;align-items:center;gap:8px;font-size:12px;color:var(--stone);
+    margin:12px 0 0;white-space:normal;
+  }
+  .shop-admin-panel .shop-admin-checkline input{width:auto;margin:0;}
   .history-list{max-height:340px;overflow-y:auto;}
   .history-season{
     border:1px solid #2a2013;border-radius:10px;padding:10px 14px;margin-bottom:12px;background:var(--bg-panel);
@@ -894,6 +906,224 @@
   .pack-sticker-noimg{font-size:40px;color:var(--stone);}
   .pack-sticker-noimg.small{font-size:20px;}
   .pack-open-result{margin-top:10px;line-height:1.5;}
+
+  /* ---- Défis : la Série ---- */
+  #defis-content{min-height:260px;}
+  .defis-fade{animation:defis-fade-in .8s cubic-bezier(.2,.8,.2,1);}
+  @keyframes defis-fade-in{
+    0%{opacity:0;transform:translateY(14px);}
+    100%{opacity:1;transform:translateY(0);}
+  }
+
+  .serie-home{max-width:420px;margin:0 auto;text-align:center;}
+  .serie-home-icon{font-size:44px;margin-bottom:6px;animation:serie-float 4.5s ease-in-out infinite;text-shadow:0 0 18px rgba(255,215,107,0.5);}
+  @keyframes serie-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  .serie-home p{color:var(--stone);font-size:13px;line-height:1.7;margin:0 0 20px;}
+
+  /* Grille des modes de jeu Défis, même langage visuel que les objets du shop */
+  .defis-mode-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:14px;max-width:420px;margin:0 auto;
+  }
+  .defis-mode-card{
+    position:relative;min-height:130px;border-radius:12px;
+    background:linear-gradient(160deg,var(--bg-panel),var(--bg-deep));
+    border:2px solid var(--gold-deep);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;
+    padding:18px 14px;cursor:pointer;
+    box-shadow:0 0 8px rgba(166,130,31,0.2) inset;
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .defis-mode-card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 0 14px rgba(255,215,107,0.25) inset;}
+  .defis-mode-card .defis-mode-icon{font-size:28px;}
+  .defis-mode-card .defis-mode-name{color:var(--gold);font-size:13.5px;font-weight:700;letter-spacing:0.5px;}
+  .defis-mode-card .defis-mode-desc{color:var(--stone);font-size:11px;line-height:1.5;}
+
+  .serie-setup{max-width:340px;margin:0 auto;text-align:center;}
+  .serie-setup label{display:block;text-align:left;}
+  .serie-setup-icon{font-size:34px;margin-bottom:4px;}
+  .serie-player-hint{font-size:11.5px;color:var(--stone);text-align:center;margin:10px 0 0;line-height:1.5;}
+
+  /* Bandeau "au tour de ..." affiché au-dessus de la carte d'épreuve */
+  .serie-turn-banner{
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    background:rgba(255,215,107,0.1);border:1px solid var(--gold-deep);
+    border-radius:20px;padding:6px 16px;font-size:12px;color:var(--gold);
+    letter-spacing:0.4px;margin:0 auto 14px;max-width:fit-content;
+    animation:defis-fade-in .5s ease;
+  }
+  .serie-turn-banner b{color:var(--white-neon);font-weight:600;}
+
+  /* Barre de progression de la série */
+  .serie-progress-wrap{max-width:340px;margin:0 auto 6px;}
+  .serie-progress-label{display:flex;justify-content:space-between;font-size:10.5px;color:var(--stone);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;}
+  .serie-progress-bar{height:6px;border-radius:6px;background:#1c1610;overflow:hidden;border:1px solid #2a2013;}
+  .serie-progress-fill{
+    height:100%;border-radius:6px;
+    background:linear-gradient(90deg,var(--gold-deep),var(--gold));
+    box-shadow:0 0 10px rgba(255,215,107,0.6);
+    transition:width 1s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .serie-cards-row{
+    display:flex;justify-content:center;align-items:flex-start;gap:10px;flex-wrap:wrap;
+    min-height:120px;margin:20px 0 10px;padding-top:22px;
+  }
+  /* Les cartes descendent d'en haut avec une légère bascule aléatoire (--rot)
+     qui se stabilise en douceur à l'arrivée — courbe d'accélération propre,
+     sans rebond exagéré. */
+  .serie-mini-card{
+    width:46px;height:46px;border-radius:10px;background:var(--bg-panel);
+    border:1px solid var(--gold-deep);display:flex;align-items:center;justify-content:center;
+    font-size:17px;color:var(--gold);opacity:0;
+    transform:translateY(-60px) rotate(var(--rot,0deg)) scale(0.7);
+    animation:serie-card-drop .85s cubic-bezier(.16,.84,.44,1) forwards;
+    transition:border-color .4s ease, box-shadow .4s ease, opacity .4s ease, transform .4s ease;
+  }
+  .serie-mini-card.current{
+    border-color:var(--gold);color:var(--gold);
+    box-shadow:0 0 8px var(--gold), 0 0 20px rgba(255,215,107,0.45);
+    animation:serie-card-drop .85s cubic-bezier(.16,.84,.44,1) forwards, serie-current-pulse 2.4s ease-in-out infinite .85s;
+  }
+  @keyframes serie-current-pulse{
+    0%,100%{box-shadow:0 0 8px var(--gold), 0 0 20px rgba(255,215,107,0.45);}
+    50%{box-shadow:0 0 4px var(--gold), 0 0 30px rgba(255,215,107,0.75);}
+  }
+  .serie-mini-card.done-valid{border-color:var(--green-neon);color:var(--green-neon);opacity:0.6;transform:rotate(0) scale(0.82);box-shadow:none;}
+  .serie-mini-card.done-invalid{border-color:var(--purple-neon);color:var(--purple-neon);opacity:0.6;transform:rotate(0) scale(0.82);box-shadow:none;}
+  @keyframes serie-card-drop{
+    0%{opacity:0;transform:translateY(-60px) rotate(var(--rot,0deg)) scale(0.7);}
+    60%{opacity:1;}
+    100%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);}
+  }
+
+  /* Carte centrale de l'épreuve en cours */
+  .serie-stage-wrap{position:relative;max-width:340px;margin:14px auto 22px;}
+  .serie-stage-card{
+    position:relative;overflow:hidden;
+    padding:30px 22px 26px;border-radius:20px;
+    background:
+      radial-gradient(ellipse at 50% -20%, rgba(255,215,107,0.14) 0%, transparent 60%),
+      var(--bg-panel);
+    border:2px solid var(--gold);text-align:center;
+    box-shadow:0 0 22px rgba(255,215,107,0.35), 0 0 60px rgba(255,215,107,0.12);
+    animation:serie-zoom-in 1.1s cubic-bezier(.2,.85,.25,1.05), serie-idle-glow 5s ease-in-out infinite 1.1s;
+  }
+  @keyframes serie-zoom-in{
+    0%{opacity:0;transform:scale(0.5) translateY(18px);}
+    70%{opacity:1;}
+    100%{opacity:1;transform:scale(1) translateY(0);}
+  }
+  @keyframes serie-idle-glow{
+    0%,100%{box-shadow:0 0 22px rgba(255,215,107,0.35), 0 0 60px rgba(255,215,107,0.12);}
+    50%{box-shadow:0 0 30px rgba(255,215,107,0.55), 0 0 80px rgba(255,215,107,0.22);}
+  }
+  .serie-stage-card::before, .serie-stage-card::after{
+    content:"";position:absolute;width:34px;height:34px;border:1px solid rgba(255,215,107,0.4);
+    pointer-events:none;
+  }
+  .serie-stage-card::before{top:8px;left:8px;border-right:none;border-bottom:none;border-radius:6px 0 0 0;}
+  .serie-stage-card::after{bottom:8px;right:8px;border-left:none;border-top:none;border-radius:0 0 6px 0;}
+  .serie-stage-icon{font-size:30px;margin-bottom:6px;filter:drop-shadow(0 0 8px rgba(255,215,107,0.5));}
+  .serie-stage-num{font-size:11px;color:var(--stone);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+  .serie-stage-label{font-size:19px;color:var(--white-neon);letter-spacing:0.5px;margin-bottom:22px;}
+
+  /* Réactions valid/invalid : flash + halo qui explose */
+  .serie-stage-card.flash-valid{
+    border-color:var(--green-neon);
+    animation:serie-flash-valid 1s ease;
+  }
+  .serie-stage-card.flash-invalid{
+    border-color:var(--purple-neon);
+    animation:serie-flash-invalid 1s ease;
+  }
+  @keyframes serie-flash-valid{
+    0%{transform:scale(1);box-shadow:0 0 22px rgba(255,215,107,0.35);}
+    35%{transform:scale(1.07);box-shadow:0 0 34px var(--green-neon), 0 0 80px rgba(57,255,143,0.5);}
+    100%{transform:scale(1);box-shadow:0 0 26px var(--green-neon), 0 0 60px rgba(57,255,143,0.35);}
+  }
+  @keyframes serie-flash-invalid{
+    0%{transform:scale(1) translateX(0);box-shadow:0 0 22px rgba(255,215,107,0.35);}
+    25%{transform:scale(1.03) translateX(-6px);}
+    45%{transform:scale(1.03) translateX(6px);}
+    65%{transform:scale(1.02) translateX(-3px);}
+    85%{transform:scale(1.01) translateX(3px);}
+    100%{transform:scale(1) translateX(0);box-shadow:0 0 26px var(--purple-neon), 0 0 60px rgba(192,96,255,0.35);}
+  }
+  .serie-burst{
+    position:absolute;inset:0;border-radius:20px;pointer-events:none;
+    animation:serie-burst-fade 1.1s ease forwards;
+  }
+  .serie-burst.ok{box-shadow:0 0 0 0 var(--green-neon);}
+  .serie-burst.ko{box-shadow:0 0 0 0 var(--purple-neon);}
+  @keyframes serie-burst-fade{
+    0%{box-shadow:0 0 0 0 currentColor;opacity:1;}
+    100%{box-shadow:0 0 0 40px currentColor;opacity:0;}
+  }
+  .serie-spark{
+    position:absolute;top:50%;left:50%;width:5px;height:5px;border-radius:50%;
+    background:var(--gold);pointer-events:none;
+    animation:serie-spark-out 1.1s ease-out forwards;
+  }
+  @keyframes serie-spark-out{
+    0%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(var(--a,0)) translateY(0);}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(0.3) rotate(var(--a,0)) translateY(-70px);}
+  }
+
+  .serie-prompt{margin-top:6px;animation:serie-prompt-in .6s ease;}
+  @keyframes serie-prompt-in{
+    0%{opacity:0;transform:translateY(12px);}
+    100%{opacity:1;transform:translateY(0);}
+  }
+  .serie-prompt-q{font-size:14px;color:var(--gold);margin-bottom:14px;letter-spacing:0.5px;font-weight:600;}
+  .serie-prompt-actions{display:flex;justify-content:center;gap:12px;}
+  .serie-prompt-actions .btn{min-width:76px;transition:transform .15s ease;}
+  .serie-prompt-actions .btn:active{transform:scale(0.93);}
+
+  /* Résumé final */
+  .serie-summary{max-width:440px;margin:0 auto;text-align:center;}
+  .serie-summary-score{
+    width:104px;height:104px;border-radius:50%;margin:6px auto 4px;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    background:conic-gradient(var(--green-neon) calc(var(--pct,0)*1%), rgba(192,96,255,0.35) 0);
+    animation:serie-score-in 1s cubic-bezier(.2,.85,.25,1.05);
+  }
+  @keyframes serie-score-in{
+    0%{opacity:0;transform:scale(0.5) rotate(-90deg);}
+    100%{opacity:1;transform:scale(1) rotate(0);}
+  }
+  .serie-summary-score-inner{
+    width:82px;height:82px;border-radius:50%;background:var(--bg-deep);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    border:1px solid rgba(255,215,107,0.3);
+  }
+  .serie-summary-score-num{font-size:20px;color:var(--gold);font-weight:700;}
+  .serie-summary-score-lbl{font-size:8.5px;color:var(--stone);letter-spacing:1px;text-transform:uppercase;}
+  .serie-summary-players{margin:20px 0 4px;text-align:left;}
+  .serie-player-summary-card{
+    background:var(--bg-panel);border:1px solid var(--gold-deep);border-radius:12px;
+    padding:13px 15px;margin-bottom:10px;
+    opacity:0;animation:serie-col-in .6s ease forwards;
+  }
+  @keyframes serie-col-in{
+    0%{opacity:0;transform:translateY(14px);}
+    100%{opacity:1;transform:translateY(0);}
+  }
+  .serie-player-summary-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .serie-player-summary-name{color:var(--white-neon);font-size:13.5px;font-weight:600;letter-spacing:0.3px;}
+  .serie-player-summary-stats{font-size:12px;display:flex;gap:10px;flex-shrink:0;}
+  .serie-player-summary-stats .ok{color:var(--green-neon);}
+  .serie-player-summary-stats .ko{color:var(--purple-neon);}
+  .serie-player-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .serie-player-tag{
+    font-size:10.5px;padding:3px 9px;border-radius:20px;border:1px solid;
+    opacity:0;animation:serie-li-in .4s ease forwards;
+  }
+  .serie-player-tag.ok{border-color:var(--green-neon);color:var(--green-neon);}
+  .serie-player-tag.ko{border-color:var(--purple-neon);color:var(--purple-neon);}
+  @keyframes serie-li-in{0%{opacity:0;transform:translateX(-6px);}100%{opacity:1;transform:translateX(0);}}
+  .serie-player-summary-card .empty-note{font-size:11px;}
+
 
   /* ---- Carnet de stickers : aspect livre ---- */
   .sticker-carnet-modal{max-height:88vh;display:flex;flex-direction:column;}
@@ -1257,16 +1487,17 @@
     </div>
     <div class="shop-grid" id="shop-grid"></div>
     <div class="shop-admin-panel" id="shop-admin-panel" style="display:none;">
-      <h3>Ajouter un objet (admin)</h3>
-      <div class="shop-admin-form">
+      <div class="admin-panel-section">
+        <div class="admin-panel-section-title">Ajouter un objet (admin)</div>
+        <label>Nom de l'objet</label>
         <input type="text" id="shop-new-name" placeholder="Nom de l'objet">
+        <label>Coût en points</label>
         <input type="number" id="shop-new-cost" placeholder="Coût en points" min="1">
-      </div>
-      <div class="shop-admin-form">
+        <label>Description (optionnelle)</label>
         <input type="text" id="shop-new-desc" placeholder="Description (optionnelle)">
-        <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--stone);white-space:nowrap;"><input type="checkbox" id="shop-new-ispack" style="width:auto;" onchange="document.getElementById('shop-new-collector-wrap').style.display=this.checked?'flex':'none';"> 🏷️ Paquet de stickers</label>
-        <label id="shop-new-collector-wrap" style="display:none;align-items:center;gap:6px;font-size:11px;color:var(--stone);white-space:nowrap;"><input type="checkbox" id="shop-new-collector" style="width:auto;"> 🏆 Collector (garde les cartes et la section du carnet même si le paquet est supprimé)</label>
-        <button class="btn primary" onclick="addShopItem()">+ Ajouter</button>
+        <label class="shop-admin-checkline"><input type="checkbox" id="shop-new-ispack" onchange="document.getElementById('shop-new-collector-wrap').style.display=this.checked?'flex':'none';"> 🏷️ Paquet de stickers</label>
+        <label class="shop-admin-checkline" id="shop-new-collector-wrap" style="display:none;"><input type="checkbox" id="shop-new-collector"> 🏆 Collector — garde les cartes et la section du carnet même si le paquet est supprimé</label>
+        <button class="btn primary admin-panel-action-full" onclick="addShopItem()">+ Ajouter</button>
       </div>
     </div>
   </div>
@@ -1284,6 +1515,18 @@
     <div class="inv-info-grid" id="inv-info-grid"></div>
     <h3 class="badges-section-title" style="margin-top:34px;">Inventaire</h3>
     <div class="shop-grid" id="inv-items-grid"></div>
+  </div>
+
+  <!-- VUE DÉFIS -->
+  <div class="view" id="view-defis">
+    <div class="top-row">
+      <span class="link-back" onclick="showView('grid')">← Retour au Panthéon</span>
+    </div>
+    <header style="margin-bottom:20px;">
+      <h1 style="font-size:clamp(22px,4vw,32px);">DÉFIS</h1>
+      <div class="subtitle">l'épreuve des piliers</div>
+    </header>
+    <div id="defis-content"></div>
   </div>
 
   <!-- VUE CLICKER (420) -->
@@ -1320,6 +1563,7 @@
 
 <div class="menu-btn chill-btn" id="chillBtn" onclick="toggleChillDropdown(event)" title="Chill">Chill</div>
 <div class="menu-dropdown chill-dropdown" id="chillDropdown">
+  <div class="menu-item" onclick="selectMenuView('defis')">🎯 Défis</div>
   <div class="menu-item" onclick="selectMenuView('clicker')">🔥 420</div>
 </div>
 
@@ -1404,6 +1648,18 @@
         <button class="btn ghost" onclick="cancelCreateAccountForm()">Annuler</button>
         <button class="btn primary" onclick="submitCreateAccount()">Créer et se connecter</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal profil en lecture seule (clic droit sur un compte) -->
+<div class="overlay" id="overlay-profile-view">
+  <div class="modal" style="width:min(440px,92vw);">
+    <h3>Profil</h3>
+    <div class="profile-card" id="profile-view-card"></div>
+    <div class="inv-info-grid" id="profile-view-info-grid"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeOverlay('overlay-profile-view')">Fermer</button>
     </div>
   </div>
 </div>
@@ -2207,6 +2463,268 @@ function formatCooldown(ms){
 }
 
 let clickerCooldownTimer = null;
+
+/* ============================================================
+   DÉFIS — "Série" : mini-jeu purement VISUEL, pensé pour jouer à
+   plusieurs sur le même appareil. On tire au sort X piliers (juste
+   pour leur nom/lien) et on les enchaîne un par un en se passant la
+   main entre joueurs à chaque pilier. Rien n'est jamais réellement
+   validé/invalidé sur le Panthéon — c'est un exercice à part,
+   indépendant de la vraie progression, avec des résultats comptés
+   séparément pour chaque joueur.
+   ============================================================ */
+let serieState = null; // {queue:[ids], idx, results:[{label,outcome,player}], players:[names]}
+
+// Bascule le contenu de la page Défis avec un petit fondu, pour que chaque
+// changement d'écran (accueil -> réglage -> tirage -> épreuve -> résumé)
+// s'enchaîne en douceur plutôt que de sauter brutalement.
+function renderDefisScreen(html){
+  const holder = document.getElementById('defis-content');
+  holder.classList.remove('defis-fade');
+  holder.innerHTML = html;
+  void holder.offsetWidth; // force le reflow pour rejouer l'animation
+  holder.classList.add('defis-fade');
+}
+
+function renderDefisHome(){
+  serieState = null;
+  renderDefisScreen(`
+    <div class="serie-home">
+      <div class="serie-home-icon">🏛️</div>
+      <p>Choisis un mode de jeu. Purement pour le fun — ça ne touche pas à la vraie progression.</p>
+      <div class="defis-mode-grid">
+        <div class="defis-mode-card" onclick="showSerieSetup()">
+          <div class="defis-mode-icon">🔥</div>
+          <div class="defis-mode-name">Série</div>
+          <div class="defis-mode-desc">Tirez une série de piliers au hasard et enchaînez les épreuves à plusieurs, en vous passant la main.</div>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+// La taille de la série n'est plus saisie à part : elle correspond directement
+// au nombre de joueurs (un pilier tiré par joueur, on se passe la main).
+function showSerieSetup(){
+  const max = cases.length;
+  renderDefisScreen(`
+    <div class="serie-setup">
+      <div class="serie-setup-icon">🎲</div>
+      <label>Nombre de joueurs</label>
+      <input type="number" id="serie-players-count-input" min="1" max="${max}" value="2">
+      <p class="serie-player-hint">Chaque joueur tire un pilier — on se passe la main à chaque tour.</p>
+      <div class="modal-actions" style="justify-content:center;">
+        <button class="btn ghost" onclick="renderDefisHome()">Annuler</button>
+        <button class="btn primary" onclick="launchSerie()">Lancer</button>
+      </div>
+    </div>
+  `);
+}
+
+// Tire aléatoirement (Fisher-Yates) autant de piliers qu'il y a de joueurs.
+function launchSerie(){
+  const input = document.getElementById('serie-players-count-input');
+  const max = cases.length;
+  let count = parseInt(input.value, 10) || 1;
+  count = Math.max(1, Math.min(count, max));
+
+  const players = [];
+  for(let i=1;i<=count;i++) players.push('Joueur '+i);
+
+  const pool = cases.slice();
+  for(let i=pool.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [pool[i],pool[j]] = [pool[j],pool[i]];
+  }
+  const queue = pool.slice(0,count).map(c=>c.id);
+  serieState = { queue, idx:0, results:[], players };
+
+  renderSerieReveal();
+}
+
+function serieCurrentPlayer(idx){
+  const players = serieState.players;
+  return players[idx % players.length];
+}
+
+// Anime l'apparition des X piliers tirés : chaque carte descend d'en haut
+// avec une légère bascule aléatoire avant de se stabiliser, en cascade,
+// puis enchaîne sur la mise en scène du premier.
+function renderSerieReveal(){
+  const cardsHtml = serieState.queue.map((id,i)=>{
+    const c = getCase(id);
+    const rot = (Math.random()*20 - 10).toFixed(1);
+    return `<div class="serie-mini-card" style="animation-delay:${i*0.18}s;--rot:${rot}deg;">${c && c.num!=null ? c.num : '★'}</div>`;
+  }).join('');
+  renderDefisScreen(`
+    <div class="serie-setup">
+      <div class="subtitle" style="margin-bottom:0;">tirage de la série...</div>
+      <div class="serie-cards-row">${cardsHtml}</div>
+    </div>
+  `);
+  const revealDelay = serieState.queue.length*180 + 750;
+  setTimeout(renderSerieStage, revealDelay);
+}
+
+function renderSerieStage(){
+  if(!serieState || serieState.idx >= serieState.queue.length){ renderSerieSummary(); return; }
+  const id = serieState.queue[serieState.idx];
+  const c = getCase(id);
+  const total = serieState.queue.length;
+  const pct = Math.round((serieState.idx/total)*100);
+  const player = serieCurrentPlayer(serieState.idx);
+
+  renderDefisScreen(`
+    <div class="serie-progress-wrap">
+      <div class="serie-progress-label"><span>Progression</span><span>${serieState.idx} / ${total}</span></div>
+      <div class="serie-progress-bar"><div class="serie-progress-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="serie-cards-row">
+      ${serieState.queue.map((qid,i)=>{
+        const res = serieState.results[i];
+        const cls = res ? (res.outcome==='valid'?'done-valid':'done-invalid') : (i===serieState.idx?'current':'');
+        const cc = getCase(qid);
+        const rot = res ? '0deg' : ((Math.random()*14-7).toFixed(1)+'deg');
+        return `<div class="serie-mini-card ${cls}" style="--rot:${rot};">${cc && cc.num!=null ? cc.num : '★'}</div>`;
+      }).join('')}
+    </div>
+    <div class="serie-turn-banner">👤 Au tour de <b>${escapeHtml(player)}</b></div>
+    <div class="serie-stage-wrap">
+      <div class="serie-stage-card" id="serie-stage-card">
+        <div class="serie-stage-icon">🏛️</div>
+        <div class="serie-stage-num">Épreuve ${serieState.idx+1} / ${total}</div>
+        <div class="serie-stage-label">${escapeHtml(c ? c.label : '???')}</div>
+        <button class="btn primary" onclick="serieOpenLink()">🔗 Lancer l'épreuve</button>
+      </div>
+    </div>
+  `);
+}
+
+function serieOpenLink(){
+  const id = serieState.queue[serieState.idx];
+  const c = getCase(id);
+  if(c && c.link) window.open(c.link, '_blank', 'noopener');
+  const card = document.getElementById('serie-stage-card');
+  const btn = card.querySelector('button');
+  if(btn) btn.remove();
+  card.insertAdjacentHTML('beforeend', `
+    <div class="serie-prompt">
+      <div class="serie-prompt-q">Échoué ?</div>
+      <div class="serie-prompt-actions">
+        <button class="btn primary" onclick="serieAnswerFail(true)">Oui</button>
+        <button class="btn ghost" onclick="serieAnswerFail(false)">Non</button>
+      </div>
+    </div>
+  `);
+}
+
+// Petite pluie d'étincelles dorées projetées depuis le centre de la carte,
+// purement cosmétique (aucune donnée réelle n'est modifiée ici).
+function serieSpawnSparks(card, count){
+  for(let i=0;i<count;i++){
+    const s = document.createElement('div');
+    s.className = 'serie-spark';
+    const angle = (360/count)*i + (Math.random()*20-10);
+    s.style.setProperty('--a', angle+'deg');
+    s.style.background = 'var(--gold)';
+    card.appendChild(s);
+    setTimeout(()=> s.remove(), 900);
+  }
+}
+
+function serieAnswerFail(failed){
+  const id = serieState.queue[serieState.idx];
+  const c = getCase(id);
+  const player = serieCurrentPlayer(serieState.idx);
+  const card = document.getElementById('serie-stage-card');
+  const prompt = card.querySelector('.serie-prompt');
+  if(prompt) prompt.remove();
+
+  if(failed){
+    card.classList.add('flash-invalid');
+    const burst = document.createElement('div');
+    burst.className = 'serie-burst ko';
+    burst.style.color = 'var(--purple-neon)';
+    card.appendChild(burst);
+    setTimeout(()=>burst.remove(), 950);
+    serieState.results[serieState.idx] = { label: c ? c.label : '???', outcome:'invalid', player };
+    setTimeout(()=> serieAskContinue(), 850);
+  } else {
+    card.classList.add('flash-valid');
+    serieSpawnSparks(card, 10);
+    serieState.results[serieState.idx] = { label: c ? c.label : '???', outcome:'valid', player };
+    setTimeout(()=>{
+      serieState.idx++;
+      renderSerieStage();
+    }, 900);
+  }
+}
+
+function serieAskContinue(){
+  const card = document.getElementById('serie-stage-card');
+  if(!card) return;
+  card.classList.remove('flash-invalid');
+  card.insertAdjacentHTML('beforeend', `
+    <div class="serie-prompt">
+      <div class="serie-prompt-q">Continuer ?</div>
+      <div class="serie-prompt-actions">
+        <button class="btn primary" onclick="serieAnswerContinue(true)">Oui</button>
+        <button class="btn ghost" onclick="serieAnswerContinue(false)">Non</button>
+      </div>
+    </div>
+  `);
+}
+
+function serieAnswerContinue(cont){
+  if(cont){
+    serieState.idx++;
+    renderSerieStage();
+  } else {
+    serieState = null;
+    showView('grid');
+  }
+}
+
+function renderSerieSummary(){
+  const results = serieState ? serieState.results.filter(Boolean) : [];
+  const players = serieState ? serieState.players : [];
+  const totalAll = results.length || 1;
+  const okAll = results.filter(r=>r.outcome==='valid').length;
+  const pct = Math.round((okAll/totalAll)*100);
+
+  const playerCards = players.map((name,pi)=>{
+    const mine = results.filter(r=>r.player===name);
+    const ok = mine.filter(r=>r.outcome==='valid');
+    const ko = mine.filter(r=>r.outcome==='invalid');
+    const tags = mine.map((r,i)=>
+      `<span class="serie-player-tag ${r.outcome==='valid'?'ok':'ko'}" style="animation-delay:${0.25+i*0.05}s">${escapeHtml(r.label)}</span>`
+    ).join('');
+    return `
+      <div class="serie-player-summary-card" style="animation-delay:${pi*0.12}s;">
+        <div class="serie-player-summary-head">
+          <div class="serie-player-summary-name">👤 ${escapeHtml(name)}</div>
+          <div class="serie-player-summary-stats"><span class="ok">✅ ${ok.length}</span><span class="ko">🟣 ${ko.length}</span></div>
+        </div>
+        ${mine.length ? `<div class="serie-player-tags">${tags}</div>` : '<div class="empty-note">N\'a fait aucune épreuve</div>'}
+      </div>
+    `;
+  }).join('');
+
+  renderDefisScreen(`
+    <div class="serie-summary">
+      <div class="subtitle" style="margin-bottom:0;">série terminée</div>
+      <div class="serie-summary-score" style="--pct:${pct};">
+        <div class="serie-summary-score-inner">
+          <div class="serie-summary-score-num">${pct}%</div>
+          <div class="serie-summary-score-lbl">Réussite</div>
+        </div>
+      </div>
+      <div class="serie-summary-players">${playerCards}</div>
+      <button class="btn primary" onclick="renderDefisHome()">Retour</button>
+    </div>
+  `);
+}
+
 
 function renderClickerView(){
   const statsEl = document.getElementById('clicker-stats');
@@ -3060,11 +3578,13 @@ function renderPackContentModal(){
     if(totalEl) totalEl.textContent = '';
     return;
   }
-  // Grâce à setStickerChance / removeStickerFromPack, le total fait TOUJOURS 100 :
-  // la valeur affichée pour chaque sticker est donc directement sa vraie probabilité
-  // de tirage, pas besoin de recalcul ni de bouton "Normaliser".
+  // Chaque chance se règle librement et indépendamment des autres (pas de
+  // rééquilibrage automatique) : le total affiché n'a donc pas besoin de
+  // faire 100% — le tirage reste correct quel que soit le total réel.
+  // Le bouton "⚖️ Répartir équitablement" permet de remettre les chances
+  // à plat manuellement, si besoin.
   const total = pack.stickers.reduce((s,c)=> s + (Number(c.chance)||0), 0);
-  if(totalEl) totalEl.textContent = `Total des chances : ${total.toFixed(1)}%.`;
+  if(totalEl) totalEl.textContent = `Total des chances : ${total.toFixed(1)}% (peut être différent de 100%).`;
   list.innerHTML = pack.stickers.map(c=>`
     <div class="pack-content-row">
       ${c.image ? `<img src="${c.image}" alt="">` : '<div class="pack-sticker-noimg small">🃏</div>'}
@@ -3101,49 +3621,25 @@ function renderPackContentModal(){
   });
 }
 
-// Fixe la chance d'UN sticker à exactement la valeur saisie (ex: 90 => 90%
-// réel), puis rééchelonne tous les AUTRES stickers du paquet, proportionnellement
-// à leurs valeurs actuelles entre eux, pour occuper exactement le pourcentage
-// restant. Le total du paquet reste donc toujours à 100%, et chaque valeur
-// affichée EST la probabilité réelle de tirage — plus d'écart entre le chiffre
-// saisi et ce qui tombe vraiment.
+// Fixe la chance d'UN sticker à exactement la valeur saisie, SANS toucher aux
+// autres stickers du paquet : chaque chance se modifie librement et
+// indépendamment des autres. Le total du paquet peut donc s'éloigner de 100%
+// (le tirage au sort reste correct dans tous les cas, il se base sur le
+// total réel des chances au moment du tirage). Si on veut repartir sur une
+// base propre, le bouton "⚖️ Répartir équitablement" fait ça manuellement,
+// à la demande — jamais automatiquement.
 function setStickerChance(pack, stickerId, value){
   const sticker = pack.stickers.find(c=>c.id===stickerId);
   if(!sticker) return;
-  const v = Math.max(0, Math.min(100, value));
-  const others = pack.stickers.filter(c=>c.id !== stickerId);
-  const remaining = 100 - v;
-  if(others.length === 0){
-    sticker.chance = 100;
-  } else {
-    const othersTotal = others.reduce((s,c)=> s + (Number(c.chance)||0), 0);
-    if(othersTotal <= 0){
-      const equal = +(remaining / others.length).toFixed(1);
-      others.forEach(c=>{ c.chance = equal; });
-    } else {
-      others.forEach(c=>{
-        c.chance = +(((Number(c.chance)||0) / othersTotal) * remaining).toFixed(1);
-      });
-    }
-    sticker.chance = +v.toFixed(1);
-  }
+  sticker.chance = +(Math.max(0, Math.min(100, value))).toFixed(1);
   saveShopItems();
 }
 
-// Retire un sticker du paquet puis redistribue sa part de chance aux autres,
-// proportionnellement, pour que le total reste à 100%.
+// Retire un sticker du paquet. Les chances des autres stickers ne sont pas
+// redistribuées automatiquement (cohérent avec setStickerChance) — utiliser
+// "⚖️ Répartir équitablement" si besoin de remettre les chances à plat.
 function removeStickerFromPack(pack, stickerId){
   pack.stickers = pack.stickers.filter(c=>c.id !== stickerId);
-  if(pack.stickers.length === 0){ saveShopItems(); return; }
-  const total = pack.stickers.reduce((s,c)=> s + (Number(c.chance)||0), 0);
-  if(total <= 0){
-    const equal = +(100 / pack.stickers.length).toFixed(1);
-    pack.stickers.forEach(c=>{ c.chance = equal; });
-  } else if(Math.abs(total - 100) > 0.05){
-    pack.stickers.forEach(c=>{
-      c.chance = +(((Number(c.chance)||0) / total) * 100).toFixed(1);
-    });
-  }
   saveShopItems();
 }
 
@@ -3207,8 +3703,8 @@ function submitStickerAdd(){
   if(!pack.stickers) pack.stickers = [];
   const newSticker = {id:'sticker-'+Date.now()+'-'+Math.floor(Math.random()*1000), name, image: pendingStickerImageDataUrl, rarity: rare?2:1, chance: 0};
   pack.stickers.push(newSticker);
-  // La chance saisie devient exacte, et les stickers déjà présents se
-  // rééchelonnent proportionnellement pour occuper le reste (total = 100%).
+  // La chance saisie est appliquée telle quelle au nouveau sticker, sans
+  // toucher aux autres stickers déjà présents dans le paquet.
   setStickerChance(pack, newSticker.id, chance);
   closeOverlay('overlay-sticker-add');
   if(document.getElementById('overlay-pack-content').style.display === 'flex') renderPackContentModal();
@@ -3855,6 +4351,7 @@ function showView(name){
   document.getElementById('view-quests').classList.toggle('active', name==='quests');
   document.getElementById('view-shop').classList.toggle('active', name==='shop');
   document.getElementById('view-inventory').classList.toggle('active', name==='inventory');
+  document.getElementById('view-defis').classList.toggle('active', name==='defis');
   document.getElementById('view-clicker').classList.toggle('active', name==='clicker');
   document.querySelector('.fab').style.display = (name==='grid') ? 'flex' : 'none';
   if(name==='create') renderCustomList();
@@ -3864,6 +4361,7 @@ function showView(name){
   if(name==='quests') renderQuests();
   if(name==='shop') renderShop();
   if(name==='inventory') renderInventory();
+  if(name==='defis') renderDefisHome();
   if(name==='clicker') renderClickerView();
 }
 
@@ -4380,14 +4878,82 @@ function renderAccountList(){
           ['✅ Tout valider', ()=> bulkSetAllStates('valid')],
           ['🟣 Tout dévalider', ()=> bulkSetAllStates('invalid')]
         ]);
-      } else if(id && isUnlocked){
-        showCtxMenuAt(e, [
-          ['🔄 Réinitialiser les succès', ()=> confirmResetAccountSecrets(id)],
-          ['⛔ Supprimer le compte', ()=> confirmDeleteAccount(id), true]
-        ]);
+        return;
       }
+      if(!id){ return; } // Invité : pas de profil consultable
+      const items = [['🪪 Voir le profil', ()=> openProfilePopup(id)]];
+      if(isUnlocked){
+        items.push(['🔄 Réinitialiser les succès', ()=> confirmResetAccountSecrets(id)]);
+        items.push(['⛔ Supprimer le compte', ()=> confirmDeleteAccount(id), true]);
+      }
+      showCtxMenuAt(e, items);
     });
   });
+}
+
+// Affiche le profil d'un compte (le sien ou celui d'un autre) en LECTURE SEULE,
+// sans jamais changer de session active : on relit directement les clés de
+// stockage propres à ce compte (états des piliers, secrets), et on pioche
+// dans les maps globales déjà chargées en mémoire pour le reste (points,
+// fragments, couronnes...), exactement comme le fait renderInventory() pour
+// le compte actif.
+let lastProfileViewedId = null;
+
+function openProfilePopup(accountId){
+  lastProfileViewedId = accountId;
+  const acc = accounts.find(a=>a.id===accountId);
+  const accName = acc ? acc.name : 'Invité';
+  const accImg = acc && acc.image ? `<img src="${acc.image}" alt="">` : '👤';
+  document.getElementById('profile-view-card').innerHTML = `
+    <div class="profile-avatar">${accImg}</div>
+    <div class="profile-name">${escapeHtml(accName)}</div>
+  `;
+
+  let states = {};
+  try{
+    const raw = syncStorage.getItem(statesKeyFor(accountId));
+    states = raw ? JSON.parse(raw) : {};
+  }catch(e){ states = {}; }
+
+  let secrets = {};
+  try{
+    const raw = syncStorage.getItem(secretsKeyFor(accountId));
+    secrets = raw ? JSON.parse(raw) : {};
+  }catch(e){ secrets = {}; }
+
+  const pillars = cases.filter(c=>c.num!=null);
+  const validCount = pillars.filter(c=>(states[c.id]||'default')==='valid').length;
+  const invalidCount = pillars.filter(c=>(states[c.id]||'default')==='invalid').length;
+
+  const challengeRec = (pointsAwarded[accountId] && pointsAwarded[accountId].challenges) || {};
+  const challengeCount = Object.keys(challengeRec).length;
+  const money = accountPoints[accountId] || 0;
+  const frags = accountFragments[accountId] || 0;
+  const crownCount = accountCrowns[accountId] || 0;
+
+  const secretsUnlocked = BADGES_CATALOG.filter(b=>!!secrets[b.id]).length;
+  const totalBadges = pillars.length + BADGES_CATALOG.length;
+  const badgesUnlocked = validCount + secretsUnlocked;
+
+  const realAccounts = accounts.filter(a=>!a.temporary);
+  const ranked = realAccounts
+    .map(a=>({id:a.id, points:accountPoints[a.id]||0}))
+    .sort((a,b)=>b.points - a.points);
+  const rankIdx = ranked.findIndex(a=>a.id===accountId);
+  const rankLabel = (money > 0 && rankIdx > -1) ? `#${rankIdx+1} / ${ranked.filter(a=>a.points>0).length}` : '—';
+
+  document.getElementById('profile-view-info-grid').innerHTML = `
+    <div class="inv-info-card"><div class="inv-info-num">${validCount}</div><div class="inv-info-label">Validés</div></div>
+    <div class="inv-info-card"><div class="inv-info-num">${invalidCount}</div><div class="inv-info-label">Non validés</div></div>
+    <div class="inv-info-card"><div class="inv-info-num">${challengeCount}</div><div class="inv-info-label">Défis du jour réussis</div></div>
+    <div class="inv-info-card"><div class="inv-info-num">${money}</div><div class="inv-info-label">Argent</div></div>
+    <div class="inv-info-card"><div class="inv-info-num">💠 ${frags}</div><div class="inv-info-label">Fragments</div></div>
+    <div class="inv-info-card"><div class="inv-info-num">${badgesUnlocked}/${totalBadges}</div><div class="inv-info-label">Badges</div></div>
+    <div class="inv-info-card"><div class="inv-info-num">👑 ${crownCount}</div><div class="inv-info-label">Couronnes</div></div>
+    <div class="inv-info-card"><div class="inv-info-num">${rankLabel}</div><div class="inv-info-label">Rang de saison</div></div>
+  `;
+
+  openOverlay('overlay-profile-view');
 }
 
 // skipPasswordCheck : utilisé juste après la création d'un compte (le mot de
@@ -4414,11 +4980,7 @@ async function actuallySwitchAccount(id){
   await loadClickerCount();
   await loadValidationDates();
   await loadSecrets();
-  render();
-  updateAccountButton();
-  renderQuests();
-  updateHosBtnVisibility();
-  if(document.getElementById('view-shop').classList.contains('active')) renderShop();
+  refreshCurrentViewAndPopups();
   closeOverlay('overlay-accounts');
 }
 
@@ -4582,13 +5144,19 @@ function openComparisonPopup(){
     .sort((a,b) => b.valid - a.valid);
 
   holder.innerHTML = ranked.map((a, idx) => `
-    <div class="comparison-row ${a.id===activeAccountId?'me':''}">
+    <div class="comparison-row ${a.id===activeAccountId?'me':''}" data-id="${a.id}" title="Clic droit : voir le profil">
       <span class="rank">#${idx+1}</span>
       ${a.image ? `<div class="account-item-avatar small"><img src="${a.image}" alt=""></div>` : `<div class="account-item-avatar small">👤</div>`}
       <span class="comparison-name">${escapeHtml(a.name)}</span>
       <span class="comparison-score">${a.valid} / 24</span>
     </div>
   `).join('');
+  holder.querySelectorAll('.comparison-row').forEach(el=>{
+    el.addEventListener('contextmenu', (e)=>{
+      e.preventDefault();
+      showCtxMenuAt(e, [['🪪 Voir le profil', ()=> openProfilePopup(el.dataset.id)]]);
+    });
+  });
   openOverlay('overlay-comparison');
 }
 
@@ -4792,6 +5360,54 @@ function startChatBackgroundWatch(){
 // quelqu'un en train de taper — ces écrans-là restent à rouvrir pour voir
 // les changements, tout le reste se met à jour tout seul.
 let cloudRefreshTimer = null;
+// Rafraîchit TOUT ce qui doit refléter les données à jour : la vue actuellement
+// affichée (quelle qu'elle soit) et toutes les popups actuellement ouvertes.
+// Utilisée à la fois par la synchronisation temps réel (quand un autre appareil
+// change quelque chose) et par le changement de compte (pour que la page sur
+// laquelle on se trouve se mette à jour tout de suite, sans avoir à naviguer
+// ailleurs puis revenir).
+function refreshCurrentViewAndPopups(){
+  render();
+  updateAccountButton();
+  updateQuestsBtn();
+  updateHosBtnVisibility();
+
+  const activeView = document.querySelector('.view.active');
+  const viewName = activeView ? activeView.id.replace('view-', '') : null;
+  if(viewName==='create') renderCustomList();
+  if(viewName==='halloffame') renderHallOfFame();
+  if(viewName==='hallofshame') renderHallOfShame();
+  if(viewName==='badges') renderBadges();
+  if(viewName==='quests') renderQuests();
+  if(viewName==='shop') renderShop();
+  if(viewName==='inventory') renderInventory();
+  if(viewName==='clicker') renderClickerView();
+  // La Série est un mini-jeu local à part : on ne rafraîchit l'écran d'accueil
+  // des Défis que si aucune série n'est en cours, pour ne jamais couper une
+  // partie en train d'être jouée.
+  if(viewName==='defis' && !serieState) renderDefisHome();
+
+  // Popups qui peuvent rester ouvertes pendant qu'une donnée change ailleurs :
+  // elles se régénèrent sur place, sans que l'utilisateur ait à les rouvrir.
+  if(document.getElementById('overlay-comparison').style.display === 'flex'){
+    openComparisonPopup();
+  }
+  if(document.getElementById('overlay-sticker-carnet').style.display === 'flex'){
+    buildCarnetPages();
+    renderStickerCarnetTabs();
+    renderStickerCarnetPage();
+  }
+  if(document.getElementById('overlay-accounts').style.display === 'flex'){
+    renderAccountList();
+  }
+  if(document.getElementById('overlay-profile-view').style.display === 'flex' && lastProfileViewedId){
+    openProfilePopup(lastProfileViewedId);
+  }
+  if(document.getElementById('overlay-pack-content').style.display === 'flex'){
+    renderPackContentModal();
+  }
+}
+
 function refreshFromCloud(){
   // Regroupe les changements rapprochés (plusieurs clics d'affilée ailleurs)
   // en un seul rafraîchissement, pour éviter de re-rendre l'appli en rafale.
@@ -4830,34 +5446,7 @@ async function applyCloudRefresh(){
   ensureDefaultStickerPack();
   checkValkyrieAutoUnlock();
 
-  render();
-  updateAccountButton();
-  updateQuestsBtn();
-  updateHosBtnVisibility();
-
-  const activeView = document.querySelector('.view.active');
-  const viewName = activeView ? activeView.id.replace('view-', '') : null;
-  if(viewName==='halloffame') renderHallOfFame();
-  if(viewName==='hallofshame') renderHallOfShame();
-  if(viewName==='badges') renderBadges();
-  if(viewName==='quests') renderQuests();
-  if(viewName==='shop') renderShop();
-  if(viewName==='inventory') renderInventory();
-  if(viewName==='clicker') renderClickerView();
-
-  // Le classement est affiché dans une popup à part : s'il est ouvert
-  // pendant qu'une donnée change ailleurs, on le recalcule sur place.
-  if(document.getElementById('overlay-comparison').style.display === 'flex'){
-    openComparisonPopup();
-  }
-  // Idem pour le carnet de stickers : si un paquet est créé/supprimé pendant qu'il
-  // est ouvert (par un autre appareil ou via un autre onglet), ses sections (onglets)
-  // se régénèrent immédiatement sans que l'utilisateur ait à le rouvrir.
-  if(document.getElementById('overlay-sticker-carnet').style.display === 'flex'){
-    buildCarnetPages();
-    renderStickerCarnetTabs();
-    renderStickerCarnetPage();
-  }
+  refreshCurrentViewAndPopups();
 }
 
 // IMPORTANT : le script Firebase (plus haut, en type="module") s'exécute en
