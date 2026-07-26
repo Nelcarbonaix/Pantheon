@@ -419,6 +419,30 @@
   .ctx-menu button:hover{background:rgba(255,215,107,0.12);color:var(--gold);}
   .ctx-menu button.danger:hover{background:rgba(255,80,80,0.14);color:#ff6b6b;}
 
+  /* Bulle d'aperçu du contenu d'un paquet (clic droit, côté joueur normal) */
+  .pack-preview-bubble{
+    position:fixed;z-index:500;background:var(--bg-panel);
+    border:1px solid var(--gold-deep);border-radius:12px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.6), 0 0 14px rgba(255,215,107,0.2);
+    padding:12px;display:none;width:240px;max-height:320px;overflow-y:auto;
+    animation:defis-fade-in .2s ease;
+  }
+  .pack-preview-bubble-title{
+    color:var(--gold);font-size:12px;letter-spacing:0.5px;text-transform:uppercase;
+    margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid #2a2013;
+  }
+  .pack-preview-row{
+    display:flex;align-items:center;gap:10px;padding:6px 0;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .pack-preview-row:last-child{border-bottom:none;}
+  .pack-preview-row img{width:34px;height:34px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+  .pack-preview-noimg{
+    width:34px;height:34px;border-radius:8px;flex-shrink:0;
+    background:var(--bg-deep);display:flex;align-items:center;justify-content:center;font-size:15px;
+  }
+  .pack-preview-name{font-size:12.5px;color:var(--white-neon);word-break:break-word;}
+
   /* modal générique */
   .overlay{
     position:fixed;inset:0;background:rgba(2,7,20,0.75);backdrop-filter:blur(2px);
@@ -876,9 +900,19 @@
     width:56px;height:56px;border-radius:50%;overflow:hidden;flex-shrink:0;
     display:flex;align-items:center;justify-content:center;font-size:26px;
     background:var(--bg-deep);border:2px solid var(--gold-deep);
+    position:relative;
   }
   .profile-card .profile-avatar img{width:100%;height:100%;object-fit:cover;}
+  .profile-card .profile-avatar.editable{cursor:pointer;transition:border-color .15s ease;}
+  .profile-card .profile-avatar.editable:hover{border-color:var(--gold);}
+  .profile-avatar-edit-hint{
+    position:absolute;right:-3px;bottom:-3px;width:20px;height:20px;border-radius:50%;
+    background:var(--gold);color:#0a1130;font-size:11px;
+    display:flex;align-items:center;justify-content:center;border:2px solid var(--bg-panel);
+  }
   .profile-card .profile-name{font-size:17px;color:var(--white-neon);letter-spacing:0.5px;}
+  .profile-card .profile-name.editable{cursor:pointer;border-bottom:1px dashed transparent;transition:border-color .15s ease, color .15s ease;}
+  .profile-card .profile-name.editable:hover{border-color:var(--gold);color:var(--gold);}
   .inv-info-grid{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
     gap:14px;max-width:900px;margin:0 auto 10px;
@@ -1610,6 +1644,8 @@
 
 <!-- menu contextuel -->
 <div class="ctx-menu" id="ctxMenu"></div>
+<div class="pack-preview-bubble" id="packPreviewBubble"></div>
+<input type="file" id="own-profile-image-input" accept="image/*" style="display:none;" onchange="submitOwnProfileImageChange()">
 
 <div class="valkyrie-center-overlay" id="valkyrieCenterOverlay">
   <div class="valkyrie-center-icon">💀</div>
@@ -1882,7 +1918,19 @@
     <div class="modal-actions">
       <button class="btn ghost" onclick="closeOverlay('overlay-pack-content')">Fermer</button>
       <button class="btn ghost" id="pack-content-normalize-btn" onclick="distributeEqualChances()">⚖️ Répartir équitablement</button>
+      <button class="btn ghost" onclick="toggleDegressivePanel()">📉 Répartition dégressive</button>
       <button class="btn primary" id="pack-content-addsticker-btn">➕ Ajouter un sticker</button>
+    </div>
+    <div class="pack-degressive-panel" id="pack-degressive-panel" style="display:none;">
+      <div class="admin-panel-section">
+        <div class="admin-panel-section-title">Répartition dégressive</div>
+        <label>Chance de la carte la plus commune (%)</label>
+        <input type="number" id="pack-degressive-start" min="0.1" max="100" step="0.5" value="40">
+        <label>Minimum (%)</label>
+        <input type="number" id="pack-degressive-floor" min="0.1" max="100" step="0.1" value="0.1">
+        <label class="shop-admin-checkline"><input type="checkbox" id="pack-degressive-floor-is-last"> Le minimum = le taux de la dernière carte</label>
+        <button class="btn primary admin-panel-action-full" onclick="applyDegressiveChances()">Appliquer</button>
+      </div>
     </div>
   </div>
 </div>
@@ -3089,8 +3137,8 @@ function renderInventory(){
   const accName = acc ? acc.name : 'Invité';
   const accImg = acc && acc.image ? `<img src="${acc.image}" alt="">` : '👤';
   profileCard.innerHTML = `
-    <div class="profile-avatar">${accImg}</div>
-    <div class="profile-name">${escapeHtml(accName)}</div>
+    <div class="profile-avatar ${acc?'editable':''}" ${acc?'onclick="document.getElementById(\'own-profile-image-input\').click()" title="Changer la photo"':''}>${accImg}${acc?'<div class="profile-avatar-edit-hint">✎</div>':''}</div>
+    <div class="profile-name ${acc?'editable':''}" ${acc?'onclick="changeOwnProfileName()" title="Changer le nom"':''}>${escapeHtml(accName)}</div>
   `;
 
   const infoGrid = document.getElementById('inv-info-grid');
@@ -3337,6 +3385,14 @@ function renderShop(bump){
           e.preventDefault(); e.stopPropagation();
           openShopItemCtxMenu(e, el.dataset.id);
         });
+      } else {
+        const it = shopItems.find(x=>x.id===el.dataset.id);
+        if(it && it.type === 'pack'){
+          el.addEventListener('contextmenu', (e)=>{
+            e.preventDefault(); e.stopPropagation();
+            showPackPreviewBubble(e, el.dataset.id);
+          });
+        }
       }
     });
   }
@@ -3487,7 +3543,17 @@ function buildCarnetPages(){
     const name = packDef ? packDef.name : (byPack[packId] ? byPack[packId].name : 'Paquet');
     const ownedInPack = Object.keys(owned).length;
     const totalInPack = packDef && packDef.stickers ? packDef.stickers.length : ownedInPack;
-    const stickers = Object.values(owned).sort((a,b)=> b.rarity - a.rarity || a.ts - b.ts);
+    // Tri par taux de drop réel (chance actuelle dans la définition du paquet) :
+    // du plus commun (chance élevée) au plus rare (chance faible). Le flag
+    // rarity (1/2, juste utilisé pour l'effet visuel ✨) ne sert qu'en secours
+    // si le sticker a été retiré du paquet depuis.
+    const stickers = Object.values(owned).sort((a,b)=>{
+      const defA = packDef && packDef.stickers ? packDef.stickers.find(s=>s.id===a.stickerId) : null;
+      const defB = packDef && packDef.stickers ? packDef.stickers.find(s=>s.id===b.stickerId) : null;
+      const chanceA = defA ? (Number(defA.chance)||0) : -1;
+      const chanceB = defB ? (Number(defB.chance)||0) : -1;
+      return (chanceB - chanceA) || (a.rarity - b.rarity) || (a.ts - b.ts);
+    });
     return {packId, name, ownedInPack, totalInPack, stickers};
   }).sort((a,b)=> a.name.localeCompare(b.name, 'fr'));
 
@@ -3592,6 +3658,7 @@ function openPackContentModal(packId){
   activePackId = packId;
   renderPackContentModal();
   document.getElementById('pack-content-addsticker-btn').onclick = ()=> openStickerAddModal(packId);
+  document.getElementById('pack-degressive-panel').style.display = 'none';
   openOverlay('overlay-pack-content');
 }
 function renderPackContentModal(){
@@ -3718,6 +3785,54 @@ function distributeEqualChances(){
   pack.stickers.forEach(c=>{ c.chance = equal; });
   saveShopItems();
   renderPackContentModal();
+}
+
+function toggleDegressivePanel(){
+  const panel = document.getElementById('pack-degressive-panel');
+  panel.style.display = (panel.style.display === 'none') ? 'block' : 'none';
+}
+
+// Répartit les chances en dégressif : la 1ère carte de la liste (donc la
+// 1ère ajoutée au paquet) reçoit `start`%, puis chaque carte suivante devient
+// plus rare. Deux modes :
+// - case décochée : décroissance géométrique avec un ratio légèrement
+//   aléatoire (~70 à 88% de la précédente), `floor` sert juste de plancher
+//   qu'on ne dépasse jamais vers le bas ;
+// - case cochée : `floor` devient la valeur EXACTE de la dernière carte — le
+//   ratio de décroissance est alors calculé pile pour relier `start` à `floor`
+//   en autant d'étapes qu'il y a de cartes, donc une progression bien lisse,
+//   sans gros écart, quel que soit le nombre de cartes.
+// Dans tous les cas, tout est ensuite renormalisé pour que le total fasse
+// exactement 100%.
+function applyDegressiveChances(){
+  const pack = shopItems.find(i=>i.id===activePackId);
+  if(!pack || !pack.stickers || pack.stickers.length === 0) return;
+
+  const start = parseFloat(document.getElementById('pack-degressive-start').value) || 1;
+  const floor = Math.max(0.01, parseFloat(document.getElementById('pack-degressive-floor').value) || 0.1);
+  const floorIsLast = document.getElementById('pack-degressive-floor-is-last').checked;
+  const n = pack.stickers.length;
+
+  let raw;
+  if(floorIsLast && n > 1){
+    const ratio = Math.pow(floor / start, 1 / (n - 1));
+    raw = Array.from({length:n}, (_,i)=> start * Math.pow(ratio, i));
+  } else {
+    raw = [Math.max(floor, start)];
+    for(let i=1; i<n; i++){
+      const ratio = 0.7 + Math.random()*0.18; // ~70% à 88% de la précédente
+      raw.push(Math.max(floor, raw[i-1] * ratio));
+    }
+  }
+
+  const total = raw.reduce((s,v)=> s+v, 0);
+  pack.stickers.forEach((c,i)=>{
+    c.chance = +((raw[i] / total) * 100).toFixed(1);
+  });
+
+  saveShopItems();
+  renderPackContentModal();
+  document.getElementById('pack-degressive-panel').style.display = 'none';
 }
 
 function submitStickerAdd(){
@@ -4629,6 +4744,7 @@ function openCtxMenu(e, id){
 
 // Affiche le menu contextuel générique (#ctxMenu) avec une liste [label, handler, danger?].
 function showCtxMenuAt(e, items){
+  closePackPreviewBubble();
   const menu = document.getElementById('ctxMenu');
   menu.innerHTML = items.map(([label, _, danger])=>
     `<button class="${danger?'danger':''}" data-label="${escapeHtml(label)}">${label}</button>`
@@ -4651,8 +4767,43 @@ function showCtxMenuAt(e, items){
 function closeCtxMenu(){
   document.getElementById('ctxMenu').style.display = 'none';
 }
+
+// Bulle d'aperçu du contenu d'un paquet, accessible à tous (pas besoin d'être
+// admin) : clic droit sur un paquet dans le shop -> liste des cartes qu'il
+// contient, triée du plus commun au plus rare (comme dans le carnet). Se
+// ferme dès qu'on clique ailleurs, comme le menu contextuel.
+function showPackPreviewBubble(e, packId){
+  const pack = shopItems.find(i=>i.id===packId);
+  const bubble = document.getElementById('packPreviewBubble');
+  if(!pack){ bubble.style.display = 'none'; return; }
+  closeCtxMenu();
+
+  const stickers = (pack.stickers || []).slice().sort((a,b)=> (Number(b.chance)||0) - (Number(a.chance)||0));
+  const rows = stickers.length
+    ? stickers.map(c=>`
+        <div class="pack-preview-row">
+          ${c.image ? `<img src="${c.image}" alt="">` : '<div class="pack-preview-noimg">🃏</div>'}
+          <div class="pack-preview-name">${escapeHtml(c.name)}${c.rarity===2?' ✨':''}</div>
+        </div>
+      `).join('')
+    : '<div class="empty-note">Ce paquet est vide pour l\'instant.</div>';
+
+  bubble.innerHTML = `<div class="pack-preview-bubble-title">🃏 ${escapeHtml(pack.name)}</div>${rows}`;
+  bubble.style.display = 'block';
+
+  const width = 240, maxHeight = 320;
+  const x = Math.min(e.clientX, window.innerWidth - width - 10);
+  const y = Math.min(e.clientY, window.innerHeight - maxHeight - 10);
+  bubble.style.left = Math.max(x,10) + 'px';
+  bubble.style.top = Math.max(y,10) + 'px';
+}
+
+function closePackPreviewBubble(){
+  document.getElementById('packPreviewBubble').style.display = 'none';
+}
 document.addEventListener('click', (e)=>{
   if(!e.target.closest('#ctxMenu')) closeCtxMenu();
+  if(!e.target.closest('#packPreviewBubble')) closePackPreviewBubble();
 });
 
 // Le menu du clic droit natif du navigateur est désactivé partout dans l'app :
@@ -4926,14 +5077,55 @@ function renderAccountList(){
 // le compte actif.
 let lastProfileViewedId = null;
 
+// Change la photo de son propre compte depuis la popup de profil (clic sur
+// l'avatar -> sélection d'un fichier -> sauvegarde synchronisée comme le
+// reste des données du compte, donc reflétée en temps réel sur les autres
+// appareils via refreshCurrentViewAndPopups()).
+// Change le nom de son propre compte (clic sur le nom dans le profil),
+// même mécanisme d'édition que le reste de l'app (openEditFieldModal),
+// sauvegarde synchronisée via saveAccounts().
+function changeOwnProfileName(){
+  const acc = accounts.find(a=>a.id===activeAccountId);
+  if(!acc) return;
+  openEditFieldModal('Nom', acc.name, async (val)=>{
+    const name = val.trim();
+    if(!name) return;
+    acc.name = name;
+    await saveAccounts();
+    refreshCurrentViewAndPopups();
+  });
+}
+
+async function submitOwnProfileImageChange(){
+  const fileInput = document.getElementById('own-profile-image-input');
+  const acc = accounts.find(a=>a.id===activeAccountId);
+  if(!acc || !fileInput.files || !fileInput.files[0]){ fileInput.value=''; return; }
+
+  const imageData = await new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(fileInput.files[0]);
+  }).catch(()=>null);
+  fileInput.value = '';
+  if(!imageData) return;
+
+  acc.image = imageData;
+  await saveAccounts();
+  refreshCurrentViewAndPopups();
+}
+
 function openProfilePopup(accountId){
   lastProfileViewedId = accountId;
   const acc = accounts.find(a=>a.id===accountId);
   const accName = acc ? acc.name : 'Invité';
   const accImg = acc && acc.image ? `<img src="${acc.image}" alt="">` : '👤';
+  // On ne peut changer la photo que de son PROPRE profil (pas celui d'un
+  // autre compte consulté en lecture seule).
+  const isOwn = acc && accountId === activeAccountId;
   document.getElementById('profile-view-card').innerHTML = `
-    <div class="profile-avatar">${accImg}</div>
-    <div class="profile-name">${escapeHtml(accName)}</div>
+    <div class="profile-avatar ${isOwn?'editable':''}" ${isOwn?'onclick="document.getElementById(\'own-profile-image-input\').click()" title="Changer la photo"':''}>${accImg}${isOwn?'<div class="profile-avatar-edit-hint">✎</div>':''}</div>
+    <div class="profile-name ${isOwn?'editable':''}" ${isOwn?'onclick="changeOwnProfileName()" title="Changer le nom"':''}>${escapeHtml(accName)}</div>
   `;
 
   let states = {};
