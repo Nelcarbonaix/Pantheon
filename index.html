@@ -5634,16 +5634,24 @@ function refreshFromCloud(){
   cloudRefreshTimer = setTimeout(applyCloudRefresh, 150);
 }
 
-// loadAccounts() remet toujours activeAccountId à null (comportement voulu
-// au lancement de l'appli, voir sa définition). En plein rafraîchissement
-// temps réel, il ne faut surtout PAS déconnecter la personne en cours de
-// session à chaque changement distant : on recharge la liste des comptes
-// mais on restaure ensuite le compte actif s'il existe toujours.
+// BUG CORRIGÉ : avant, tant qu'on était sur le compte admin (temporaire) ou
+// Void, cette fonction ne rechargeait JAMAIS la liste des vrais comptes
+// depuis le cloud. Résultat : si un autre appareil créait/supprimait/renommait
+// un compte pendant ce temps, la copie locale restait périmée — et la moindre
+// action qui appelle saveAccounts() pendant la session admin (ex: changer sa
+// photo/nom) réécrivait alors le cloud avec cette liste périmée, effaçant au
+// passage les comptes que l'app ne connaissait plus. D'où le bug rapporté :
+// après un rafraîchissement de page, seul le compte admin réapparaissait.
+// Le fix : on recharge quand même les vrais comptes depuis le cloud, on
+// réinjecte juste l'entrée temporaire (admin/Void) dans la liste ensuite, et
+// on ne touche pas au compte actif.
 async function refreshAccountsListPreservingActive(){
   const currentId = activeAccountId;
   if(currentId === TEMP_ACCOUNT_ID || currentId === SECRET_VOID_ID){
-    // Session admin de test / secrète : jamais persistée côté cloud, on ne
-    // touche pas à la liste des comptes tant qu'elle est active.
+    const tempEntry = accounts.find(a=>a.id===currentId);
+    await loadAccounts();
+    if(tempEntry) accounts.push(tempEntry);
+    activeAccountId = currentId;
     return;
   }
   await loadAccounts();
