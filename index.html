@@ -267,7 +267,6 @@
     transition:transform .15s ease, box-shadow .25s ease, border-color .25s ease;
     box-shadow:0 0 8px rgba(166,130,31,0.25) inset, 0 0 6px rgba(166,130,31,0.15);
   }
-  .cell:hover{transform:translateY(-3px);}
   .cell .num{font-size:11px;color:var(--stone);letter-spacing:1px;}
   .cell .num.num-solo{font-size:22px;color:var(--white-neon);letter-spacing:1.5px;}
   .cell .label{color:var(--white-neon);text-align:center;padding:0 3px;
@@ -406,7 +405,7 @@
     box-shadow:0 0 16px var(--gold-deep), 0 0 30px rgba(166,130,31,0.5);
     z-index:50;transition:transform .15s ease;
   }
-  .fab:hover{transform:scale(1.08);}
+  .fab:hover{box-shadow:0 0 22px var(--gold-deep), 0 0 40px rgba(166,130,31,0.65);}
 
   /* menu contextuel */
   .ctx-menu{
@@ -710,7 +709,7 @@
     background:linear-gradient(160deg,var(--bg-panel),var(--bg-deep));
     border:1.5px solid #2a2013;transition:transform .15s ease, box-shadow .15s ease;
   }
-  .skin-card:hover{transform:translateY(-3px);}
+  .skin-card:hover{border-color:var(--gold-deep);box-shadow:0 6px 14px rgba(0,0,0,0.4);}
   .skin-card.owned{border-color:var(--green-neon);}
   .skin-card.equipped{box-shadow:0 0 0 2px var(--green-neon), 0 0 16px rgba(57,255,143,0.25) inset;}
   .skin-card .rarity-tag{
@@ -750,7 +749,7 @@
     background:linear-gradient(160deg,var(--bg-panel),var(--bg-deep));
     border:1.5px solid #2a2013;transition:transform .15s ease, box-shadow .15s ease;
   }
-  .pillar-card:hover{transform:translateY(-3px);}
+  .pillar-card:hover{border-color:var(--gold-deep);box-shadow:0 6px 14px rgba(0,0,0,0.4);}
   .pillar-card.locked{opacity:0.7;}
   .pillar-card.maxed{
     border-color:var(--gold);
@@ -774,7 +773,7 @@
     border:1.5px solid #2a2013;
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  .upgrade-row:hover{transform:translateY(-3px);}
+  .upgrade-row:hover{border-color:var(--gold-deep);box-shadow:0 6px 14px rgba(0,0,0,0.4);}
   .upgrade-row.maxed{border-color:var(--green-neon);box-shadow:0 0 10px rgba(57,255,143,0.2) inset;}
   .upgrade-info{flex:1;min-width:0;}
   .upgrade-name{color:var(--white-neon);font-size:13.5px;letter-spacing:0.3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
@@ -890,7 +889,7 @@
     background:linear-gradient(160deg,var(--bg-panel),var(--bg-deep));
     box-shadow:0 0 8px rgba(166,130,31,0.25) inset, 0 0 6px rgba(166,130,31,0.15);
   }
-  .valkyrie-toggle.revealed:hover{transform:translateY(-2px);}
+  .valkyrie-toggle.revealed:hover{border-color:var(--gold);box-shadow:0 0 14px rgba(230,196,95,0.3), 0 0 8px rgba(166,130,31,0.25) inset, 0 0 6px rgba(166,130,31,0.15);}
   .valkyrie-toggle.revealed .valkyrie-label{color:var(--white-neon);text-decoration:none;}
   .valkyrie-toggle.revealed.valid{
     border-color:var(--green-neon);
@@ -945,7 +944,7 @@
     background:linear-gradient(160deg,var(--bg-panel),var(--bg-deep));border:1.5px solid #2a2013;
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  .badge-item:hover{transform:translateY(-3px);}
+  .badge-item:hover{border-color:var(--gold-deep);box-shadow:0 6px 14px rgba(0,0,0,0.4);}
   .badge-item .badge-icon{font-size:32px;}
   .badge-item .badge-label{font-size:11.5px;letter-spacing:0.5px;}
   .badge-item.locked{opacity:0.45;}
@@ -968,17 +967,21 @@
   }
   .library-book{
     cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;
-    transition:transform .15s ease;
   }
-  .library-book:hover{transform:translateY(-4px);}
   .library-book.locked{cursor:default;}
-  .library-book.locked:hover{transform:none;}
   .library-book-cover{
     width:100%;aspect-ratio:200/280;border-radius:4px 9px 9px 4px;position:relative;
     background:linear-gradient(160deg,var(--bg-panel),var(--bg-deep));
     border:1.5px solid #2a2013;overflow:hidden;
     box-shadow:0 6px 14px rgba(0,0,0,0.45), inset -7px 0 10px rgba(0,0,0,0.4);
+    transition:transform .15s ease;
   }
+  /* L'effet de survol bouge la couverture (élément décoratif interne),
+     jamais .library-book lui-même : ainsi le curseur ne peut pas "sortir"
+     de la zone cliquable à cause du déplacement, ce qui évite la boucle
+     survol/sortie (l'élément tremblait et revenait très vite). */
+  .library-book:hover .library-book-cover{transform:translateY(-4px);}
+  .library-book.locked:hover .library-book-cover{transform:none;}
   .library-book-cover img{width:100%;height:100%;object-fit:cover;display:block;}
   .library-book-cover::before{
     content:"";position:absolute;left:0;top:0;bottom:0;width:6px;z-index:2;
@@ -1046,7 +1049,7 @@
     box-shadow:0 0 8px rgba(166,130,31,0.2) inset;
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  .shop-item:hover{transform:translateY(-3px);}
+  .shop-item:hover{border-color:var(--gold);box-shadow:0 0 14px rgba(230,196,95,0.3), 0 0 8px rgba(166,130,31,0.2) inset;}
   .shop-item-icon{font-size:26px;line-height:1;}
   .shop-item .shop-item-name{color:var(--white-neon);font-size:12.5px;letter-spacing:0.4px;line-height:1.25;}
   .shop-item .shop-item-cost{font-size:12.5px;color:var(--gold);font-weight:700;}
@@ -1113,7 +1116,7 @@
   #black-market-corrupted-fields{margin-top:4px;}
   .vendor-portrait-wrap{max-width:420px;margin:4px auto 12px;text-align:center;}
   .vendor-portrait{width:130px;height:130px;object-fit:cover;border-radius:50%;border:2px solid var(--purple-neon);box-shadow:0 0 16px rgba(192,96,255,0.35);cursor:pointer;transition:transform .15s ease;}
-  .vendor-portrait:hover{transform:scale(1.05);}
+  .vendor-portrait:hover{box-shadow:0 0 22px rgba(192,96,255,0.55);}
   .vendor-portrait-placeholder{width:130px;height:130px;border-radius:50%;border:2px dashed var(--purple-neon);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto;cursor:pointer;opacity:0.7;}
   .vendor-portrait-label{font-size:11.5px;color:var(--purple-neon);margin-top:6px;letter-spacing:0.3px;}
   .vendor-dialogue-npc{background:rgba(192,96,255,0.06);border:1px solid rgba(192,96,255,0.3);border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.5;color:var(--white-neon);margin-bottom:14px;}
@@ -1248,7 +1251,7 @@
     box-shadow:0 0 8px rgba(166,130,31,0.2) inset;
     transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
   }
-  .defis-mode-card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 0 14px rgba(255,215,107,0.25) inset;}
+  .defis-mode-card:hover{border-color:var(--gold);box-shadow:0 0 14px rgba(255,215,107,0.25) inset, 0 6px 14px rgba(0,0,0,0.35);}
   .defis-mode-card .defis-mode-icon{font-size:28px;}
   .defis-mode-card .defis-mode-name{color:var(--gold);font-size:13.5px;font-weight:700;letter-spacing:0.5px;}
   .defis-mode-card .defis-mode-desc{color:var(--stone);font-size:11px;line-height:1.5;}
@@ -1564,7 +1567,7 @@
     border:1px solid var(--bronze);border-radius:12px;background:var(--bg-panel);cursor:pointer;
     transition:border-color .18s ease,box-shadow .18s ease,transform .15s ease;
   }
-  .combo-account-card:hover{border-color:var(--gold-deep);transform:translateY(-2px);}
+  .combo-account-card:hover{border-color:var(--gold-deep);box-shadow:0 6px 14px rgba(0,0,0,0.4);}
   .combo-account-card.selected{border-color:var(--gold);box-shadow:0 0 14px rgba(255,215,107,0.3) inset;}
   .combo-account-card.selected::after{content:"✓";color:var(--gold);font-size:11px;font-weight:700;margin-top:-2px;}
   .combo-account-avatar{
