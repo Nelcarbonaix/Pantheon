@@ -3717,10 +3717,27 @@ function startAutoClickerLoop(){
   if(autoClickerTimer) clearInterval(autoClickerTimer);
   autoClickerTimer = setInterval(tickAutoClicker, 1000);
 }
+// BUG CORRIGÉ : avant, ce tick (toutes les secondes) appelait saveClickerLastSeen()
+// à chaque fois, qui écrit dans le cloud sur le MÊME chemin que tout le reste des
+// données ('pantheon_data'). L'app écoute ce chemin en temps réel pour se
+// synchroniser entre appareils, mais ne distingue pas "un autre appareil a changé
+// quelque chose" de "moi-même je viens d'écrire mon propre battement de cœur" :
+// résultat, elle se redéclenchait elle-même chaque seconde et reconstruisait toute
+// la grille en boucle — d'où les cases qui semblaient "clignoter" au survol (la
+// case sous la souris était en réalité détruite et recréée sans arrêt). On garde
+// donc le "dernier vu" en local à chaque tick (largement suffisant pour son usage :
+// calculer les gains hors-ligne au chargement) et on ne l'envoie au cloud que
+// toutes les ~15s, plus au moment de quitter/masquer l'onglet.
+let clickerLastSeenSyncTick = 0;
 function tickAutoClicker(){
   const accountId = activeAccountId;
   clickerLastSeenByAccount[accountId] = Date.now();
-  saveClickerLastSeen();
+  try{ localStorage.setItem(CLICKER_LASTSEEN_KEY, JSON.stringify(clickerLastSeenByAccount)); }catch(e){}
+  clickerLastSeenSyncTick++;
+  if(clickerLastSeenSyncTick >= 15){
+    clickerLastSeenSyncTick = 0;
+    saveClickerLastSeen();
+  }
   if(!accountEarnsPoints(accountId)) return;
   const rate = clickerAutoRate(accountId);
   if(rate <= 0) return;
@@ -3728,6 +3745,14 @@ function tickAutoClicker(){
   const view = document.getElementById('view-clicker');
   if(view && view.classList.contains('active')) renderClickerView();
 }
+
+// Filet de sécurité : on pousse quand même la valeur au cloud si l'onglet est
+// masqué ou fermé, pour ne jamais perdre plus de quelques secondes de précision
+// sur le calcul des gains hors-ligne, malgré l'envoi désormais espacé ci-dessus.
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'hidden') saveClickerLastSeen();
+});
+window.addEventListener('pagehide', ()=>{ try{ saveClickerLastSeen(); }catch(e){} });
 
 /* ============================================================
    DÉFIS — "Série" : mini-jeu purement VISUEL, pensé pour jouer à
